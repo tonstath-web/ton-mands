@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TON MANDS</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--tg-theme-button-color, #3390ec);
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--tg-theme-button-color, #3390ec), #0088cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--tg-theme-hint-color, #999999);
+        }
+
+        .card {
+            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--tg-theme-hint-color, #999999);
+        }
+
+        .card-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--tg-theme-text-color, #000000);
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: var(--tg-theme-hint-color, #999999);
+            margin-top: 4px;
+        }
+
+        .price-up {
+            color: #34c759;
+        }
+
+        .price-down {
+            color: #ff3b30;
+        }
+
+        .crypto-list {
+            margin-top: 16px;
+        }
+
+        .crypto-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .crypto-item:active {
+            opacity: 0.7;
+        }
+
+        .crypto-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .crypto-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: var(--tg-theme-button-color, #3390ec);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .crypto-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .crypto-symbol {
+            font-size: 12px;
+            color: var(--tg-theme-hint-color, #999999);
+        }
+
+        .crypto-right {
+            text-align: right;
+        }
+
+        .crypto-price {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .crypto-change {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+            background: var(--tg-theme-button-color, #3390ec);
+            color: var(--tg-theme-button-text-color, #ffffff);
+        }
+
+        .btn:active {
+            opacity: 0.8;
+        }
+
+        .btn-secondary {
+            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            color: var(--tg-theme-button-color, #3390ec);
+            margin-top: 8px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--tg-theme-hint-color, #999999);
+        }
+
+        .error {
+            background: #ff3b30;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            border-radius: 10px;
+            margin-bottom: 16px;
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 24px;
+            background: var(--tg-theme-button-color, #3390ec);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .user-id {
+            font-size: 12px;
+            color: var(--tg-theme-hint-color, #999999);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- User Info -->
+        <div class="user-info">
+            <div class="user-avatar" id="userAvatar">U</div>
+            <div class="user-details">
+                <div class="user-name" id="userName">User</div>
+                <div class="user-id" id="userId">ID: --</div>
+            </div>
+        </div>
+
+        <!-- Portfolio Card -->
+        <div class="card">
+            <div class="card-title">PORTFOLIO VALUE</div>
+            <div class="card-value" id="portfolioValue">$0.00</div>
+            <div class="card-subtitle">Updated just now</div>
+        </div>
+
+        <!-- Market Stats -->
+        <div class="card">
+            <div class="card-title">24H CHANGE</div>
+            <div class="card-value" id="marketChange">--%</div>
+            <div class="card-subtitle">Market trend</div>
+        </div>
+
+        <!-- Crypto List -->
+        <div class="crypto-list" id="cryptoList">
+            <div class="loading">Loading prices...</div>
+        </div>
+
+        <!-- Actions -->
+        <button class="btn" id="refreshBtn">🔄 Refresh Prices</button>
+        <button class="btn btn-secondary" id="tradeBtn">📈 Start Trading</button>
+    </div>
+
+    <script>
+        // Initialize Telegram WebApp
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        // Get user data from Telegram
+        const user = tg.initDataUnsafe?.user;
+        
+        if (user) {
+            document.getElementById('userName').textContent = 
+                `${user.first_name} ${user.last_name || ''}`.trim();
+            document.getElementById('userId').textContent = `ID: ${user.id}`;
+            
+            const initial = user.first_name?.charAt(0).toUpperCase() || 'U';
+            document.getElementById('userAvatar').textContent = initial;
+        }
+
+        // Set theme colors
+        document.documentElement.style.setProperty('--tg-theme-bg-color', tg.backgroundColor || '#ffffff');
+        document.documentElement.style.setProperty('--tg-theme-text-color', tg.textColor || '#000000');
+        document.documentElement.style.setProperty('--tg-theme-button-color', tg.buttonColor || '#3390ec');
+        document.documentElement.style.setProperty('--tg-theme-button-text-color', tg.buttonTextColor || '#ffffff');
+        document.documentElement.style.setProperty('--tg-theme-secondary-bg-color', tg.secondaryBackgroundColor || '#f0f0f0');
+        document.documentElement.style.setProperty('--tg-theme-hint-color', tg.hintColor || '#999999');
+
+        // Crypto data
+        const cryptos = [
+            { symbol: 'BTC', name: 'Bitcoin', price: 0, change: 0 },
+            { symbol: 'ETH', name: 'Ethereum', price: 0, change: 0 },
+            { symbol: 'BNB', name: 'Binance Coin', price: 0, change: 0 },
+            { symbol: 'SOL', name: 'Solana', price: 0, change: 0 },
+            { symbol: 'DOGE', name: 'Dogecoin', price: 0, change: 0 }
+        ];
+
+        // Fetch crypto prices from backend
+        async function fetchPrices() {
+            try {
+                const response = await fetch('/api/prices');
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateCryptoList(data.prices);
+                    updatePortfolio(data.prices);
+                } else {
+                    showError('Failed to fetch prices');
+                }
+            } catch (error) {
+                console.error('Error fetching prices:', error);
+                showError('Connection error');
+            }
+        }
+
+        // Update crypto list UI
+        function updateCryptoList(prices) {
+            const list = document.getElementById('cryptoList');
+            list.innerHTML = '';
+
+            prices.forEach(crypto => {
+                const item = document.createElement('div');
+                item.className = 'crypto-item';
+                item.onclick = () => selectCrypto(crypto);
+                
+                const changeClass = crypto.change >= 0 ? 'price-up' : 'price-down';
+                const changeSign = crypto.change >= 0 ? '+' : '';
+                
+                item.innerHTML = `
+                    <div class="crypto-left">
+                        <div class="crypto-icon">${crypto.symbol.charAt(0)}</div>
+                        <div>
+                            <div class="crypto-name">${crypto.name}</div>
+                            <div class="crypto-symbol">${crypto.symbol}/USDT</div>
+                        </div>
+                    </div>
+                    <div class="crypto-right">
+                        <div class="crypto-price">$${crypto.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                        <div class="crypto-change ${changeClass}">${changeSign}${crypto.change.toFixed(2)}%</div>
+                    </div>
+                `;
+                
+                list.appendChild(item);
+            });
+
+            // Update market change (average)
+            const avgChange = prices.reduce((sum, c) => sum + c.change, 0) / prices.length;
+            const marketChangeEl = document.getElementById('marketChange');
+            marketChangeEl.textContent = `${avgChange >= 0 ? '+' : ''}${avgChange.toFixed(2)}%`;
+            marketChangeEl.className = `card-value ${avgChange >= 0 ? 'price-up' : 'price-down'}`;
+        }
+
+        // Update portfolio value
+        function updatePortfolio(prices) {
+            // Simulated portfolio (in real app, fetch from backend)
+            const portfolio = {
+                BTC: 0.05,
+                ETH: 0.5,
+                SOL: 10
+            };
+
+            let total = 0;
+            prices.forEach(crypto => {
+                if (portfolio[crypto.symbol]) {
+                    total += portfolio[crypto.symbol] * crypto.price;
+                }
+            });
+
+            document.getElementById('portfolioValue').textContent = 
+                `$${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+
+        // Select crypto
+        function selectCrypto(crypto) {
+            tg.showPopup({
+                title: crypto.name,
+                message: `Current price: $${crypto.price.toLocaleString()}\n24h change: ${crypto.change >= 0 ? '+' : ''}${crypto.change.toFixed(2)}%`,
+                buttons: [
+                    { type: 'default', text: 'View Chart' },
+                    { type: 'default', text: 'Trade' }
+                ]
+            }, (button) => {
+                if (button === 'Trade') {
+                    tg.MainButton.text = `Buy ${crypto.symbol}`;
+                    tg.MainButton.show();
+                }
+            });
+        }
+
+        // Show error
+        function showError(message) {
+            const list = document.getElementById('cryptoList');
+            list.innerHTML = `<div class="error">${message}</div>`;
+        }
+
+        // Refresh button
+        document.getElementById('refreshBtn').onclick = () => {
+            tg.HapticFeedback.impactOccurred('light');
+            document.getElementById('cryptoList').innerHTML = '<div class="loading">Loading prices...</div>';
+            fetchPrices();
+        };
+
+        // Trade button
+        document.getElementById('tradeBtn').onclick = () => {
+            tg.HapticFeedback.impactOccurred('medium');
+            tg.showPopup({
+                title: 'Start Trading',
+                message: 'Redirect to trading bot?',
+                buttons: [
+                    { type: 'default', text: 'Open Bot' },
+                    { type: 'cancel' }
+                ]
+            }, (button) => {
+                if (button === 'Open Bot') {
+                    tg.openTelegramLink('https://t.me/your_bot_username');
+                }
+            });
+        };
+
+        // Main button click handler
+        tg.MainButton.onClick(() => {
+            tg.showAlert('Trade feature coming soon!');
+        });
+
+        // Initial fetch
+        fetchPrices();
+
+        // Auto refresh every 30 seconds
+        setInterval(fetchPrices, 30000);
+    </script>
+</body>
+</html>
