@@ -6,8 +6,8 @@ import logging
 from telegram import (
     Update, 
     WebAppInfo, 
-    InlineKeyboardButton, 
-    InlineKeyboardMarkup
+    KeyboardButton, 
+    ReplyKeyboardMarkup
 )
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
@@ -35,13 +35,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = user.id
     referral_link = f"https://t.me/{context.bot.username}?start=ref{user_id}"
     
-    # Create inline keyboard dengan 2 buttons
-    # Pakai InlineKeyboard dengan web_app - TIDAK PERLU BOTFATHER!
+    # Create keyboard dengan 2 buttons
+    # ReplyKeyboard support web_app!
     keyboard = [
-        [InlineKeyboardButton("📢 Join TON Mands Channel", url=f"https://t.me/{CHANNEL_USERNAME}")],
-        [InlineKeyboardButton("🚀 Open Mini App", web_app=WebAppInfo(url=MINI_APP_URL))]
+        [KeyboardButton("📢 Join TON Mands Channel", url=f"https://t.me/{CHANNEL_USERNAME}")],
+        [KeyboardButton("🚀 Open Mini App", web_app=WebAppInfo(url=MINI_APP_URL))]
     ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
     
     # Welcome message
     message = f"""Hello {user.first_name} {username} 👋
