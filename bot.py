@@ -7,9 +7,7 @@ from telegram import (
     Update, 
     WebAppInfo, 
     KeyboardButton, 
-    ReplyKeyboardMarkup,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup
+    ReplyKeyboardMarkup
 )
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
@@ -38,13 +36,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     referral_link = f"https://t.me/{context.bot.username}?start=ref{user_id}"
     
     # Create inline keyboard dengan 2 buttons
+    # Gunakan WebAppInfo untuk Mini App yang proper
     keyboard = [
-        [
-            InlineKeyboardButton("📢 Join TON Mands Channel", url=f"https://t.me/{CHANNEL_USERNAME}"),
-            InlineKeyboardButton("🚀 Open Mini App", url=MINI_APP_URL)
-        ]
+        [KeyboardButton("📢 Join TON Mands Channel", url=f"https://t.me/{CHANNEL_USERNAME}")],
+        [KeyboardButton("🚀 Open Mini App", web_app=WebAppInfo(url=MINI_APP_URL))]
     ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
     
     # Welcome message
     message = f"""Hello {user.first_name} {username} 👋
