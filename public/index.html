@@ -352,6 +352,7 @@
             justify-content: space-around;
             padding: 8px 0;
             box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
         }
 
         .nav-item {
@@ -365,6 +366,13 @@
             font-size: 11px;
             transition: color 0.2s;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .nav-item:active {
+            opacity: 0.6;
+            transform: scale(0.95);
         }
 
         .nav-item.active {
@@ -373,6 +381,11 @@
 
         .nav-icon {
             font-size: 22px;
+            pointer-events: none;
+        }
+
+        .nav-item span:last-child {
+            pointer-events: none;
         }
 
         /* Loading */
@@ -634,17 +647,33 @@
 
         // Navigation function
         function navTo(page) {
+            if (isSpinning) return; // Prevent nav during spin
+            
             tg.HapticFeedback.impactOccurred('light');
             
             if (page === 'home') {
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 return;
             }
             
             // Show coming soon message
+            const titles = {
+                'refer': '👥 Refer & Earn',
+                'profile': '👤 Profile',
+                'withdraw': '💳 Withdraw'
+            };
+            
+            const messages = {
+                'refer': 'Invite friends and earn TON rewards!\n\nReferral system coming soon!',
+                'profile': 'View your profile, settings, and activity!\n\nProfile page coming soon!',
+                'withdraw': 'Withdraw your earnings to TON wallet!\n\nWithdraw feature coming soon!'
+            };
+            
             tg.showPopup({
-                title: 'Coming Soon',
-                message: `${page.charAt(0).toUpperCase() + page.slice(1)} feature will be available soon!\n\nStay tuned for updates!`,
-                buttons: [{type: 'ok'}]
+                title: titles[page] || 'Coming Soon',
+                message: messages[page] || 'This feature will be available soon!\n\nStay tuned!',
+                buttons: [{type: 'ok', text: 'OK'}]
             });
         }
 
