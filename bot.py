@@ -36,10 +36,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     referral_link = f"https://t.me/{context.bot.username}?start=ref{user_id}"
     
     # Create keyboard dengan 2 buttons
-    # ReplyKeyboard support web_app!
+    # Pakai URL button biasa - TIDAK PERLU BotFather setup!
     keyboard = [
         [KeyboardButton("📢 Join TON Mands Channel", url=f"https://t.me/{CHANNEL_USERNAME}")],
-        [KeyboardButton("🚀 Open Mini App", web_app=WebAppInfo(url=MINI_APP_URL))]
+        [KeyboardButton("🚀 Open Mini App", url=MINI_APP_URL)]
     ]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
     
