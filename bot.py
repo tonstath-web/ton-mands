@@ -23,20 +23,26 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     # Create keyboard with Mini App button
     keyboard = [
-        [KeyboardButton("🚀 Open Mini App", web_app=WebAppInfo(url=MINI_APP_URL))]
+        [KeyboardButton("💎 Open TON MANDS", web_app=WebAppInfo(url=MINI_APP_URL))],
+        [KeyboardButton("📊 Prices"), KeyboardButton("ℹ️ Help")]
     ]
-    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=False)
     
     await update.message.reply_text(
         f"""👋 Hi {user.first_name}!
 
-Welcome to **TON MANDS**! 💎🎉
+💎 **Welcome to TON MANDS!** 💎
 
-Click the button below to open the app:
+Your real-time crypto price tracker!
 
-🚀 **Open Mini App** - View crypto prices & portfolio
+**Click the button below to open the Mini App:**
 
-Or type /help for more commands.
+💎 **Open TON MANDS** - View live prices, portfolio & analytics
+
+Or use commands:
+📊 /prices - Quick price check
+ℹ️ /help - Help menu
+📱 /about - About TON MANDS
         """,
         reply_markup=reply_markup,
         parse_mode='Markdown'
@@ -45,18 +51,25 @@ Or type /help for more commands.
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle /help command"""
     await update.message.reply_text(
-        """📚 **Help Commands**
+        """📚 **TON MANDS - Help**
 
-/start - Open TON MANDS App
-/help - Show this help message
-/prices - Get latest crypto prices
-/about - About this bot
+**Commands:**
+/start - Open Mini App
+/prices - Quick price check
+/help - Show this help
+/about - About TON MANDS
 
 **Features:**
-✅ Real-time crypto prices
-✅ Portfolio tracking
-✅ Price charts
-✅ Market analytics
+💎 Real-time crypto prices
+📊 Portfolio tracking
+📈 Market analytics
+🔄 Auto-refresh every 30s
+
+**Supported Cryptos:**
+₿ BTC, Ξ ETH, ₿ BNB, ◎ SOL, Ð DOGE
+
+**Mini App:**
+Click "💎 Open TON MANDS" button to launch!
 
 Powered by Telegram Mini Apps 🚀
         """,
