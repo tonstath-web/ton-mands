@@ -305,10 +305,10 @@
         /* Shop Section */
         .shop-section {
             background: white;
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 24px;
             margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
             display: none;
         }
 
@@ -316,81 +316,131 @@
             display: block;
         }
 
+        .shop-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
         .shop-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #333;
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FF9800 0%, #FF5722 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 8px;
         }
 
         .shop-subtitle {
             font-size: 14px;
             color: #666;
-            margin-bottom: 20px;
+        }
+
+        .shop-grid {
+            display: grid;
+            gap: 16px;
         }
 
         .shop-card {
-            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
-            border-radius: 12px;
+            background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
+            border-radius: 16px;
             padding: 20px;
-            margin-bottom: 12px;
-            border: 2px solid #FFB74D;
+            border: 2px solid #FFD54F;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
         }
 
-        .shop-card:last-child {
-            margin-bottom: 0;
+        .shop-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(255, 152, 0, 0.3);
+        }
+
+        .shop-card.vip {
+            background: linear-gradient(135deg, #1A237E 0%, #3949AB 100%);
+            border: 2px solid #7986CB;
+        }
+
+        .shop-card.vip .shop-card-title,
+        .shop-card.vip .shop-card-desc {
+            color: white;
+        }
+
+        .shop-card.vip .shop-card-price {
+            color: #FFD700;
+        }
+
+        .shop-card.vip .buy-btn {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA000 100%);
+            color: #1A237E;
+        }
+
+        .best-value-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
         }
 
         .shop-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
 
         .shop-card-title {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 700;
             color: #333;
         }
 
         .shop-card-price {
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: 800;
             color: #FF9800;
         }
 
-        .shop-card-items {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin: 12px 0;
-            font-size: 32px;
+        .shop-card-tickets {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .ticket-icon {
+            font-size: 42px;
+            margin: 8px 0;
         }
 
         .shop-card-desc {
-            font-size: 13px;
+            font-size: 15px;
             color: #666;
             text-align: center;
-            margin-bottom: 12px;
+            font-weight: 600;
+            margin-bottom: 16px;
         }
 
         .buy-btn {
             background: linear-gradient(135deg, #FF9800 0%, #FF5722 100%);
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
+            padding: 14px 28px;
+            border-radius: 24px;
+            font-size: 16px;
+            font-weight: 700;
             cursor: pointer;
             width: 100%;
-            box-shadow: 0 2px 8px rgba(255, 87, 34, 0.3);
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+            transition: all 0.2s;
         }
 
         .buy-btn:active {
-            opacity: 0.8;
+            transform: scale(0.96);
+            box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
         }
 
         /* Balance Section */
@@ -601,78 +651,52 @@
 
         <!-- Shop Section -->
         <div id="shop" class="page-section shop-section">
-            <div class="shop-title">🛒 Buy Spin Tickets</div>
-            <div class="shop-subtitle">Get more chances to win!</div>
-            
-            <div class="shop-card">
-                <div class="shop-card-header">
-                    <div class="shop-card-title">🎫 Starter Pack</div>
-                    <div class="shop-card-price">0.5 TON</div>
-                </div>
-                <div class="shop-card-items">
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                </div>
-                <div class="shop-card-desc">10 Spin Tickets</div>
-                <button class="buy-btn" onclick="buyTickets(0.5, 10)">BUY NOW</button>
+            <div class="shop-header">
+                <div class="shop-title">🛒 Spin Tickets Shop</div>
+                <div class="shop-subtitle">More tickets = More chances to win! 🎰</div>
             </div>
             
-            <div class="shop-card">
-                <div class="shop-card-header">
-                    <div class="shop-card-title">🎫 Pro Pack</div>
-                    <div class="shop-card-price">1 TON</div>
+            <div class="shop-grid">
+                <!-- Starter Pack -->
+                <div class="shop-card">
+                    <div class="shop-card-header">
+                        <div class="shop-card-title">🎫 Starter</div>
+                        <div class="shop-card-price">0.5 TON</div>
+                    </div>
+                    <div class="shop-card-tickets">
+                        <div class="ticket-icon">🎫🎫🎫</div>
+                        <div class="shop-card-desc">10 Tickets</div>
+                    </div>
+                    <button class="buy-btn" onclick="buyTickets(0.5, 10)">BUY NOW</button>
                 </div>
-                <div class="shop-card-items">
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
+                
+                <!-- Pro Pack -->
+                <div class="shop-card">
+                    <div class="best-value-badge">⭐ BEST VALUE</div>
+                    <div class="shop-card-header">
+                        <div class="shop-card-title">🎫 Pro</div>
+                        <div class="shop-card-price">1 TON</div>
+                    </div>
+                    <div class="shop-card-tickets">
+                        <div class="ticket-icon">🎫🎫🎫🎫🎫</div>
+                        <div class="shop-card-desc">20 Tickets</div>
+                    </div>
+                    <button class="buy-btn" onclick="buyTickets(1, 20)">BUY NOW</button>
                 </div>
-                <div class="shop-card-desc">20 Spin Tickets</div>
-                <button class="buy-btn" onclick="buyTickets(1, 20)">BUY NOW</button>
-            </div>
-            
-            <div class="shop-card">
-                <div class="shop-card-header">
-                    <div class="shop-card-title">💎 VIP Pack</div>
-                    <div class="shop-card-price">2 TON</div>
+                
+                <!-- VIP Pack -->
+                <div class="shop-card vip">
+                    <div class="best-value-badge">💎 VIP</div>
+                    <div class="shop-card-header">
+                        <div class="shop-card-title">💎 VIP</div>
+                        <div class="shop-card-price">2 TON</div>
+                    </div>
+                    <div class="shop-card-tickets">
+                        <div class="ticket-icon">🎫🎫🎫🎫🎫🎫🎫</div>
+                        <div class="shop-card-desc">50 Tickets</div>
+                    </div>
+                    <button class="buy-btn" onclick="buyTickets(2, 50)">BUY NOW</button>
                 </div>
-                <div class="shop-card-items">
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                    <span>🎫🎫🎫🎫🎫</span>
-                </div>
-                <div class="shop-card-desc">50 Spin Tickets</div>
-                <button class="buy-btn" onclick="buyTickets(2, 50)">BUY NOW</button>
             </div>
         </div>
 
