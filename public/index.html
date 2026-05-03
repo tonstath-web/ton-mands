@@ -16,7 +16,9 @@
         body {
             background: linear-gradient(180deg, #E8F5E9 0%, #F1F8E9 100%);
             min-height: 100vh;
-            padding-bottom: 70px;
+            padding-bottom: 80px;
+            margin: 0;
+            overflow-x: hidden;
         }
 
         .container {
@@ -350,29 +352,38 @@
             border-top: 1px solid #f0f0f0;
             display: flex;
             justify-content: space-around;
-            padding: 8px 0;
-            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
-            z-index: 1000;
+            padding: 10px 0;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            pointer-events: auto;
         }
 
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 4px;
-            padding: 8px 16px;
+            padding: 10px 20px;
             color: #999;
-            text-decoration: none;
-            font-size: 11px;
-            transition: color 0.2s;
+            font-size: 12px;
+            transition: all 0.2s;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
             user-select: none;
+            min-width: 60px;
+        }
+
+        .nav-item:hover {
+            background: #f5f5f5;
+            border-radius: 8px;
         }
 
         .nav-item:active {
-            opacity: 0.6;
-            transform: scale(0.95);
+            background: #e0e0e0;
+            border-radius: 8px;
         }
 
         .nav-item.active {
@@ -380,12 +391,8 @@
         }
 
         .nav-icon {
-            font-size: 22px;
-            pointer-events: none;
-        }
-
-        .nav-item span:last-child {
-            pointer-events: none;
+            font-size: 24px;
+            display: block;
         }
 
         /* Loading */
@@ -503,20 +510,20 @@
     </div>
 
     <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="navTo('home')">
+    <div class="bottom-nav" id="bottomNav">
+        <div class="nav-item active" data-page="home">
             <span class="nav-icon">🏠</span>
             <span>Home</span>
         </div>
-        <div class="nav-item" onclick="showSpin()">
+        <div class="nav-item" data-page="spin">
             <span class="nav-icon">🎰</span>
             <span>Spin</span>
         </div>
-        <div class="nav-item" onclick="navTo('refer')">
+        <div class="nav-item" data-page="refer">
             <span class="nav-icon">👥</span>
             <span>Refer</span>
         </div>
-        <div class="nav-item" onclick="navTo('profile')">
+        <div class="nav-item" data-page="profile">
             <span class="nav-icon">👤</span>
             <span>Profile</span>
         </div>
@@ -646,36 +653,72 @@
         }
 
         // Navigation function
-        function navTo(page) {
-            if (isSpinning) return; // Prevent nav during spin
+        function handleNav(page) {
+            if (isSpinning) return;
             
             tg.HapticFeedback.impactOccurred('light');
             
+            // Update active state
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.page === page) {
+                    item.classList.add('active');
+                }
+            });
+            
             if (page === 'home') {
-                // Scroll to top
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 return;
             }
             
-            // Show coming soon message
+            if (page === 'spin') {
+                const spinSection = document.querySelector('.spin-section');
+                if (spinSection) {
+                    spinSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                return;
+            }
+            
+            // Show coming soon for other pages
             const titles = {
                 'refer': '👥 Refer & Earn',
-                'profile': '👤 Profile',
-                'withdraw': '💳 Withdraw'
+                'profile': '👤 Profile'
             };
             
             const messages = {
                 'refer': 'Invite friends and earn TON rewards!\n\nReferral system coming soon!',
-                'profile': 'View your profile, settings, and activity!\n\nProfile page coming soon!',
-                'withdraw': 'Withdraw your earnings to TON wallet!\n\nWithdraw feature coming soon!'
+                'profile': 'View your profile, settings, and activity!\n\nProfile page coming soon!'
             };
             
-            tg.showPopup({
-                title: titles[page] || 'Coming Soon',
-                message: messages[page] || 'This feature will be available soon!\n\nStay tuned!',
-                buttons: [{type: 'ok', text: 'OK'}]
-            });
+            setTimeout(() => {
+                tg.showPopup({
+                    title: titles[page] || 'Coming Soon',
+                    message: messages[page] || 'This feature will be available soon!',
+                    buttons: [{type: 'ok', text: 'OK'}]
+                });
+            }, 300);
         }
+
+        // Setup nav click handlers
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const page = this.dataset.page;
+                    handleNav(page);
+                });
+                
+                // Touch support
+                item.addEventListener('touchstart', function() {
+                    this.style.opacity = '0.6';
+                });
+                
+                item.addEventListener('touchend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+        });
 
         // Crypto data
         const cryptos = [
