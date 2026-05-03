@@ -302,8 +302,8 @@
             opacity: 0.8;
         }
 
-        /* Profile Section */
-        .profile-section {
+        /* Shop Section */
+        .shop-section {
             background: white;
             border-radius: 16px;
             padding: 24px;
@@ -312,38 +312,157 @@
             display: none;
         }
 
-        .profile-section.active {
+        .shop-section.active {
             display: block;
         }
 
-        .profile-section-title {
+        .shop-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .shop-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .shop-card {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 12px;
+            border: 2px solid #FFB74D;
+        }
+
+        .shop-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .shop-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .shop-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .shop-card-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #FF9800;
+        }
+
+        .shop-card-items {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 12px 0;
+            font-size: 32px;
+        }
+
+        .shop-card-desc {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .buy-btn {
+            background: linear-gradient(135deg, #FF9800 0%, #FF5722 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 2px 8px rgba(255, 87, 34, 0.3);
+        }
+
+        .buy-btn:active {
+            opacity: 0.8;
+        }
+
+        /* Balance Section */
+        .balance-section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+
+        .balance-section.active {
+            display: block;
+        }
+
+        .balance-title {
             font-size: 20px;
             font-weight: 700;
             color: #333;
             margin-bottom: 16px;
         }
 
-        .profile-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 0;
-            border-bottom: 1px solid #f0f0f0;
+        .balance-card {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            text-align: center;
         }
 
-        .profile-item:last-child {
-            border-bottom: none;
+        .balance-amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2E7D32;
+            margin: 12px 0;
         }
 
-        .profile-item-label {
+        .balance-label {
             font-size: 14px;
             color: #666;
         }
 
-        .profile-item-value {
+        .balance-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .balance-btn {
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
             font-size: 14px;
             font-weight: 600;
-            color: #333;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .deposit-btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+            color: white;
+        }
+
+        .withdraw-btn {
+            background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
+            color: white;
+        }
+
+        .balance-btn:active {
+            opacity: 0.8;
+            transform: scale(0.98);
         }
 
         /* Bottom Navigation */
@@ -458,7 +577,7 @@
             </button>
             
             <div class="spin-credits">
-                Free Spins: <span id="spinCredits">3</span>/day
+                Free Spins: <span id="spinCredits">3</span>/day | Tickets: <span id="ticketCredits">0</span>
             </div>
             
             <div class="prize-display" id="prizeDisplay">
@@ -480,33 +599,108 @@
             </button>
         </div>
 
-        <!-- Profile Section -->
-        <div id="profile" class="page-section profile-section">
-            <div class="profile-section-title">👤 Profile Settings</div>
+        <!-- Shop Section -->
+        <div id="shop" class="page-section shop-section">
+            <div class="shop-title">🛒 Buy Spin Tickets</div>
+            <div class="shop-subtitle">Get more chances to win!</div>
             
-            <div class="profile-item">
-                <div class="profile-item-label">User ID</div>
-                <div class="profile-item-value" id="profileUserId">1750653290</div>
+            <div class="shop-card">
+                <div class="shop-card-header">
+                    <div class="shop-card-title">🎫 Starter Pack</div>
+                    <div class="shop-card-price">0.5 TON</div>
+                </div>
+                <div class="shop-card-items">
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                </div>
+                <div class="shop-card-desc">10 Spin Tickets</div>
+                <button class="buy-btn" onclick="buyTickets(0.5, 10)">BUY NOW</button>
             </div>
             
-            <div class="profile-item">
-                <div class="profile-item-label">Balance</div>
-                <div class="profile-item-value">0 TON</div>
+            <div class="shop-card">
+                <div class="shop-card-header">
+                    <div class="shop-card-title">🎫 Pro Pack</div>
+                    <div class="shop-card-price">1 TON</div>
+                </div>
+                <div class="shop-card-items">
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                </div>
+                <div class="shop-card-desc">20 Spin Tickets</div>
+                <button class="buy-btn" onclick="buyTickets(1, 20)">BUY NOW</button>
             </div>
             
-            <div class="profile-item">
-                <div class="profile-item-label">Total Spins</div>
-                <div class="profile-item-value">0</div>
+            <div class="shop-card">
+                <div class="shop-card-header">
+                    <div class="shop-card-title">💎 VIP Pack</div>
+                    <div class="shop-card-price">2 TON</div>
+                </div>
+                <div class="shop-card-items">
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                    <span>🎫🎫🎫🎫🎫</span>
+                </div>
+                <div class="shop-card-desc">50 Spin Tickets</div>
+                <button class="buy-btn" onclick="buyTickets(2, 50)">BUY NOW</button>
+            </div>
+        </div>
+
+        <!-- Balance Section -->
+        <div id="balance" class="page-section balance-section">
+            <div class="balance-title">💳 Deposit & Withdraw</div>
+            
+            <div class="balance-card">
+                <div class="balance-label">Your Balance</div>
+                <div class="balance-amount" id="balanceAmount">0 TON</div>
+                <div class="balance-label">Available to withdraw</div>
             </div>
             
-            <div class="profile-item">
-                <div class="profile-item-label">Referrals</div>
-                <div class="profile-item-value">0</div>
+            <div class="balance-actions">
+                <button class="balance-btn deposit-btn" onclick="deposit()">
+                    💰 Deposit
+                </button>
+                <button class="balance-btn withdraw-btn" onclick="withdraw()">
+                    💸 Withdraw
+                </button>
             </div>
             
-            <div class="profile-item">
-                <div class="profile-item-label">Version</div>
-                <div class="profile-item-value">1.0.0</div>
+            <div style="margin-top: 24px;">
+                <div class="balance-label" style="margin-bottom: 12px;">📊 Transaction History</div>
+                <div class="empty-state">
+                    <div class="empty-icon">📋</div>
+                    <div class="empty-text">No transactions yet</div>
+                </div>
             </div>
         </div>
     </div>
@@ -525,9 +719,13 @@
             <span class="nav-icon">👥</span>
             <span>Refer</span>
         </div>
-        <div class="nav-item" data-page="profile">
-            <span class="nav-icon">👤</span>
-            <span>Profile</span>
+        <div class="nav-item" data-page="shop">
+            <span class="nav-icon">🛒</span>
+            <span>Shop</span>
+        </div>
+        <div class="nav-item" data-page="balance">
+            <span class="nav-icon">💳</span>
+            <span>Wallet</span>
         </div>
     </div>
 
@@ -544,7 +742,6 @@
             const fullName = `${user.first_name} ${user.last_name || ''}`.trim();
             document.getElementById('userName').textContent = fullName;
             document.getElementById('userId').textContent = `ID: ${user.id}`;
-            document.getElementById('profileUserId').textContent = user.id;
             
             const initial = user.first_name?.charAt(0).toUpperCase() || 'U';
             document.getElementById('userAvatar').textContent = initial;
@@ -562,14 +759,31 @@
         };
 
         let spinCredits = 3;
+        let ticketCredits = 0;
+        let balance = 0;
         let isSpinning = false;
 
         function spin() {
-            if (isSpinning || spinCredits <= 0) return;
+            if (isSpinning) return;
             
+            // Check if has tickets
+            if (spinCredits > 0) {
+                useTicket(spinCredits);
+                spinCredits--;
+            } else if (ticketCredits > 0) {
+                useTicket(ticketCredits);
+                ticketCredits--;
+            } else {
+                tg.showPopup({
+                    title: 'No Tickets!',
+                    message: 'You don\'t have any spin tickets!\\n\\nVisit Shop to buy more.',
+                    buttons: [{type: 'ok'}]
+                });
+                return;
+            }
+            
+            updateBalanceDisplay();
             isSpinning = true;
-            spinCredits--;
-            document.getElementById('spinCredits').textContent = spinCredits;
             
             const btn = document.getElementById('spinBtn');
             btn.disabled = true;
@@ -609,10 +823,12 @@
                 const prize = calculatePrize(results);
                 
                 if (prize > 0) {
+                    balance += prize;
                     document.getElementById('prizeDisplay').className = 'prize-display win';
                     document.getElementById('prizeDisplay').textContent = `🎉 WIN: ${prize} TON!`;
                     tg.HapticFeedback.notificationOccurred('success');
                     createConfetti();
+                    updateBalanceDisplay();
                 } else {
                     document.getElementById('prizeDisplay').className = 'prize-display';
                     document.getElementById('prizeDisplay').textContent = 'Try again!';
@@ -623,13 +839,9 @@
                 btn.disabled = false;
                 btn.textContent = 'SPIN!';
                 
-                // Reset credits after 24 hours (simulated)
-                if (spinCredits === 0) {
-                    setTimeout(() => {
-                        spinCredits = 3;
-                        document.getElementById('spinCredits').textContent = spinCredits;
-                    }, 60000);
-                }
+                // Update displays
+                document.getElementById('spinCredits').textContent = spinCredits;
+                document.getElementById('ticketCredits').textContent = ticketCredits;
             }, 2000);
         }
 
@@ -650,6 +862,38 @@
             return 0;
         }
 
+        function useTicket(credits) {
+            if (credits === 0) {
+                spinCredits--;
+            } else {
+                ticketCredits--;
+            }
+        }
+
+        // Buy tickets
+        function buyTickets(price, tickets) {
+            if (balance >= price) {
+                balance -= price;
+                ticketCredits += tickets;
+                
+                tg.HapticFeedback.notificationOccurred('success');
+                tg.showPopup({
+                    title: 'Purchase Successful!',
+                    message: `You bought ${tickets} spin tickets for ${price} TON!`,
+                    buttons: [{type: 'ok'}]
+                });
+                
+                updateBalanceDisplay();
+                document.getElementById('ticketCredits').textContent = ticketCredits;
+            } else {
+                tg.showPopup({
+                    title: 'Insufficient Balance',
+                    message: `You need ${price} TON but only have ${balance} TON.\\n\\nPlease deposit more TON.`,
+                    buttons: [{type: 'ok'}]
+                });
+            }
+        }
+
         // Copy referral link
         function copyReferral() {
             const link = document.getElementById('referralLink').textContent;
@@ -661,6 +905,53 @@
                     buttons: [{type: 'ok'}]
                 });
             });
+        }
+
+        // Deposit
+        function deposit() {
+            tg.showPopup({
+                title: '💰 Deposit TON',
+                message: 'To deposit TON, please send to:\\n\\nUQD...[Wallet Address]\\n\\nAfter payment, your balance will be updated automatically.',
+                buttons: [{type: 'ok'}]
+            });
+        }
+
+        // Withdraw
+        function withdraw() {
+            if (balance <= 0) {
+                tg.showPopup({
+                    title: 'No Balance',
+                    message: 'You don\'t have any balance to withdraw.\\n\\nSpin and win to earn TON!',
+                    buttons: [{type: 'ok'}]
+                });
+                return;
+            }
+            
+            tg.showPopup({
+                title: '💸 Withdraw',
+                message: `Withdraw ${balance} TON?\\n\\nYour TON will be sent to your wallet after approval.`,
+                buttons: [
+                    {type: 'ok', text: 'Yes'},
+                    {type: 'default', text: 'Cancel'}
+                ],
+                on_close: (confirmed) => {
+                    if (confirmed) {
+                        balance = 0;
+                        tg.HapticFeedback.notificationOccurred('success');
+                        tg.showPopup({
+                            title: 'Withdrawal Requested',
+                            message: 'Your withdrawal request has been submitted. It will be processed shortly.',
+                            buttons: [{type: 'ok'}]
+                        });
+                        updateBalanceDisplay();
+                    }
+                }
+            });
+        }
+
+        function updateBalanceDisplay() {
+            document.getElementById('userBalance').textContent = balance;
+            document.getElementById('balanceAmount').textContent = `${balance} TON`;
         }
 
         // Navigation function
