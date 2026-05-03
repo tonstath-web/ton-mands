@@ -19,7 +19,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Config
-BOT_TOKEN = os.getenv('BOT_TOKEN', '8772804057:AAHPjPWVBR5GCV_eZhMt_wEa9kxSCFFefEc')
+BOT_TOKEN = os.getenv('BOT_TOKEN', '8560595547:AAEv8OT5xNbiNQ6ula_g3uhy_KwH9CMIMVg')
 MINI_APP_URL = os.getenv('MINI_APP_URL', 'https://ton-mands.vercel.app')
 CHANNEL_USERNAME = 'tonmands'  # Update dengan channel Anda
 
