@@ -340,22 +340,22 @@
 
     <!-- Bottom Navigation -->
     <div class="bottom-nav">
-        <a href="#" class="nav-item active">
+        <div class="nav-item active" onclick="navTo('home')">
             <span class="nav-icon">🏠</span>
             <span>Home</span>
-        </a>
-        <a href="#" class="nav-item">
+        </div>
+        <div class="nav-item" onclick="navTo('withdraw')">
             <span class="nav-icon">💳</span>
             <span>Withdraw</span>
-        </a>
-        <a href="#" class="nav-item">
+        </div>
+        <div class="nav-item" onclick="navTo('refer')">
             <span class="nav-icon">👥</span>
             <span>Refer</span>
-        </a>
-        <a href="#" class="nav-item">
+        </div>
+        <div class="nav-item" onclick="navTo('profile')">
             <span class="nav-icon">👤</span>
             <span>Profile</span>
-        </a>
+        </div>
     </div>
 
     <script>
@@ -461,6 +461,23 @@
             tg.HapticFeedback.impactOccurred('light');
             document.getElementById('cryptoList').innerHTML = '<div class="loading">Loading...</div>';
             fetchPrices();
+        }
+
+        // Navigation function
+        function navTo(page) {
+            tg.HapticFeedback.impactOccurred('light');
+            
+            if (page === 'home') {
+                // Already on home
+                return;
+            }
+            
+            // Show coming soon message
+            tg.showPopup({
+                title: 'Coming Soon',
+                message: `${page.charAt(0).toUpperCase() + page.slice(1)} feature will be available soon!\n\nStay tuned for updates!`,
+                buttons: [{type: 'ok'}]
+            });
         }
 
         // Initial fetch
