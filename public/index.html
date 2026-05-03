@@ -25,7 +25,7 @@
             margin: 0 auto;
         }
 
-        /* Header Profile */
+        /* Profile Header */
         .profile-header {
             background: linear-gradient(135deg, #0088cc 0%, #0099ee 100%);
             border-radius: 16px;
@@ -212,6 +212,117 @@
             color: #F44336;
         }
 
+        /* Spin Feature */
+        .spin-section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .spin-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .spin-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .slot-machine {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .reel {
+            width: 70px;
+            height: 90px;
+            background: linear-gradient(180deg, #FFF3E0 0%, #FFE0B2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 3px solid #FFB74D;
+        }
+
+        .reel.spinning {
+            animation: blur 0.1s infinite;
+        }
+
+        @keyframes blur {
+            0% { filter: blur(0); }
+            50% { filter: blur(2px); }
+            100% { filter: blur(0); }
+        }
+
+        .spin-btn {
+            background: linear-gradient(135deg, #FF9800 0%, #FF5722 100%);
+            color: white;
+            border: none;
+            padding: 16px 48px;
+            border-radius: 24px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(255, 87, 34, 0.3);
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .spin-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 8px rgba(255, 87, 34, 0.3);
+        }
+
+        .spin-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .spin-credits {
+            margin-top: 16px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .spin-credits span {
+            color: #FF9800;
+            font-weight: 700;
+        }
+
+        /* Prize Display */
+        .prize-display {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 12px;
+            background: #FFF3E0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #E65100;
+            min-height: 44px;
+        }
+
+        .prize-display.win {
+            background: linear-gradient(135deg, #C8E6C9 0%, #A5D6A7 100%);
+            color: #2E7D32;
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
         /* Empty State */
         .empty-state {
             text-align: center;
@@ -253,6 +364,7 @@
             text-decoration: none;
             font-size: 11px;
             transition: color 0.2s;
+            cursor: pointer;
         }
 
         .nav-item.active {
@@ -291,6 +403,21 @@
         .refresh-btn:active {
             opacity: 0.8;
         }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            animation: confetti-fall 3s ease-in-out infinite;
+            z-index: 9999;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -304,6 +431,30 @@
             </div>
             <div class="profile-balance">
                 💰 <span id="userBalance">0</span>
+            </div>
+        </div>
+
+        <!-- Spin Feature -->
+        <div class="spin-section">
+            <div class="spin-title">🎰 TON Spin</div>
+            <div class="spin-subtitle">Spin to win crypto rewards!</div>
+            
+            <div class="slot-machine">
+                <div class="reel" id="reel1">🍒</div>
+                <div class="reel" id="reel2">🍋</div>
+                <div class="reel" id="reel3">🍇</div>
+            </div>
+            
+            <button class="spin-btn" id="spinBtn" onclick="spin()">
+                SPIN!
+            </button>
+            
+            <div class="spin-credits">
+                Free Spins: <span id="spinCredits">3</span>/day
+            </div>
+            
+            <div class="prize-display" id="prizeDisplay">
+                🎲 Good luck!
             </div>
         </div>
 
@@ -344,9 +495,9 @@
             <span class="nav-icon">🏠</span>
             <span>Home</span>
         </div>
-        <div class="nav-item" onclick="navTo('withdraw')">
-            <span class="nav-icon">💳</span>
-            <span>Withdraw</span>
+        <div class="nav-item" onclick="showSpin()">
+            <span class="nav-icon">🎰</span>
+            <span>Spin</span>
         </div>
         <div class="nav-item" onclick="navTo('refer')">
             <span class="nav-icon">👥</span>
@@ -374,6 +525,127 @@
             
             const initial = user.first_name?.charAt(0).toUpperCase() || 'U';
             document.getElementById('userAvatar').textContent = initial;
+        }
+
+        // Spin feature
+        const symbols = ['🍒', '🍋', '🍇', '💎', '7️⃣', '🔔'];
+        const prizes = {
+            '🍒': 0.01,
+            '🍋': 0.02,
+            '🍇': 0.05,
+            '💎': 0.1,
+            '7️⃣': 0.25,
+            '🔔': 0.5
+        };
+
+        let spinCredits = 3;
+        let isSpinning = false;
+
+        function spin() {
+            if (isSpinning || spinCredits <= 0) return;
+            
+            isSpinning = true;
+            spinCredits--;
+            document.getElementById('spinCredits').textContent = spinCredits;
+            
+            const btn = document.getElementById('spinBtn');
+            btn.disabled = true;
+            btn.textContent = 'SPINNING...';
+            
+            tg.HapticFeedback.impactOccurred('medium');
+            
+            // Start spinning animation
+            const reels = [document.getElementById('reel1'), document.getElementById('reel2'), document.getElementById('reel3')];
+            reels.forEach(reel => reel.classList.add('spinning'));
+            
+            // Random symbols during spin
+            const spinInterval = setInterval(() => {
+                reels.forEach(reel => {
+                    reel.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                });
+            }, 100);
+            
+            // Stop after 2 seconds
+            setTimeout(() => {
+                clearInterval(spinInterval);
+                
+                // Determine result
+                const results = [
+                    symbols[Math.floor(Math.random() * symbols.length)],
+                    symbols[Math.floor(Math.random() * symbols.length)],
+                    symbols[Math.floor(Math.random() * symbols.length)]
+                ];
+                
+                // Show results
+                reels.forEach((reel, i) => {
+                    reel.classList.remove('spinning');
+                    reel.textContent = results[i];
+                });
+                
+                // Check win
+                const prize = calculatePrize(results);
+                
+                if (prize > 0) {
+                    document.getElementById('prizeDisplay').className = 'prize-display win';
+                    document.getElementById('prizeDisplay').textContent = `🎉 WIN: ${prize} TON!`;
+                    tg.HapticFeedback.notificationOccurred('success');
+                    createConfetti();
+                } else {
+                    document.getElementById('prizeDisplay').className = 'prize-display';
+                    document.getElementById('prizeDisplay').textContent = 'Try again!';
+                    tg.HapticFeedback.impactOccurred('light');
+                }
+                
+                isSpinning = false;
+                btn.disabled = false;
+                btn.textContent = 'SPIN!';
+                
+                // Reset credits after 24 hours (simulated)
+                if (spinCredits === 0) {
+                    setTimeout(() => {
+                        spinCredits = 3;
+                        document.getElementById('spinCredits').textContent = spinCredits;
+                    }, 60000); // Reset after 1 minute for demo
+                }
+            }, 2000);
+        }
+
+        function calculatePrize(results) {
+            const [r1, r2, r3] = results;
+            
+            // Jackpot - all same
+            if (r1 === r2 && r2 === r3) {
+                return prizes[r1] * 10;
+            }
+            
+            // Two same
+            if (r1 === r2 || r2 === r3 || r1 === r3) {
+                return prizes[r1] + prizes[r2] + prizes[r3];
+            }
+            
+            // No win
+            return 0;
+        }
+
+        function showSpin() {
+            tg.HapticFeedback.impactOccurred('light');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Navigation function
+        function navTo(page) {
+            tg.HapticFeedback.impactOccurred('light');
+            
+            if (page === 'home') {
+                return;
+            }
+            
+            // Show coming soon message
+            tg.showPopup({
+                title: 'Coming Soon',
+                message: `${page.charAt(0).toUpperCase() + page.slice(1)} feature will be available soon!\n\nStay tuned for updates!`,
+                buttons: [{type: 'ok'}]
+            });
         }
 
         // Crypto data
@@ -463,21 +735,21 @@
             fetchPrices();
         }
 
-        // Navigation function
-        function navTo(page) {
-            tg.HapticFeedback.impactOccurred('light');
+        // Confetti effect
+        function createConfetti() {
+            const colors = ['#FF9800', '#FF5722', '#4CAF50', '#2196F3', '#9C27B0'];
             
-            if (page === 'home') {
-                // Already on home
-                return;
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 5000);
             }
-            
-            // Show coming soon message
-            tg.showPopup({
-                title: 'Coming Soon',
-                message: `${page.charAt(0).toUpperCase() + page.slice(1)} feature will be available soon!\n\nStay tuned for updates!`,
-                buttons: [{type: 'ok'}]
-            });
         }
 
         // Initial fetch
