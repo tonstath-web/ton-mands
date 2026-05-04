@@ -1483,6 +1483,9 @@
             // Increment total spins BEFORE getting result
             totalSpins++;
             
+            // DEBUG: Log spin count
+            console.log('🎡 SPIN #', totalSpins, '| Eligible rewards:', wheelSegments.filter(seg => totalSpins >= seg.minSpins && seg.text !== 'Try Again').length);
+            
             updateBalanceDisplay();
             isSpinning = true;
             
@@ -1495,6 +1498,9 @@
             // Get weighted result based on total spins
             winningSegmentIndex = getWeightedResult();
             const winningSegment = wheelSegments[winningSegmentIndex];
+            
+            // DEBUG: Log result
+            console.log('🎯 Result:', winningSegment.text, '| Index:', winningSegmentIndex);
             
             // Calculate rotation to land on winning segment
             const segmentAngle = 360 / wheelSegments.length;
@@ -1535,20 +1541,25 @@
         function displayPrize(segment, prize) {
             const prizeDisplay = document.getElementById('prizeDisplay');
             
+            // DEBUG: Show spin count for first 10 spins
+            if (totalSpins <= 10) {
+                console.log('📊 Spin #' + totalSpins + ' Result:', segment.text, '| Prize type:', prize.type);
+            }
+            
             if (prize.type === 'ton') {
                 balance += prize.value;
                 prizeDisplay.className = 'prize-display win';
-                prizeDisplay.textContent = `🎉 WIN: ${prize.value} TON!`;
+                prizeDisplay.textContent = `🎉 WIN: ${prize.value} TON! (Spin #${totalSpins})`;
                 tg.HapticFeedback.notificationOccurred('success');
                 createConfetti();
                 updateBalanceDisplay();
             } else if (prize.type === 'none') {
                 prizeDisplay.className = 'prize-display';
-                prizeDisplay.textContent = `😢 Try Again!`;
+                prizeDisplay.textContent = `😢 Try Again! (Spin #${totalSpins})`;
                 tg.HapticFeedback.impactOccurred('light');
             } else {
                 prizeDisplay.className = 'prize-display';
-                prizeDisplay.textContent = `Result: ${segment.text}`;
+                prizeDisplay.textContent = `Result: ${segment.text} (Spin #${totalSpins})`;
                 tg.HapticFeedback.impactOccurred('light');
             }
         }
