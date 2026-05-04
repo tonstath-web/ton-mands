@@ -132,8 +132,8 @@
                 
                 <!-- Battle Wheel -->
                 <div class="battle-wheel-container" style="position: relative;">
-                    <!-- Winner Pointer -->
-                    <div id="winnerPointer" style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); z-index: 30; opacity: 0; transition: all 0.3s ease;">
+                    <!-- Winner Pointer - Hidden by default, only shows during spin -->
+                    <div id="winnerPointer" style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); z-index: 30; display: none;">
                         <svg width="50" height="60" viewBox="0 0 50 60" fill="none">
                             <path d="M25 60L0 0L50 0L25 60Z" fill="#FFD700" stroke="#FFA500" stroke-width="3"/>
                             <circle cx="25" cy="20" r="10" fill="#FF6B6B" stroke="#FFA500" stroke-width="2"/>
@@ -526,7 +526,8 @@
             const wheel = document.getElementById('battleWheel');
             const pointer = document.getElementById('winnerPointer');
             
-            // Show pointer with animation
+            // Show pointer - make visible and animate in
+            pointer.style.display = 'block';
             pointer.style.opacity = '0';
             pointer.style.transform = 'translateX(-50%) translateY(-10px)';
             pointer.style.transition = 'all 0.3s ease';
@@ -610,9 +611,9 @@
                     btn.disabled = false;
                     btn.textContent = '⚔️ JOIN BATTLE';
                     
-                    // Hide pointer with animation
+                    // Hide pointer completely
+                    pointer.style.display = 'none';
                     pointer.style.opacity = '0';
-                    pointer.style.transform = 'translateX(-50%) translateY(-10px)';
                     
                     wheel.style.transition = 'none';
                     wheel.style.transform = 'rotate(0deg)';
