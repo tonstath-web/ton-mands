@@ -722,37 +722,22 @@
             }
         }
 
-        // Navigation
+        // Navigation - Simple and Direct
         function handleNav(page) {
-            console.log('Navigating to:', page);
-            
             // Hide all sections
-            const sections = document.querySelectorAll('.page-section');
-            sections.forEach(s => {
-                s.classList.remove('active');
-                s.style.display = 'none';
-            });
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             
-            // Show target section
+            // Show target
             const target = document.getElementById(page);
-            if (target) {
-                target.classList.add('active');
-                target.style.display = 'block';
-            }
+            if (target) target.classList.add('active');
             
-            // Update nav items
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(n => {
+            // Update nav
+            document.querySelectorAll('.nav-item').forEach(n => {
                 n.classList.remove('active');
-                if (n.getAttribute('data-page') === page) {
-                    n.classList.add('active');
-                }
+                if (n.dataset.page === page) n.classList.add('active');
             });
             
-            // Update profile stats when navigating to profile page
-            if (page === 'shop') {
-                updateProfileStats();
-            }
+            if (page === 'shop') updateProfileStats();
         }
         
         // Update profile stats
@@ -777,24 +762,12 @@
             navigator.clipboard.writeText(link).then(() => alert('Link copied!'));
         }
 
-        // Setup navigation
-        function setupNavigation() {
-            // Setup nav items
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                item.style.cursor = 'pointer';
-                item.onclick = function() {
-                    const page = this.getAttribute('data-page');
-                    if (page) {
-                        handleNav(page);
-                    }
-                };
-            });
-            
-            // Setup join button
-            const joinBtn = document.getElementById('joinBtn');
-            if (joinBtn) {
-                joinBtn.onclick = () => {
+        // Setup navigation immediately
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.onclick = function() {
+                handleNav(this.dataset.page);
+            };
+        });
             // Check if betting is still open
             if (!isBettingOpen) {
                 alert('Betting is closed! Wait for next battle.');
@@ -836,9 +809,6 @@
                 });
             }
         }
-        
-        // Setup navigation immediately
-        setupNavigation();
 
         // Confetti
         function createConfetti() {
