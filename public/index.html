@@ -1386,29 +1386,25 @@
             document.getElementById('userAvatar').textContent = initial;
         }
 
-        // Lucky Wheel feature
+        // Lucky Wheel feature with weighted probabilities
         const wheelSegments = [
-            { color: '#9C27B0', icon: '🔑', text: '+1 Key' },
-            { color: '#E91E63', icon: '💰', text: '$0.01 USDT' },
-            { color: '#673AB7', icon: '🎁', text: '$0.1 USDT' },
-            { color: '#3F51B5', icon: '💎', text: '$10 USDT' },
-            { color: '#2196F3', icon: '💵', text: '$0.50 USDT' },
-            { color: '#03A9F4', icon: '⭐', text: '+500 XP' },
-            { color: '#00BCD4', icon: '🎁', text: 'Box' },
-            { color: '#4CAF50', icon: '⭐', text: '+300 XP' },
-            { color: '#8BC34A', icon: '⭐', text: '+2000 XP' }
+            { color: '#FF5252', icon: '💎', text: '0.02 TON', probability: 1 },
+            { color: '#FF4081', icon: '💰', text: '0.2 TON', probability: 0.001 },
+            { color: '#E040FB', icon: '🎁', text: '0.4 TON', probability: 0.001 },
+            { color: '#7C4DFF', icon: '⭐', text: '0.8 TON', probability: 0.001 },
+            { color: '#536DFE', icon: '🏆', text: '1 TON', probability: 0.001 },
+            { color: '#FFD740', icon: '👑', text: '50 TON', probability: 0.001 },
+            { color: '#69F0AE', icon: '❌', text: 'Try Again', probability: 98.995 }
         ];
 
         const prizes = {
-            '+1 Key': { type: 'key', value: 1 },
-            '$0.01 USDT': { type: 'usdt', value: 0.01 },
-            '$0.1 USDT': { type: 'usdt', value: 0.1 },
-            '$0.50 USDT': { type: 'usdt', value: 0.5 },
-            '$10 USDT': { type: 'usdt', value: 10 },
-            '+300 XP': { type: 'xp', value: 300 },
-            '+500 XP': { type: 'xp', value: 500 },
-            '+2000 XP': { type: 'xp', value: 2000 },
-            'Box': { type: 'box', value: 'random' }
+            '0.02 TON': { type: 'ton', value: 0.02 },
+            '0.2 TON': { type: 'ton', value: 0.2 },
+            '0.4 TON': { type: 'ton', value: 0.4 },
+            '0.8 TON': { type: 'ton', value: 0.8 },
+            '1 TON': { type: 'ton', value: 1 },
+            '50 TON': { type: 'ton', value: 50 },
+            'Try Again': { type: 'none', value: 0 }
         };
 
         let spinCredits = 3;
@@ -1418,6 +1414,7 @@
         let currentRotation = 0;
         let autoSpinEnabled = false;
         let autoSpinInterval = null;
+        let winningSegmentIndex = 0;
 
         // Generate wheel segments
         function createWheel() {
@@ -1437,6 +1434,20 @@
                 segmentEl.appendChild(content);
                 wheel.appendChild(segmentEl);
             });
+        }
+
+        // Weighted random selection based on probability
+        function getWeightedResult() {
+            const totalProbability = wheelSegments.reduce((sum, seg) => sum + seg.probability, 0);
+            let random = Math.random() * totalProbability;
+            
+            for (let i = 0; i < wheelSegments.length; i++) {
+                random -= wheelSegments[i].probability;
+                if (random <= 0) {
+                    return i;
+                }
+            }
+            return wheelSegments.length - 1; // Fallback to last segment
         }
 
         function spinWheel() {
@@ -1465,12 +1476,18 @@
             
             tg.HapticFeedback.impactOccurred('medium');
             
-            // Calculate random rotation (minimum 5 full spins + random segment)
-            const minSpins = 5;
+            // Get weighted result BEFORE spinning
+            winningSegmentIndex = getWeightedResult();
+            const winningSegment = wheelSegments[winningSegmentIndex];
+            
+            // Calculate rotation to land on winning segment
             const segmentAngle = 360 / wheelSegments.length;
-            const randomOffset = Math.floor(Math.random() * wheelSegments.length);
-            const extraRotation = Math.floor(Math.random() * 360);
-            const totalRotation = currentRotation + (minSpins * 360) + (randomOffset * segmentAngle) + extraRotation;
+            const minSpins = 5;
+            // Calculate the angle needed to land on the winning segment at the top (pointer)
+            // Pointer is at top (0 degrees), so we need to rotate so the segment ends at 0
+            const segmentCenterAngle = (winningSegmentIndex * segmentAngle) + (segmentAngle / 2);
+            const targetRotation = (minSpins * 360) + (360 - segmentCenterAngle) + 90; // +90 to adjust for CSS rotation
+            const totalRotation = currentRotation + targetRotation;
             
             const wheel = document.getElementById('luckyWheel');
             wheel.style.transform = `rotate(-${totalRotation}deg)`;
@@ -1482,10 +1499,6 @@
                 btn.disabled = false;
                 btn.textContent = '⭐ SPIN ⭐';
                 
-                // Calculate winning segment
-                const normalizedRotation = totalRotation % 360;
-                const winningIndex = Math.floor(normalizedRotation / segmentAngle);
-                const winningSegment = wheelSegments[winningIndex];
                 const prize = prizes[winningSegment.text];
                 
                 // Show result
@@ -1505,27 +1518,17 @@
         function displayPrize(segment, prize) {
             const prizeDisplay = document.getElementById('prizeDisplay');
             
-            if (prize.type === 'usdt') {
+            if (prize.type === 'ton') {
                 balance += prize.value;
                 prizeDisplay.className = 'prize-display win';
-                prizeDisplay.textContent = `🎉 WIN: ${prize.value} USDT!`;
+                prizeDisplay.textContent = `🎉 WIN: ${prize.value} TON!`;
                 tg.HapticFeedback.notificationOccurred('success');
                 createConfetti();
                 updateBalanceDisplay();
-            } else if (prize.type === 'key') {
-                prizeDisplay.className = 'prize-display win';
-                prizeDisplay.textContent = `🔑 WIN: +1 Key!`;
-                tg.HapticFeedback.notificationOccurred('success');
-                createConfetti();
-            } else if (prize.type === 'xp') {
-                prizeDisplay.className = 'prize-display win';
-                prizeDisplay.textContent = `⭐ WIN: +${prize.value} XP!`;
-                tg.HapticFeedback.notificationOccurred('success');
-            } else if (prize.type === 'box') {
-                prizeDisplay.className = 'prize-display win';
-                prizeDisplay.textContent = `🎁 WIN: Mystery Box!`;
-                tg.HapticFeedback.notificationOccurred('success');
-                createConfetti();
+            } else if (prize.type === 'none') {
+                prizeDisplay.className = 'prize-display';
+                prizeDisplay.textContent = `😢 Try Again!`;
+                tg.HapticFeedback.impactOccurred('light');
             } else {
                 prizeDisplay.className = 'prize-display';
                 prizeDisplay.textContent = `Result: ${segment.text}`;
