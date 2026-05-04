@@ -115,7 +115,7 @@
         <!-- Home Section -->
         <div id="home" class="page-section active">
             <div class="pvp-section">
-                <div class="pvp-title">🎁 Epic Gift</div>
+                <div class="pvp-title">⚔️ PVP Betting</div>
                 <div class="pvp-subtitle">Bet TON & Win the Pool!</div>
                 
                 <!-- Pool Display -->
@@ -133,7 +133,7 @@
                 <!-- Battle Wheel -->
                 <div class="battle-wheel-container">
                     <div class="battle-wheel" id="battleWheel"></div>
-                    <div class="wheel-center">🎁</div>
+                    <div class="wheel-center">⚔️</div>
                 </div>
                 
                 <!-- Players -->
@@ -292,7 +292,7 @@
                 const rotation = i * segmentAngle;
                 segment.style.transform = `rotate(${rotation}deg) skewY(-${90 - segmentAngle}deg)`;
                 segment.style.background = `rgba(156,39,176,${0.1 + (i * 0.05)})`;
-                segment.innerHTML = `<span style="transform: skewY(${90 - segmentAngle}deg) rotate(-${rotation}deg); font-size: 10px; color: rgba(255,255,255,0.3); font-weight: 700;">EPIC GIFT</span>`;
+                segment.innerHTML = `<span style="transform: skewY(${90 - segmentAngle}deg) rotate(-${rotation}deg); font-size: 10px; color: rgba(255,255,255,0.3); font-weight: 700;">PVP</span>`;
                 wheel.appendChild(segment);
             }
         }
@@ -314,10 +314,10 @@
             currentPool = selectedBet;
             timeRemaining = 30;
             
-            // Reset players
+            // Reset players - only real users
             players = [{
                 name: user?.first_name || 'You',
-                emoji: user?.first_name?.charAt(0).toUpperCase() || 'U',
+                emoji: '👤',
                 bet: selectedBet,
                 percentage: 100
             }];
@@ -335,10 +335,31 @@
                 document.getElementById('timerValue').textContent = 
                     `0${minutes}:${seconds.toString().padStart(2, '0')}`;
                 
+                // Auto-add bot players if only 1 player after 15 seconds
+                if (timeRemaining === 15 && players.length === 1) {
+                    addBotPlayers();
+                }
+                
                 if (timeRemaining <= 0) {
                     startBattle();
                 }
             }, 1000);
+        }
+        
+        // Add bot players to fill the battle
+        function addBotPlayers() {
+            const numBots = Math.floor(Math.random() * 3) + 1; // 1-3 bots
+            for (let i = 0; i < numBots; i++) {
+                const botBet = selectedBet * (Math.random() * 0.5 + 0.5); // Random bet
+                currentPool += botBet;
+                players.push({
+                    name: playerNames[Math.floor(Math.random() * (playerNames.length - 1)) + 1],
+                    emoji: playerEmojis[Math.floor(Math.random() * (playerEmojis.length - 1)) + 1],
+                    bet: parseFloat(botBet.toFixed(3)),
+                    percentage: 0
+                });
+            }
+            updateUI();
         }
 
         // Start battle
@@ -441,9 +462,11 @@
             
             // Update button
             const btn = document.getElementById('joinBtn');
-            if (isCreatingBattle) {
-                btn.textContent = '🎮 Join the Battle';
+            if (isCreatingBattle && !isBattleActive) {
+                const userJoined = players.length > 1;
+                btn.textContent = userJoined ? '✅ Joined! Waiting...' : '⚔️ JOIN BATTLE';
                 btn.className = 'battle-btn join';
+                btn.disabled = players.length > 1; // Disable after joining
             } else {
                 btn.textContent = '⏳ Battle in Progress...';
                 btn.disabled = true;
@@ -473,16 +496,28 @@
 
         // Join battle button
         document.getElementById('joinBtn').addEventListener('click', () => {
-            if (isCreatingBattle) {
-                // Add player bet to pool
+            if (isCreatingBattle && !isBattleActive) {
+                // Check if user already joined
+                const alreadyJoined = players.some((p, i) => i !== userIndex && p.name === (user?.first_name || 'You'));
+                if (alreadyJoined) {
+                    alert('You already joined this battle!');
+                    return;
+                }
+                
+                // Add user bet to pool
                 currentPool += selectedBet;
                 players.push({
-                    name: playerNames[Math.floor(Math.random() * (playerNames.length - 1)) + 1],
-                    emoji: playerEmojis[Math.floor(Math.random() * (playerEmojis.length - 1)) + 1],
+                    name: user?.first_name || 'You',
+                    emoji: '👤',
                     bet: selectedBet,
                     percentage: 0
                 });
                 updateUI();
+                
+                // Auto-add bots if enough players
+                if (players.length >= 2) {
+                    setTimeout(() => addBotPlayers(), 1000);
+                }
             } else {
                 // Battle already in progress
                 alert('Battle is already in progress!');
