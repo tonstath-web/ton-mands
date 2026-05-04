@@ -4,17 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TON MANDS</title>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Cache-Control" content="no-cache">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script>
-    // FORCE CACHE CLEAR - Add version query to prevent caching
-    if (window.location.search.indexOf('v=') === -1) {
-        const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?v=' + Date.now();
-        window.history.replaceState({path: newUrl}, '', newUrl);
-    }
-    </script>
     <style>
         * {
             margin: 0;
@@ -1822,52 +1813,50 @@
             document.getElementById(page).classList.add('active');
         }
 
-        // Setup nav click handlers and wheel
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('🚀 TON MANDS Initializing...');
-            
-            // Show version
-            document.getElementById('appVersion').textContent = APP_VERSION;
-            
-            // Create wheel segments
-            createWheel();
-            
-            // Update next reward display
-            updateNextRewardDisplay();
-            
-            // Ensure spin button is enabled
-            const spinBtn = document.getElementById('spinBtn');
-            if (spinBtn) {
-                spinBtn.disabled = false;
-                spinBtn.style.pointerEvents = 'auto';
-                spinBtn.style.cursor = 'pointer';
-                spinBtn.textContent = '⭐ SPIN ⭐';
-                console.log('✅ Spin button ready');
-            } else {
-                console.error('❌ Spin button not found!');
+        // Initialize app
+        function initApp() {
+            try {
+                console.log('🚀 TON MANDS v' + APP_VERSION);
+                
+                // Show version
+                const versionEl = document.getElementById('appVersion');
+                if (versionEl) versionEl.textContent = APP_VERSION;
+                
+                // Create wheel
+                createWheel();
+                
+                // Update next reward
+                updateNextRewardDisplay();
+                
+                // Enable spin button
+                const spinBtn = document.getElementById('spinBtn');
+                if (spinBtn) {
+                    spinBtn.disabled = false;
+                    spinBtn.onclick = spinWheel;
+                    console.log('✅ Spin button enabled');
+                }
+                
+                // Setup nav
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.onclick = function() {
+                        const page = this.dataset.page;
+                        handleNav(page);
+                    };
+                });
+                
+                console.log('✅ App ready!');
+            } catch (e) {
+                console.error('❌ Init error:', e);
+                alert('Init error: ' + e.message);
             }
-            
-            // Setup nav items
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const page = this.dataset.page;
-                    handleNav(page);
-                });
-                
-                // Touch support
-                item.addEventListener('touchstart', function() {
-                    this.style.opacity = '0.6';
-                });
-                
-                item.addEventListener('touchend', function() {
-                    this.style.opacity = '1';
-                });
-            });
-            
-            console.log('✅ TON MANDS Ready!');
-        });
+        }
+        
+        // Start app when DOM ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
 
         // Confetti effect
         function createConfetti() {
