@@ -340,7 +340,7 @@
             // Build conic gradient
             let gradientParts = [];
             let currentAngle = 0;
-            const colors = ['#00d4ff', '#7B61FF', '#FF6B6B', '#4ECDC4', '#FFE66D', '#95E1D3', '#FF9800', '#8BC34A'];
+            const colors = ['#FF6B6B', '#4ECDC4', '#7B61FF', '#FFE66D', '#00d4ff', '#FF9800', '#8BC34A', '#95E1D3'];
             
             players.forEach((player, index) => {
                 const percentage = (player.bet / totalBet) * 100;
@@ -353,7 +353,7 @@
             
             wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
             
-            // Add player name labels
+            // Add player labels
             wheel.innerHTML = '';
             currentAngle = 0;
             
@@ -363,27 +363,27 @@
                 const centerAngle = currentAngle + angle/2;
                 currentAngle += angle;
                 
-                // Create label
+                // Create label container
                 const label = document.createElement('div');
                 label.style.cssText = `
                     position: absolute;
                     top: 50%;
                     left: 50%;
-                    width: 80px;
+                    width: 70px;
                     text-align: center;
                     transform-origin: 0 0;
-                    transform: rotate(${centerAngle}deg) translate(45px) rotate(-${centerAngle}deg);
+                    transform: rotate(${centerAngle}deg) translate(50px) rotate(-${centerAngle}deg);
                     z-index: 5;
                 `;
                 
                 // Auto-scale emoji size based on percentage
-                const emojiSize = Math.min(32, Math.max(16, 16 + percentage/4));
-                const nameSize = Math.min(12, Math.max(8, 8 + percentage/30));
+                const emojiSize = Math.min(36, Math.max(18, 18 + percentage/3));
+                const nameSize = Math.min(12, Math.max(9, 9 + percentage/25));
                 
                 label.innerHTML = `
-                    <div style="font-size: ${emojiSize}px; margin-bottom: 2px; line-height: 1;">${player.emoji}</div>
-                    <div style="font-size: ${nameSize}px; color: #fff; font-weight: 700; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">${player.name}</div>
-                    <div style="font-size: ${Math.max(8, nameSize-2)}px; color: rgba(255,255,255,0.7); margin-top: 1px;">${percentage.toFixed(0)}%</div>
+                    <div style="font-size: ${emojiSize}px; line-height: 1; margin-bottom: 3px;">${player.emoji}</div>
+                    <div style="font-size: ${nameSize}px; color: #fff; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">${player.name}</div>
+                    <div style="font-size: ${Math.max(9, nameSize-1)}px; color: rgba(255,255,255,0.8); margin-top: 2px; font-weight: 600;">${percentage.toFixed(0)}%</div>
                 `;
                 
                 wheel.appendChild(label);
@@ -697,24 +697,25 @@
         // Join battle button
         document.getElementById('joinBtn').addEventListener('click', () => {
             if (isCreatingBattle && !isBattleActive) {
-                // Check if user already joined
-                const alreadyJoined = players.some((p, i) => i !== userIndex && p.name === (user?.first_name || 'You'));
-                if (alreadyJoined) {
-                    alert('You already joined this battle!');
-                    return;
-                }
-                
                 // Add user bet to pool with Telegram name
                 currentPool += selectedBet;
                 const userName = user ? (user.first_name || 'You') : 'You';
                 const userEmoji = user?.first_name?.charAt(0).toUpperCase() || '👤';
                 
-                players.push({
-                    name: userName,
-                    emoji: userEmoji,
-                    bet: selectedBet,
-                    percentage: 0
-                });
+                // Check if user already exists - if yes, add to their bet (merge)
+                const existingIndex = players.findIndex(p => p.name === userName);
+                if (existingIndex !== -1) {
+                    // User already joined - add to their bet (merge into one segment)
+                    players[existingIndex].bet += selectedBet;
+                } else {
+                    // New player
+                    players.push({
+                        name: userName,
+                        emoji: userEmoji,
+                        bet: selectedBet,
+                        percentage: 0
+                    });
+                }
                 
                 // Update UI immediately
                 updateUI();
