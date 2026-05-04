@@ -1418,23 +1418,25 @@
             const segmentAngle = 360 / wheelSegments.length;
             
             // Create conic gradient for wheel background
+            // Start from -90deg so first segment is at TOP
             let gradientParts = [];
             wheelSegments.forEach((segment, index) => {
-                const startAngle = index * segmentAngle;
-                const endAngle = (index + 1) * segmentAngle;
+                const startAngle = (index * segmentAngle) - 90; // Shift so first segment starts at top
+                const endAngle = ((index + 1) * segmentAngle) - 90;
                 gradientParts.push(`${segment.color} ${startAngle}deg ${endAngle}deg`);
             });
             wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
             
-            // Add segment labels
+            // Add segment labels - positioned from center
             wheelSegments.forEach((segment, index) => {
                 const label = document.createElement('div');
                 label.className = 'wheel-label';
                 
-                // Position at 70% radius from center
-                const radius = 110; // pixels from center
-                const angle = (index * segmentAngle) + (segmentAngle / 2); // center of segment
-                const radians = (angle - 90) * (Math.PI / 180); // -90 to start from top
+                // Position at 65% radius from center
+                const radius = 100; // pixels from center
+                // Segment center angle (starting from top = -90deg)
+                const angle = (index * segmentAngle) + (segmentAngle / 2) - 90;
+                const radians = angle * (Math.PI / 180);
                 
                 const x = Math.cos(radians) * radius;
                 const y = Math.sin(radians) * radius;
@@ -1558,34 +1560,32 @@
             const segmentAngle = 360 / wheelSegments.length;
             const minSpins = 5;
             
-            // Wheel segments are drawn starting from 3 o'clock (0 deg in CSS)
-            // Each segment center is at: index * segmentAngle + segmentAngle/2
-            // To land segment at TOP (12 o'clock = -90deg or 270deg):
-            // We need: segment_center + rotation = 270 (mod 360)
-            // So: rotation = 270 - segment_center
+            // Wheel segments are drawn with -90deg offset (first segment at TOP)
+            // Segment center is at: index * segmentAngle + segmentAngle/2 (from top, clockwise)
+            // To land segment at TOP (pointer), we need rotation that brings segment center to 0deg
             
             const segmentCenterAngle = (winningSegmentIndex * segmentAngle) + (segmentAngle / 2);
             
-            // Target rotation to bring this segment to top
-            const baseTargetRotation = 270 - segmentCenterAngle;
+            // To center this segment at top, rotate COUNTER-CLOCKWISE by segmentCenterAngle
+            // This brings the segment center to 0deg (top position)
+            const baseTargetRotation = -segmentCenterAngle;
             
-            // Add minimum full spins for animation effect
+            // Add minimum full spins for animation effect (clockwise = positive)
             const extraSpins = (minSpins * 360);
             
-            // Calculate final rotation (always positive, always increasing)
-            // Find the next rotation value that's >= currentRotation + extraSpins
+            // Calculate final rotation (always increasing for smooth animation)
             let totalRotation = currentRotation + extraSpins;
             
             // Adjust to land exactly on target
             const rotationMod = totalRotation % 360;
             let adjustment = baseTargetRotation - rotationMod;
             
-            // Make sure we always rotate forward (positive)
-            if (adjustment < 0) adjustment += 360;
+            // Make sure adjustment is positive (always rotate forward)
+            while (adjustment < 0) adjustment += 360;
             
             totalRotation += adjustment;
             
-            console.log('🎡 Segment:', winningSegmentIndex, '| Center:', segmentCenterAngle, '| Target:', baseTargetRotation, '| Final:', totalRotation);
+            console.log('🎡 Segment:', winningSegmentIndex, '| Center:', segmentCenterAngle, '| Base:', baseTargetRotation, '| Final:', totalRotation);
             
             const wheel = document.getElementById('luckyWheel');
             wheel.style.transform = `rotate(${totalRotation}deg)`;
