@@ -465,36 +465,40 @@
                 // Close betting when timer reaches 0
                 if (timeRemaining <= 0) {
                     isBettingOpen = false;
-                    // Check if we have minimum players
+                    // Check if we have minimum 2 players to start
                     if (players.length >= MIN_PLAYERS_TO_START) {
                         startBattle();
+                    } else if (players.length === 1) {
+                        // Only 1 player - add 1 bot and extend timer
+                        addBotPlayers();
+                        timeRemaining = 15; // Give 15 more seconds
+                        isBettingOpen = true; // Keep betting open
                     } else {
-                        // Not enough players - extend timer or add bots
-                        if (players.length === 1) {
-                            addBotPlayers();
-                            timeRemaining = 15; // Give more time
-                        }
+                        // No players - reset battle
+                        createBattle(); // Restart with new timer
                     }
                 }
             }, 1000);
         }
         
-        // Add bot players to fill the battle
+        // Add bot players to fill the battle (only if needed)
         function addBotPlayers() {
-            const numBots = Math.floor(Math.random() * 3) + 1; // 1-3 bots
-            for (let i = 0; i < numBots; i++) {
-                const botBet = selectedBet * (Math.random() * 0.5 + 0.5); // Random bet
-                currentPool += botBet;
-                players.push({
-                    name: playerNames[Math.floor(Math.random() * (playerNames.length - 1)) + 1],
-                    photo: null,
-                    emoji: playerEmojis[Math.floor(Math.random() * (playerEmojis.length - 1)) + 1],
-                    bet: parseFloat(botBet.toFixed(3)),
-                    percentage: 0
-                });
+            // Only add bots if we have at least 1 real player and need more to reach min
+            if (players.length < MIN_PLAYERS_TO_START) {
+                const botsNeeded = MIN_PLAYERS_TO_START - players.length;
+                for (let i = 0; i < botsNeeded; i++) {
+                    const botBet = selectedBet;
+                    currentPool += botBet;
+                    players.push({
+                        name: playerNames[Math.floor(Math.random() * (playerNames.length - 1)) + 1],
+                        photo: null,
+                        emoji: playerEmojis[Math.floor(Math.random() * (playerEmojis.length - 1)) + 1],
+                        bet: parseFloat(botBet.toFixed(3)),
+                        percentage: 0
+                    });
+                }
+                updateUI();
             }
-            // Update UI to show all players on wheel
-            updateUI();
         }
 
         // Start battle
@@ -756,6 +760,11 @@
                 
                 // Update UI immediately
                 updateUI();
+                
+                // Auto-start if we have 2+ players and timer < 10s
+                if (players.length >= MIN_PLAYERS_TO_START && timeRemaining < 10) {
+                    // Let timer reach 0 naturally to start
+                }
             } else {
                 // Battle already in progress
                 alert('Battle is already in progress!');
