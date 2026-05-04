@@ -325,12 +325,15 @@
         let battlesLost = parseInt(localStorage.getItem('tonmands_battlesLost') || '0');
         let totalEarned = parseFloat(localStorage.getItem('tonmands_totalEarned') || '0');
         let isCreatingBattle = true;
+        let isBattleActive = false;
+        let isBettingOpen = true;
         let currentPool = 0;
         let timeRemaining = 30;
         let battleInterval = null;
         let players = [];
         let userIndex = 0;
-        let isBattleActive = false;
+        const MAX_PLAYERS = 20;
+        const MIN_PLAYERS_TO_START = 2;
 
         // Create battle wheel segments with profile photos
         function createBattleWheel() {
@@ -421,6 +424,7 @@
         function createBattle() {
             isCreatingBattle = true;
             isBattleActive = false;
+            isBettingOpen = true;
             currentPool = selectedBet;
             timeRemaining = 30;
             
@@ -451,13 +455,19 @@
                 document.getElementById('timerValue').textContent = 
                     `0${minutes}:${seconds.toString().padStart(2, '0')}`;
                 
-                // Auto-add bot players if only 1 player after 15 seconds
-                if (timeRemaining === 15 && players.length === 1) {
-                    addBotPlayers();
-                }
-                
+                // Close betting when timer reaches 0
                 if (timeRemaining <= 0) {
-                    startBattle();
+                    isBettingOpen = false;
+                    // Check if we have minimum players
+                    if (players.length >= MIN_PLAYERS_TO_START) {
+                        startBattle();
+                    } else {
+                        // Not enough players - extend timer or add bots
+                        if (players.length === 1) {
+                            addBotPlayers();
+                            timeRemaining = 15; // Give more time
+                        }
+                    }
                 }
             }, 1000);
         }
@@ -484,11 +494,12 @@
         function startBattle() {
             clearInterval(battleInterval);
             isCreatingBattle = false;
-            isBattleActive = true;
+            isBattleActive = false;
+            isBettingOpen = false;
             
             const btn = document.getElementById('joinBtn');
             btn.disabled = true;
-            btn.textContent = '🎮 Battle in Progress...';
+            btn.textContent = '🎰 Spinning...';
             
             // Generate random winner (weighted by bet amount)
             const totalBet = players.reduce((sum, p) => sum + p.bet, 0);
@@ -645,12 +656,22 @@
             // Update button
             const btn = document.getElementById('joinBtn');
             if (isCreatingBattle && !isBattleActive) {
-                const userJoined = players.length > 1;
-                btn.textContent = userJoined ? '✅ Joined! Waiting...' : '⚔️ JOIN BATTLE';
-                btn.className = 'battle-btn join';
-                btn.disabled = players.length > 1;
+                if (!isBettingOpen) {
+                    btn.textContent = '🔒 Betting Closed';
+                    btn.className = 'battle-btn';
+                    btn.disabled = true;
+                } else if (players.length >= MAX_PLAYERS) {
+                    btn.textContent = '🔒 Battle Full';
+                    btn.className = 'battle-btn';
+                    btn.disabled = true;
+                } else {
+                    const userJoined = players.some(p => p.name === (user?.first_name || 'You'));
+                    btn.textContent = userJoined ? '✅ Joined! Waiting...' : '⚔️ JOIN BATTLE';
+                    btn.className = 'battle-btn join';
+                    btn.disabled = false;
+                }
             } else {
-                btn.textContent = '⏳ Battle in Progress...';
+                btn.textContent = '🎮 Battle in Progress...';
                 btn.disabled = true;
             }
             
@@ -706,7 +727,19 @@
 
         // Join battle button
         document.getElementById('joinBtn').addEventListener('click', () => {
+            // Check if betting is still open
+            if (!isBettingOpen) {
+                alert('Betting is closed! Wait for next battle.');
+                return;
+            }
+            
             if (isCreatingBattle && !isBattleActive) {
+                // Check max players
+                if (players.length >= MAX_PLAYERS) {
+                    alert('Battle is full! Max 20 players.');
+                    return;
+                }
+                
                 // Add user bet to pool with Telegram info
                 currentPool += selectedBet;
                 const userName = user ? (user.first_name || 'You') : 'You';
@@ -731,11 +764,6 @@
                 
                 // Update UI immediately
                 updateUI();
-                
-                // Auto-add bots if enough players
-                if (players.length >= 2) {
-                    setTimeout(() => addBotPlayers(), 1000);
-                }
             } else {
                 // Battle already in progress
                 alert('Battle is already in progress!');
