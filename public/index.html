@@ -1316,23 +1316,23 @@
 
     <!-- Bottom Navigation -->
     <div class="bottom-nav" id="bottomNav">
-        <div class="nav-item active" data-page="home">
+        <div class="nav-item active" data-page="home" onclick="handleNav('home')">
             <span class="nav-icon">🏠</span>
             <span>Home</span>
         </div>
-        <div class="nav-item" data-page="spin">
+        <div class="nav-item" data-page="spin" onclick="handleNav('spin')">
             <span class="nav-icon">🎰</span>
             <span>Spin</span>
         </div>
-        <div class="nav-item" data-page="refer">
+        <div class="nav-item" data-page="refer" onclick="handleNav('refer')">
             <span class="nav-icon">👥</span>
             <span>Refer</span>
         </div>
-        <div class="nav-item" data-page="shop">
+        <div class="nav-item" data-page="shop" onclick="handleNav('shop')">
             <span class="nav-icon">🛒</span>
             <span>Shop</span>
         </div>
-        <div class="nav-item" data-page="balance">
+        <div class="nav-item" data-page="balance" onclick="handleNav('balance')">
             <span class="nav-icon">💳</span>
             <span>Wallet</span>
         </div>
@@ -1832,16 +1832,21 @@
                 const spinBtn = document.getElementById('spinBtn');
                 if (spinBtn) {
                     spinBtn.disabled = false;
-                    spinBtn.onclick = spinWheel;
+                    spinBtn.style.pointerEvents = 'auto';
+                    spinBtn.style.cursor = 'pointer';
+                    spinBtn.addEventListener('click', spinWheel);
                     console.log('✅ Spin button enabled');
                 }
                 
-                // Setup nav
+                // Setup nav - ADD EVENT LISTENERS
                 document.querySelectorAll('.nav-item').forEach(item => {
-                    item.onclick = function() {
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
                         const page = this.dataset.page;
+                        console.log('🧭 Nav clicked:', page);
                         handleNav(page);
-                    };
+                    });
+                    item.style.cursor = 'pointer';
                 });
                 
                 console.log('✅ App ready!');
@@ -1855,7 +1860,7 @@
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initApp);
         } else {
-            initApp();
+            setTimeout(initApp, 100);
         }
 
         // Confetti effect
