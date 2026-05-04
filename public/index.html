@@ -460,11 +460,38 @@
                 }
             }
             
-            // Simulate result (2 seconds)
+            // SPIN THE WHEEL! 🎡
+            const wheel = document.getElementById('battleWheel');
+            wheel.style.transition = 'none';
+            wheel.style.animation = 'none';
+            
+            // Calculate spin to land on winner segment
+            const segmentAngle = 360 / players.length;
+            const winnerAngle = winnerIndex * segmentAngle;
+            const extraSpins = 5 * 360; // 5 full rotations
+            const targetRotation = extraSpins + (360 - winnerAngle);
+            
+            // Force reflow
+            wheel.offsetHeight;
+            
+            // Animate wheel spin
+            wheel.style.transition = 'transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
+            wheel.style.transform = `rotate(${targetRotation}deg)`;
+            
+            // Simulate result (3 seconds - matches wheel spin)
             setTimeout(() => {
                 const winner = players[winnerIndex];
                 const won = winnerIndex === userIndex;
                 const resultDisplay = document.getElementById('battleResult');
+                
+                // Highlight winner card
+                const playerCards = document.querySelectorAll('.player-battle-card');
+                playerCards.forEach((card, idx) => {
+                    if (idx === winnerIndex) {
+                        card.classList.add('winner');
+                        card.querySelector('.winner-badge').textContent = '👑';
+                    }
+                });
                 
                 if (won) {
                     const reward = currentPool * 0.9; // 90% of pool (10% house edge)
@@ -496,11 +523,17 @@
                 setTimeout(() => {
                     isBattleActive = false;
                     btn.disabled = false;
-                    btn.textContent = '🎮 Join the Battle';
+                    btn.textContent = '⚔️ JOIN BATTLE';
+                    
+                    // Reset wheel
+                    wheel.style.transition = 'none';
+                    wheel.style.transform = 'rotate(0deg)';
+                    wheel.style.animation = 'spin 10s linear infinite';
+                    
                     createBattle();
                 }, 3000);
                 
-            }, 2000);
+            }, 3000);
         }
 
         // Update UI
