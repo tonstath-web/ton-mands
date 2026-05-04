@@ -221,14 +221,12 @@
         function createWheel() {
             const wheel = document.getElementById('luckyWheel');
             const segmentAngle = 360 / wheelSegments.length;
-            const halfSegment = segmentAngle / 2;
             
-            // CRITICAL FIX: Center segment 0 (Try Again) at TOP (0°)
-            // Shift all segments by -halfSegment so segment 0 is centered at 0°
+            // Segment 0 (Try Again) at 0° to 51.43° (starts from TOP, goes clockwise)
             let gradientParts = [];
             wheelSegments.forEach((segment, index) => {
-                const startAngle = (index * segmentAngle) - halfSegment;
-                const endAngle = ((index + 1) * segmentAngle) - halfSegment;
+                const startAngle = index * segmentAngle;
+                const endAngle = (index + 1) * segmentAngle;
                 gradientParts.push(`${segment.color} ${startAngle}deg ${endAngle}deg`);
             });
             wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
@@ -238,8 +236,7 @@
                 const label = document.createElement('div');
                 label.className = 'wheel-label';
                 const radius = 90;
-                // Label at center of segment (already shifted by -halfSegment)
-                const angle = (index * segmentAngle) - halfSegment;
+                const angle = (index * segmentAngle) + (segmentAngle / 2);
                 const radians = angle * (Math.PI / 180);
                 const x = Math.cos(radians) * radius;
                 const y = Math.sin(radians) * radius;
@@ -247,6 +244,8 @@
                 label.innerHTML = `<span class="wheel-icon">${segment.icon}</span><span class="wheel-label-text">${segment.text}</span>`;
                 wheel.appendChild(label);
             });
+            
+            console.log('✅ Wheel created | Segment 0 (Try Again): 0° - ' + segmentAngle.toFixed(2) + '°');
         }
 
         // Get result (Try Again for first 4 spins)
@@ -276,29 +275,28 @@
             
             const winningIndex = getResult();
             const segmentAngle = 360 / wheelSegments.length;
-            const extraSpins = 5 * 360;
+            const extraSpins = 5 * 360; // 1800°
             
-            // CRITICAL: Segment 0 (Try Again) is centered at 0° (TOP)
-            // Other segments are at: index * segmentAngle
-            // To bring segment to TOP: rotate by -(index * segmentAngle)
+            // Segment 0 (Try Again): 0° to 51.43°, center at 25.71°
+            // To center at TOP (0°), need to rotate by -25.71° (or 334.29°)
+            const segmentCenter = (winningIndex * segmentAngle) + (segmentAngle / 2);
             
-            const segmentPosition = winningIndex * segmentAngle;
+            // Target: bring segment center to 0° (TOP where pointer is)
+            const targetRotationMod = (360 - segmentCenter) % 360;
             
-            // Simple formula: rotate so segment ends at TOP (0°)
-            // targetRotation % 360 should equal (360 - segmentPosition) % 360
-            const targetMod = (360 - segmentPosition) % 360;
-            
-            // Start with 5 full spins from current
+            // Calculate total rotation (5 spins + adjustment to land on target)
             let targetRotation = currentRotation + extraSpins;
-            
-            // Find remainder
             const remainder = targetRotation % 360;
-            
-            // Calculate how much to add to reach target
-            let adjustment = targetMod - remainder;
+            let adjustment = targetRotationMod - remainder;
             if (adjustment < 0) adjustment += 360;
             
             targetRotation += adjustment;
+            
+            console.log('🎯 Spin #' + totalSpins + ' | Index: ' + winningIndex + ' (' + wheelSegments[winningIndex].text + ')');
+            console.log('   Segment Center: ' + segmentCenter.toFixed(2) + '°');
+            console.log('   Target Mod: ' + targetRotationMod.toFixed(2) + '°');
+            console.log('   Total Rotation: ' + targetRotation.toFixed(2) + '°');
+            console.log('   (Final % 360): ' + (targetRotation % 360).toFixed(2) + '°');
             
             const wheel = document.getElementById('luckyWheel');
             wheel.style.transform = `rotate(${targetRotation}deg)`;
