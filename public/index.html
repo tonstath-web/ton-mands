@@ -28,7 +28,8 @@
         
         /* Lucky Wheel - CLEAN DESIGN */
         .lucky-wheel-container { position: relative; width: 280px; height: 280px; margin: 0 auto 32px; }
-        .lucky-wheel { width: 100%; height: 100%; border-radius: 50%; transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); box-shadow: 0 0 0 8px #FFD700, 0 0 0 14px #FF8C00, 0 20px 60px rgba(0,0,0,0.6); border: 5px solid #FFA500; }
+        .lucky-wheel { width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 0 0 8px #FFD700, 0 0 0 14px #FF8C00, 0 20px 60px rgba(0,0,0,0.6); border: 5px solid #FFA500; }
+        .lucky-wheel.spinning { transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); }
         .wheel-pointer { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); z-index: 30; }
         .wheel-pointer svg { width: 40px; height: 50px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6)); }
         .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: radial-gradient(circle, #FFD700, #FFA500); border-radius: 50%; box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 4px 20px rgba(255,255,255,0.6); border: 5px solid rgba(255,255,255,0.5); z-index: 20; display: flex; align-items: center; justify-content: center; font-size: 32px; }
@@ -278,8 +279,12 @@
             
             isSpinning = true;
             const btn = document.getElementById('spinBtn');
+            const wheel = document.getElementById('luckyWheel');
             btn.disabled = true;
             btn.textContent = '🔄 SPINNING...';
+            
+            // Add spinning class for transition
+            wheel.classList.add('spinning');
             
             const winningIndex = getResult();
             const segmentAngle = 360 / wheelSegments.length;
@@ -307,6 +312,9 @@
                 isSpinning = false;
                 btn.disabled = false;
                 btn.textContent = '⭐ SPIN ⭐';
+                
+                // Remove spinning class - no more transition
+                wheel.classList.remove('spinning');
                 
                 const segment = wheelSegments[winningIndex];
                 const prize = prizes[segment.text];
