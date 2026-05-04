@@ -188,11 +188,11 @@
             document.getElementById('userAvatar').textContent = user.first_name?.charAt(0).toUpperCase() || 'U';
         }
 
-        // Wheel segments
+        // Wheel segments - ORDER MATTERS! First segment will be at TOP (12 o'clock)
         const wheelSegments = [
-            { color: '#69F0AE', icon: '❌', text: 'Try Again' },
-            { color: '#FF5252', icon: '💎', text: '0.02 TON' },
-            { color: '#FF4081', icon: '💰', text: '0.2 TON' },
+            { color: '#FF3333', icon: '❌', text: 'TRY AGAIN' },
+            { color: '#FF6666', icon: '💎', text: '0.02 TON' },
+            { color: '#FF9999', icon: '💰', text: '0.2 TON' },
             { color: '#E040FB', icon: '🎁', text: '0.4 TON' },
             { color: '#7C4DFF', icon: '⭐', text: '0.8 TON' },
             { color: '#536DFE', icon: '🏆', text: '1 TON' },
@@ -206,7 +206,7 @@
             '0.8 TON': { type: 'ton', value: 0.8 },
             '1 TON': { type: 'ton', value: 1 },
             '50 TON': { type: 'ton', value: 50 },
-            'Try Again': { type: 'none', value: 0 }
+            'TRY AGAIN': { type: 'none', value: 0 }
         };
 
         let spinCredits = 3;
@@ -327,7 +327,7 @@
                     createConfetti();
                 } else {
                     prizeDisplay.className = 'prize-display';
-                    prizeDisplay.textContent = '😢 Try Again!';
+                    prizeDisplay.textContent = '😢 TRY AGAIN!';
                 }
                 
                 document.getElementById('totalSpins').textContent = totalSpins;
