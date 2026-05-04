@@ -132,7 +132,9 @@
                 </div>
                 
                 <!-- Battle Wheel -->
-                <div class="battle-wheel-container" style="margin-bottom: 24px;">
+                <div class="battle-wheel-container" style="margin-bottom: 24px; position: relative;">
+                    <!-- Winner Pointer Triangle -->
+                    <div id="winnerPointer" style="position: absolute; top: -16px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 20px solid #FFD700; z-index: 20; filter: drop-shadow(0 2px 8px rgba(255,215,0,0.6)); display: none;"></div>
                     <div class="battle-wheel" id="battleWheel" style="transition: transform 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);"></div>
                     <div class="wheel-center" style="width: 60px; height: 60px; background: linear-gradient(135deg, #00d4ff, #0088cc); font-size: 28px;">🎯</div>
                 </div>
@@ -448,6 +450,11 @@
             
             // SPIN THE WHEEL! 🎡
             const wheel = document.getElementById('battleWheel');
+            const pointer = document.getElementById('winnerPointer');
+            
+            // Show pointer
+            pointer.style.display = 'block';
+            
             wheel.style.transition = 'none';
             wheel.style.animation = 'none';
             
@@ -461,7 +468,7 @@
             wheel.offsetHeight;
             
             // Animate wheel spin
-            wheel.style.transition = 'transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
+            wheel.style.transition = 'transform 3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
             wheel.style.transform = `rotate(${targetRotation}deg)`;
             
             // Simulate result (3 seconds - matches wheel spin)
@@ -512,6 +519,9 @@
                     isBattleActive = false;
                     btn.disabled = false;
                     btn.textContent = '⚔️ JOIN BATTLE';
+                    
+                    // Hide pointer
+                    pointer.style.display = 'none';
                     
                     wheel.style.transition = 'none';
                     wheel.style.transform = 'rotate(0deg)';
