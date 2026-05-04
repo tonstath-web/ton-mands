@@ -1417,13 +1417,16 @@
             const wheel = document.getElementById('luckyWheel');
             const segmentAngle = 360 / wheelSegments.length;
             
+            console.log('🎡 Creating wheel with', wheelSegments.length, 'segments');
+            
             // Create conic gradient for wheel background
-            // Start from -90deg so first segment is at TOP
+            // Standard conic-gradient starts from TOP (12 o'clock) and goes clockwise
             let gradientParts = [];
             wheelSegments.forEach((segment, index) => {
-                const startAngle = (index * segmentAngle) - 90; // Shift so first segment starts at top
-                const endAngle = ((index + 1) * segmentAngle) - 90;
+                const startAngle = index * segmentAngle;
+                const endAngle = (index + 1) * segmentAngle;
                 gradientParts.push(`${segment.color} ${startAngle}deg ${endAngle}deg`);
+                console.log(`Segment ${index}: ${segment.text} | ${startAngle}° - ${endAngle}°`);
             });
             wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
             
@@ -1434,8 +1437,8 @@
                 
                 // Position at 65% radius from center
                 const radius = 100; // pixels from center
-                // Segment center angle (starting from top = -90deg)
-                const angle = (index * segmentAngle) + (segmentAngle / 2) - 90;
+                // Segment center angle (conic-gradient starts from TOP = 0deg)
+                const angle = (index * segmentAngle) + (segmentAngle / 2);
                 const radians = angle * (Math.PI / 180);
                 
                 const x = Math.cos(radians) * radius;
@@ -1560,32 +1563,50 @@
             const segmentAngle = 360 / wheelSegments.length;
             const minSpins = 5;
             
-            // Wheel segments are drawn with -90deg offset (first segment at TOP)
-            // Segment center is at: index * segmentAngle + segmentAngle/2 (from top, clockwise)
-            // To land segment at TOP (pointer), we need rotation that brings segment center to 0deg
+            // Conic-gradient starts from TOP (0deg) and goes clockwise
+            // Segment 0 (Try Again) is at 0° to 51.43°
+            // Segment center = index * segmentAngle + segmentAngle/2
+            // To bring segment to TOP: rotate NEGATIVE of center angle
             
             const segmentCenterAngle = (winningSegmentIndex * segmentAngle) + (segmentAngle / 2);
             
-            // To center this segment at top, rotate COUNTER-CLOCKWISE by segmentCenterAngle
-            // This brings the segment center to 0deg (top position)
-            const baseTargetRotation = -segmentCenterAngle;
+            // We want segment center to be at 0deg (TOP, where pointer is)
+            // Current position: segmentCenterAngle
+            // Target position: 0deg (or 360deg, or 720deg, etc.)
+            // Rotation needed: -segmentCenterAngle (counter-clockwise) OR 360-segmentCenterAngle (clockwise)
             
-            // Add minimum full spins for animation effect (clockwise = positive)
+            // Use clockwise rotation (positive)
+            let baseTargetRotation = 360 - segmentCenterAngle;
+            
+            // Ensure baseTargetRotation is in range [0, 360)
+            baseTargetRotation = baseTargetRotation % 360;
+            
+            // Add minimum full spins for animation
             const extraSpins = (minSpins * 360);
             
-            // Calculate final rotation (always increasing for smooth animation)
+            // Calculate total rotation (must be > currentRotation for smooth animation)
+            // Find next rotation that equals baseTargetRotation (mod 360)
             let totalRotation = currentRotation + extraSpins;
             
             // Adjust to land exactly on target
-            const rotationMod = totalRotation % 360;
-            let adjustment = baseTargetRotation - rotationMod;
+            const currentMod = totalRotation % 360;
+            let adjustment = baseTargetRotation - currentMod;
             
-            // Make sure adjustment is positive (always rotate forward)
-            while (adjustment < 0) adjustment += 360;
+            // Make sure adjustment is positive
+            if (adjustment < 0) adjustment += 360;
             
             totalRotation += adjustment;
             
-            console.log('🎡 Segment:', winningSegmentIndex, '| Center:', segmentCenterAngle, '| Base:', baseTargetRotation, '| Final:', totalRotation);
+            // Verify calculation
+            const finalMod = totalRotation % 360;
+            console.log('🎡 DEBUG:');
+            console.log('   Segment:', winningSegmentIndex, '(' + winningSegment.text + ')');
+            console.log('   Segment Angle:', segmentAngle.toFixed(2) + '°');
+            console.log('   Segment Center:', segmentCenterAngle.toFixed(2) + '°');
+            console.log('   Base Target:', baseTargetRotation.toFixed(2) + '°');
+            console.log('   Final Rotation:', totalRotation.toFixed(2) + '°');
+            console.log('   Final Mod 360:', finalMod.toFixed(2) + '°');
+            console.log('   Expected at TOP: Segment ' + winningSegmentIndex);
             
             const wheel = document.getElementById('luckyWheel');
             wheel.style.transform = `rotate(${totalRotation}deg)`;
