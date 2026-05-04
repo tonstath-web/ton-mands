@@ -1207,6 +1207,7 @@
             </div>
             
             <div class="spin-credits">
+                <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-bottom: 4px;">Version: <span id="appVersion" style="font-family: monospace;">v2.0</span></div>
                 <div style="margin-bottom: 8px;">🎯 Total Spins: <span id="totalSpins" style="color: #FFD700; font-weight: 800;">0</span></div>
                 <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 8px;">Next reward at: <span id="nextReward" style="color: #00d4ff;">5 spins</span></div>
                 <div>Spins Left: <span id="spinCredits">3</span>/day | Tickets: <span id="ticketCredits">0</span></div>
@@ -1384,11 +1385,22 @@
         let autoSpinInterval = null;
         let winningSegmentIndex = 0;
         
+        // Version check (force cache clear)
+        const APP_VERSION = 'v2.0-FORCE-MODE';
+        const savedVersion = localStorage.getItem('tonmands_version');
+        
+        // Force clear if version changed
+        if (savedVersion !== APP_VERSION) {
+            console.log('🔄 Version change detected! Clearing old data...');
+            localStorage.clear();
+            localStorage.setItem('tonmands_version', APP_VERSION);
+        }
+        
         // Load totalSpins from localStorage (persist across sessions!)
         let totalSpins = parseInt(localStorage.getItem('tonmands_totalSpins') || '0');
         
         // DEBUG: Log current spin count on load
-        console.log('🎡 TON MANDS Loaded | Total Spins:', totalSpins);
+        console.log('🎡 TON MANDS Loaded | Version:', APP_VERSION, '| Total Spins:', totalSpins);
 
         // Generate wheel segments using conic gradient
         function createWheel() {
@@ -1432,7 +1444,18 @@
             // FORCE MODE: Spin 1-4 MUST be Try Again (HARDCODED!)
             if (totalSpins <= 4) {
                 console.log('🔒 FORCE Try Again - Spin #', totalSpins, '< 5');
-                return wheelSegments.findIndex(seg => seg.text === 'Try Again');
+                
+                // DOUBLE CHECK - Show alert if somehow trying to give reward
+                const tryAgainIndex = wheelSegments.findIndex(seg => seg.text === 'Try Again');
+                
+                // Show popup warning on first spin
+                if (totalSpins === 1) {
+                    setTimeout(() => {
+                        alert('⚠️ SPIN 1 FIX: This should be Try Again. If you see a reward, screenshot this!');
+                    }, 100);
+                }
+                
+                return tryAgainIndex;
             }
             
             // Spin 5-9: 99.99% Try Again (almost impossible to win)
@@ -1741,6 +1764,9 @@
 
         // Setup nav click handlers and wheel
         document.addEventListener('DOMContentLoaded', () => {
+            // Show version
+            document.getElementById('appVersion').textContent = APP_VERSION;
+            
             // Create wheel segments
             createWheel();
             
