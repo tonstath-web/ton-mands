@@ -376,9 +376,14 @@
                     z-index: 5;
                 `;
                 
+                // Auto-scale emoji size based on percentage
+                const emojiSize = Math.min(32, Math.max(16, 16 + percentage/4));
+                const nameSize = Math.min(12, Math.max(8, 8 + percentage/30));
+                
                 label.innerHTML = `
-                    <div style="font-size: 20px; margin-bottom: 2px;">${player.emoji}</div>
-                    <div style="font-size: 10px; color: #fff; font-weight: 700; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">${player.name}</div>
+                    <div style="font-size: ${emojiSize}px; margin-bottom: 2px; line-height: 1;">${player.emoji}</div>
+                    <div style="font-size: ${nameSize}px; color: #fff; font-weight: 700; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">${player.name}</div>
+                    <div style="font-size: ${Math.max(8, nameSize-2)}px; color: rgba(255,255,255,0.7); margin-top: 1px;">${percentage.toFixed(0)}%</div>
                 `;
                 
                 wheel.appendChild(label);
