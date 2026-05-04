@@ -38,10 +38,9 @@
         .timer-label { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; }
         
         /* Battle Wheel */
-        .battle-wheel-container { position: relative; width: 280px; height: 280px; margin: 0 auto 24px; }
-        .battle-wheel { width: 100%; height: 100%; border-radius: 50%; border: 3px solid rgba(0,212,255,0.3); position: relative; overflow: hidden; background: linear-gradient(135deg, #1a3a5c, #0d2840); box-shadow: 0 0 40px rgba(0,212,255,0.2), inset 0 0 60px rgba(0,0,0,0.5); }
-        .wheel-segment { position: absolute; width: 50%; height: 50%; transform-origin: 100% 100%; left: 0; top: 0; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(0,212,255,0.15); }
-        .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; background: radial-gradient(circle, #00d4ff, #0088cc); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; box-shadow: 0 0 40px rgba(0,212,255,0.4), inset 0 0 20px rgba(0,0,0,0.3); border: 4px solid rgba(255,255,255,0.2); z-index: 10; }
+        .battle-wheel-container { position: relative; width: 260px; height: 260px; margin: 0 auto 20px; }
+        .battle-wheel { width: 100%; height: 100%; border-radius: 50%; position: relative; overflow: hidden; background: #0f1a2e; border: 4px solid #00d4ff; box-shadow: 0 0 40px rgba(0,212,255,0.3), inset 0 0 30px rgba(0,0,0,0.6); }
+        .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: linear-gradient(135deg, #00d4ff, #0088cc); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; box-shadow: 0 0 25px rgba(0,212,255,0.5); border: 3px solid rgba(255,255,255,0.3); z-index: 10; }
         
         /* Player Cards */
         .players-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px; margin-bottom: 24px; }
@@ -333,57 +332,58 @@
         let userIndex = 0;
         let isBattleActive = false;
 
-        // Create battle wheel segments with proportional sizes based on bet amount
+        // Create battle wheel segments
         function createBattleWheel() {
             const wheel = document.getElementById('battleWheel');
             const totalBet = players.reduce((sum, p) => sum + p.bet, 0);
             
-            wheel.innerHTML = '';
-            
+            // Build conic gradient
+            let gradientParts = [];
             let currentAngle = 0;
+            const colors = ['#00d4ff', '#7B61FF', '#FF6B6B', '#4ECDC4', '#FFE66D', '#95E1D3', '#FF9800', '#8BC34A'];
             
             players.forEach((player, index) => {
-                const segment = document.createElement('div');
-                segment.className = 'wheel-segment';
-                
-                // Calculate segment angle based on bet percentage
                 const percentage = (player.bet / totalBet) * 100;
-                const segmentAngle = (percentage / 100) * 360;
+                const startAngle = currentAngle;
+                const endAngle = currentAngle + (percentage / 100) * 360;
                 
-                // Position segment
-                const rotation = currentAngle;
-                currentAngle += segmentAngle;
-                
-                // Skew for pie slice shape
-                const skewAngle = 90 - segmentAngle;
-                segment.style.transform = `rotate(${rotation}deg) skewY(-${skewAngle}deg)`;
-                segment.style.transformOrigin = '100% 100%';
-                segment.style.left = '0';
-                segment.style.top = '0';
-                segment.style.width = '50%';
-                segment.style.height = '50%';
-                
-                // Segment colors - gradient based on position
-                const hue = (index * 40) % 360;
-                segment.style.background = `linear-gradient(135deg, hsla(${hue}, 70%, 50%, 0.3), hsla(${hue}, 70%, 40%, 0.2))`;
-                segment.style.border = `1px solid hsla(${hue}, 70%, 60%, 0.5)`;
-                
-                // Show player info with size proportional to bet
-                const emojiSize = Math.min(48, Math.max(20, percentage * 0.8));
-                const nameSize = Math.min(14, Math.max(9, 8 + percentage/20));
-                
-                segment.innerHTML = `
-                    <div style="transform: skewY(${skewAngle}deg) rotate(-${rotation + segmentAngle/2}deg); display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 8px;">
-                        <div style="font-size: ${emojiSize}px; margin-bottom: 4px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));">${player.emoji || '👤'}</div>
-                        <div style="font-size: ${nameSize}px; color: rgba(255,255,255,0.95); font-weight: 700; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">${player.name || 'Player'}</div>
-                        <div style="font-size: ${Math.min(12, Math.max(8, nameSize - 2))}px; color: rgba(255,255,255,0.7); margin-top: 2px; font-weight: 600;">${percentage.toFixed(1)}%</div>
-                    </div>
-                `;
-                
-                wheel.appendChild(segment);
+                gradientParts.push(`${colors[index % colors.length]} ${startAngle}deg ${endAngle}deg`);
+                currentAngle = endAngle;
             });
             
-            // Start spinning animation
+            wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
+            
+            // Add player name labels
+            wheel.innerHTML = '';
+            currentAngle = 0;
+            
+            players.forEach((player, index) => {
+                const percentage = (player.bet / totalBet) * 100;
+                const angle = (percentage / 100) * 360;
+                const centerAngle = currentAngle + angle/2;
+                currentAngle += angle;
+                
+                // Create label
+                const label = document.createElement('div');
+                label.style.cssText = `
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    width: 80px;
+                    text-align: center;
+                    transform-origin: 0 0;
+                    transform: rotate(${centerAngle}deg) translate(45px) rotate(-${centerAngle}deg);
+                    z-index: 5;
+                `;
+                
+                label.innerHTML = `
+                    <div style="font-size: 20px; margin-bottom: 2px;">${player.emoji}</div>
+                    <div style="font-size: 10px; color: #fff; font-weight: 700; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">${player.name}</div>
+                `;
+                
+                wheel.appendChild(label);
+            });
+            
             wheel.style.animation = 'spin 10s linear infinite';
             wheel.style.transform = 'rotate(0deg)';
         }
