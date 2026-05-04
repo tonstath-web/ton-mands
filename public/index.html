@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TON MANDS</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="../firebase-config.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
@@ -324,6 +328,10 @@
         let battlesWon = parseInt(localStorage.getItem('tonmands_battlesWon') || '0');
         let battlesLost = parseInt(localStorage.getItem('tonmands_battlesLost') || '0');
         let totalEarned = parseFloat(localStorage.getItem('tonmands_totalEarned') || '0');
+        
+        // Battle state with Firebase
+        let currentBattleId = null;
+        let battleListener = null;
         let isCreatingBattle = true;
         let isBattleActive = false;
         let isBettingOpen = true;
@@ -332,8 +340,13 @@
         let battleInterval = null;
         let players = [];
         let userIndex = 0;
+        let userPlayerKey = null;
         const MAX_PLAYERS = 20;
         const MIN_PLAYERS_TO_START = 2;
+        
+        // Check if Firebase is available
+        const isFirebaseEnabled = typeof firebase !== 'undefined' && firebaseDB;
+        console.log('Firebase enabled:', isFirebaseEnabled);
 
         // Create battle wheel segments with profile photos
         function createBattleWheel() {
@@ -439,16 +452,78 @@
             const userName = user ? (user.first_name || 'You') : 'You';
             const userEmoji = user?.first_name?.charAt(0).toUpperCase() || '👤';
             const userPhoto = user?.photo_url || null;
+            const userId = user?.id || 'unknown';
             
             players = [{
                 name: userName,
                 photo: userPhoto,
                 emoji: userEmoji,
                 bet: selectedBet,
+                userId: userId,
                 percentage: 100
             }];
             
             userIndex = 0;
+            userPlayerKey = null;
+            
+            // Create battle in Firebase if enabled
+            if (isFirebaseEnabled && firebaseDB) {
+                // Cleanup old listener
+                if (battleListener) {
+                    battleListener.off('value');
+                }
+                
+                // Create new battle
+                const battleData = {
+                    players: {
+                        'player_0': {
+                            name: userName,
+                            photo: userPhoto,
+                            emoji: userEmoji,
+                            bet: selectedBet,
+                            userId: userId
+                        }
+                    },
+                    pool: selectedBet,
+                    timer: 30,
+                    status: 'waiting',
+                    hostId: userId
+                };
+                
+                currentBattleId = firebaseDB.createBattleInFirebase(battleData);
+                console.log('Battle created:', currentBattleId);
+                
+                // Listen for changes
+                battleListener = firebaseDB.listenToBattle(currentBattleId, (battleData) => {
+                    if (battleData.status === 'spinning' && !isBattleActive) {
+                        // Battle started by another player
+                        startBattleFromRemote(battleData);
+                    } else if (battleData.status === 'waiting') {
+                        // Sync players from Firebase
+                        const remotePlayers = [];
+                        let playerIndex = 0;
+                        Object.keys(battleData.players || {}).forEach((key, index) => {
+                            const p = battleData.players[key];
+                            remotePlayers.push({
+                                name: p.name,
+                                photo: p.photo,
+                                emoji: p.emoji,
+                                bet: p.bet,
+                                userId: p.userId,
+                                key: key
+                            });
+                            if (p.userId === userId) {
+                                userIndex = index;
+                                userPlayerKey = key;
+                            }
+                        });
+                        players = remotePlayers;
+                        currentPool = battleData.pool || 0;
+                        timeRemaining = battleData.timer || 30;
+                        updateUI();
+                    }
+                });
+            }
             
             // Update UI immediately to show player on wheel
             updateUI();
@@ -462,6 +537,11 @@
                 document.getElementById('timerValue').textContent = 
                     `0${minutes}:${seconds.toString().padStart(2, '0')}`;
                 
+                // Update Firebase timer
+                if (isFirebaseEnabled && currentBattleId) {
+                    firebaseDB.updateBattleInFirebase(currentBattleId, { timer: timeRemaining });
+                }
+                
                 // Close betting when timer reaches 0
                 if (timeRemaining <= 0) {
                     isBettingOpen = false;
@@ -471,11 +551,11 @@
                     } else if (players.length === 1) {
                         // Only 1 player - add 1 bot and extend timer
                         addBotPlayers();
-                        timeRemaining = 15; // Give 15 more seconds
-                        isBettingOpen = true; // Keep betting open
+                        timeRemaining = 15;
+                        isBettingOpen = true;
                     } else {
                         // No players - reset battle
-                        createBattle(); // Restart with new timer
+                        createBattle();
                     }
                 }
             }, 1000);
@@ -499,6 +579,37 @@
                 }
                 updateUI();
             }
+        }
+        
+        // Start battle from remote (Firebase sync)
+        function startBattleFromRemote(battleData) {
+            isCreatingBattle = false;
+            isBattleActive = false;
+            isBettingOpen = false;
+            
+            // Sync players from battle data
+            players = [];
+            let idx = 0;
+            Object.keys(battleData.players || {}).forEach((key) => {
+                const p = battleData.players[key];
+                players.push({
+                    name: p.name,
+                    photo: p.photo,
+                    emoji: p.emoji,
+                    bet: p.bet,
+                    userId: p.userId,
+                    key: key
+                });
+                if (p.userId === user?.id) {
+                    userIndex = idx;
+                }
+                idx++;
+            });
+            
+            currentPool = battleData.pool;
+            
+            // Start the spin
+            performSpin(battleData.winnerIndex || 0);
         }
 
         // Start battle
@@ -526,8 +637,22 @@
                 }
             }
             
-            // SPIN THE WHEEL! 🎡
+            // Update Firebase with winner and start spinning
+            if (isFirebaseEnabled && currentBattleId) {
+                firebaseDB.updateBattleInFirebase(currentBattleId, {
+                    status: 'spinning',
+                    winnerIndex: winnerIndex
+                });
+            }
+            
+            // Perform the spin
+            performSpin(winnerIndex);
+        }
+        
+        // Perform wheel spin (shared function)
+        function performSpin(winnerIndex) {
             const wheel = document.getElementById('battleWheel');
+            const btn = document.getElementById('joinBtn');
             
             wheel.style.transition = 'none';
             wheel.style.animation = 'none';
@@ -736,35 +861,52 @@
                     return;
                 }
                 
-                // Add user bet to pool with Telegram info
-                currentPool += selectedBet;
                 const userName = user ? (user.first_name || 'You') : 'You';
                 const userEmoji = user?.first_name?.charAt(0).toUpperCase() || '👤';
                 const userPhoto = user?.photo_url || null;
+                const userId = user?.id || 'unknown';
                 
                 // Check if user already exists - if yes, add to their bet (merge)
-                const existingIndex = players.findIndex(p => p.name === userName);
+                const existingIndex = players.findIndex(p => p.userId === userId);
                 if (existingIndex !== -1) {
-                    // User already joined - add to their bet (merge into one segment)
+                    // User already joined - add to their bet
                     players[existingIndex].bet += selectedBet;
+                    currentPool += selectedBet;
+                    
+                    // Update Firebase
+                    if (isFirebaseEnabled && currentBattleId && players[existingIndex].key) {
+                        firebaseDB.db.ref(`battles/${currentBattleId}/players/${players[existingIndex].key}`).update({
+                            bet: players[existingIndex].bet
+                        });
+                        firebaseDB.db.ref(`battles/${currentBattleId}`).update({ pool: currentPool });
+                    }
                 } else {
-                    // New player
-                    players.push({
+                    // New player - join battle
+                    currentPool += selectedBet;
+                    const newPlayer = {
                         name: userName,
                         photo: userPhoto,
                         emoji: userEmoji,
                         bet: selectedBet,
-                        percentage: 0
-                    });
+                        userId: userId
+                    };
+                    
+                    // Add to Firebase
+                    if (isFirebaseEnabled && currentBattleId) {
+                        const playerKey = firebaseDB.joinBattle(currentBattleId, newPlayer);
+                        newPlayer.key = playerKey;
+                        firebaseDB.db.ref(`battles/${currentBattleId}`).update({ pool: currentPool });
+                    } else {
+                        players.push(newPlayer);
+                    }
+                    
+                    if (players[existingIndex] !== newPlayer) {
+                        players.push(newPlayer);
+                    }
                 }
                 
                 // Update UI immediately
                 updateUI();
-                
-                // Auto-start if we have 2+ players and timer < 10s
-                if (players.length >= MIN_PLAYERS_TO_START && timeRemaining < 10) {
-                    // Let timer reach 0 naturally to start
-                }
             } else {
                 // Battle already in progress
                 alert('Battle is already in progress!');
