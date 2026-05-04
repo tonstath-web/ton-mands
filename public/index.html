@@ -339,67 +339,8 @@
         const MAX_PLAYERS = 20;
         const MIN_PLAYERS_TO_START = 2;
         
-        // Backend API URL (Vercel)
-        const API_URL = '/api/battle';
-        
-        // Call backend API
-        async function callAPI(action, data = {}) {
-          try {
-            const response = await fetch(API_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ action, battleId: currentBattleId, data })
-            });
-            const result = await response.json();
-            return result;
-          } catch (error) {
-            console.error('API error:', error);
-            return { success: false, error: error.message };
-          }
-        }
-        
-        // Poll battle updates
-        let pollInterval = null;
-        function startPolling() {
-          if (pollInterval) clearInterval(pollInterval);
-          pollInterval = setInterval(async () => {
-            if (currentBattleId && isCreatingBattle) {
-              const result = await callAPI('get');
-              if (result.success && result.battle) {
-                syncBattle(result.battle);
-              }
-            }
-          }, 1000); // Poll every second
-        }
-        
-        // Sync battle from server
-        function syncBattle(battle) {
-          const remotePlayers = [];
-          let idx = 0;
-          Object.entries(battle.players).forEach(([key, player]) => {
-            remotePlayers.push({
-              ...player,
-              playerId: key
-            });
-            if (player.userId === user?.id) {
-              userIndex = idx;
-              userPlayerId = key;
-            }
-            idx++;
-          });
-          
-          players = remotePlayers;
-          currentPool = battle.pool;
-          timeRemaining = battle.timer || 30;
-          
-          if (battle.status === 'spinning' && !isBattleActive) {
-            startBattleFromRemote(battle);
-          }
-          
-          updateUI();
-        }
-        
-        console.log('✅ Telegram Backend enabled');
+        // Client-side only - no backend!
+        console.log('✅ Client-side mode enabled');
 
         // Create battle wheel segments with profile photos
         function createBattleWheel() {
@@ -493,8 +434,8 @@
             });
         });
 
-        // Create new battle
-        async function createBattle() {
+        // Create new battle (client-side only)
+        function createBattle() {
             isCreatingBattle = true;
             isBattleActive = false;
             isBettingOpen = true;
@@ -512,45 +453,22 @@
                 photo: userPhoto,
                 emoji: userEmoji,
                 bet: selectedBet,
-                userId: userId,
-                percentage: 100
+                userId: userId
             }];
             
             userIndex = 0;
-            userPlayerId = null;
-            
-            // Create battle in Telegram Backend
-            const result = await callAPI('create', {
-                name: userName,
-                userId: userId,
-                bet: selectedBet,
-                emoji: userEmoji,
-                photo: userPhoto
-            });
-            
-            if (result.success) {
-                currentBattleId = result.battle.id;
-                console.log('Battle created:', currentBattleId);
-                syncBattle(result.battle);
-                startPolling();
-            }
             
             // Update UI immediately to show player on wheel
             updateUI();
             
             // Start timer
             if (battleInterval) clearInterval(battleInterval);
-            battleInterval = setInterval(async () => {
+            battleInterval = setInterval(() => {
                 timeRemaining--;
                 const minutes = Math.floor(timeRemaining / 60);
                 const seconds = timeRemaining % 60;
                 document.getElementById('timerValue').textContent = 
                     `0${minutes}:${seconds.toString().padStart(2, '0')}`;
-                
-                // Update backend timer
-                if (currentBattleId && timeRemaining % 5 === 0) {
-                    await callAPI('update', { timer: timeRemaining });
-                }
                 
                 // Close betting when timer reaches 0
                 if (timeRemaining <= 0) {
@@ -620,8 +538,8 @@
             performSpin(battleData.winnerIndex || 0);
         }
 
-        // Start battle
-        async function startBattle() {
+        // Start battle (client-side only)
+        function startBattle() {
             clearInterval(battleInterval);
             isCreatingBattle = false;
             isBattleActive = false;
@@ -645,16 +563,11 @@
                 }
             }
             
-            // Update backend with winner
-            if (currentBattleId) {
-                await callAPI('start', { winnerIndex });
-            }
-            
             // Perform the spin
             performSpin(winnerIndex);
         }
         
-        // Perform wheel spin (shared function)
+        // Perform wheel spin
         function performSpin(winnerIndex) {
             const wheel = document.getElementById('battleWheel');
             const btn = document.getElementById('joinBtn');
@@ -851,8 +764,8 @@
             });
         });
 
-        // Join battle button
-        document.getElementById('joinBtn').addEventListener('click', async () => {
+        // Join battle button (client-side only)
+        document.getElementById('joinBtn').addEventListener('click', () => {
             // Check if betting is still open
             if (!isBettingOpen) {
                 alert('Betting is closed! Wait for next battle.');
@@ -871,23 +784,23 @@
                 const userPhoto = user?.photo_url || null;
                 const userId = user?.id || 'unknown';
                 
-                // Join battle via API
-                const result = await callAPI('join', {
-                    name: userName,
-                    userId: userId,
-                    bet: selectedBet,
-                    emoji: userEmoji,
-                    photo: userPhoto
-                });
-                
-                if (result.success) {
-                    currentBattleId = result.battle.id;
-                    userPlayerId = result.playerId;
-                    syncBattle(result.battle);
-                    updateUI();
+                // Check if user already exists - if yes, add to their bet
+                const existingIndex = players.findIndex(p => p.userId === userId);
+                if (existingIndex !== -1) {
+                    players[existingIndex].bet += selectedBet;
+                    currentPool += selectedBet;
                 } else {
-                    alert(result.error || 'Failed to join battle');
+                    currentPool += selectedBet;
+                    players.push({
+                        name: userName,
+                        photo: userPhoto,
+                        emoji: userEmoji,
+                        bet: selectedBet,
+                        userId: userId
+                    });
                 }
+                
+                updateUI();
             } else {
                 alert('Battle is already in progress!');
             }
