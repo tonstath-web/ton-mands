@@ -1207,7 +1207,8 @@
             </div>
             
             <div class="spin-credits">
-                Spins Left: <span id="spinCredits">3</span>/day | Tickets: <span id="ticketCredits">0</span>
+                <div style="margin-bottom: 8px;">Total Spins: <span id="totalSpins" style="color: #FFD700; font-weight: 800;">0</span></div>
+                <div>Spins Left: <span id="spinCredits">3</span>/day | Tickets: <span id="ticketCredits">0</span></div>
             </div>
             
             <div class="prize-display" id="prizeDisplay">
@@ -1351,15 +1352,15 @@
             document.getElementById('userAvatar').textContent = initial;
         }
 
-        // Lucky Wheel feature with weighted probabilities
+        // Lucky Wheel feature with weighted probabilities and spin requirements
         const wheelSegments = [
-            { color: '#FF5252', icon: '💎', text: '0.02 TON', probability: 1 },
-            { color: '#FF4081', icon: '💰', text: '0.2 TON', probability: 0.001 },
-            { color: '#E040FB', icon: '🎁', text: '0.4 TON', probability: 0.001 },
-            { color: '#7C4DFF', icon: '⭐', text: '0.8 TON', probability: 0.001 },
-            { color: '#536DFE', icon: '🏆', text: '1 TON', probability: 0.001 },
-            { color: '#FFD740', icon: '👑', text: '50 TON', probability: 0.001 },
-            { color: '#69F0AE', icon: '❌', text: 'Try Again', probability: 98.995 }
+            { color: '#FF5252', icon: '💎', text: '0.02 TON', probability: 1, minSpins: 5 },
+            { color: '#FF4081', icon: '💰', text: '0.2 TON', probability: 0.001, minSpins: 70 },
+            { color: '#E040FB', icon: '🎁', text: '0.4 TON', probability: 0.001, minSpins: 150 },
+            { color: '#7C4DFF', icon: '⭐', text: '0.8 TON', probability: 0.001, minSpins: 200 },
+            { color: '#536DFE', icon: '🏆', text: '1 TON', probability: 0.001, minSpins: 500 },
+            { color: '#FFD740', icon: '👑', text: '50 TON', probability: 0.001, minSpins: 100000 },
+            { color: '#69F0AE', icon: '❌', text: 'Try Again', probability: 98.995, minSpins: 0 }
         ];
 
         const prizes = {
@@ -1380,6 +1381,7 @@
         let autoSpinEnabled = false;
         let autoSpinInterval = null;
         let winningSegmentIndex = 0;
+        let totalSpins = 0; // Track total spins for requirements
 
         // Generate wheel segments using conic gradient
         function createWheel() {
@@ -1418,18 +1420,30 @@
             });
         }
 
-        // Weighted random selection based on probability
+        // Weighted random selection based on probability and spin requirements
         function getWeightedResult() {
-            const totalProbability = wheelSegments.reduce((sum, seg) => sum + seg.probability, 0);
+            // Filter segments that meet spin requirements
+            const eligibleSegments = wheelSegments.filter(seg => totalSpins >= seg.minSpins);
+            
+            // If no segments eligible (shouldn't happen), allow Try Again
+            if (eligibleSegments.length === 0) {
+                return wheelSegments.findIndex(seg => seg.text === 'Try Again');
+            }
+            
+            // Calculate total probability of eligible segments
+            const totalProbability = eligibleSegments.reduce((sum, seg) => sum + seg.probability, 0);
             let random = Math.random() * totalProbability;
             
-            for (let i = 0; i < wheelSegments.length; i++) {
-                random -= wheelSegments[i].probability;
+            for (let i = 0; i < eligibleSegments.length; i++) {
+                random -= eligibleSegments[i].probability;
                 if (random <= 0) {
-                    return i;
+                    // Find original index
+                    return wheelSegments.findIndex(seg => seg.text === eligibleSegments[i].text);
                 }
             }
-            return wheelSegments.length - 1; // Fallback to last segment
+            
+            // Fallback to Try Again
+            return wheelSegments.findIndex(seg => seg.text === 'Try Again');
         }
 
         function spinWheel() {
@@ -1449,6 +1463,9 @@
                 return;
             }
             
+            // Increment total spins BEFORE getting result
+            totalSpins++;
+            
             updateBalanceDisplay();
             isSpinning = true;
             
@@ -1458,7 +1475,7 @@
             
             tg.HapticFeedback.impactOccurred('medium');
             
-            // Get weighted result BEFORE spinning
+            // Get weighted result based on total spins
             winningSegmentIndex = getWeightedResult();
             const winningSegment = wheelSegments[winningSegmentIndex];
             
@@ -1489,6 +1506,7 @@
                 // Update displays
                 document.getElementById('spinCredits').textContent = spinCredits;
                 document.getElementById('ticketCredits').textContent = ticketCredits;
+                document.getElementById('totalSpins').textContent = totalSpins;
                 
                 // Check auto spin
                 if (autoSpinEnabled && spinCredits > 0) {
