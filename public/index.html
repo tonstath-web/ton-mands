@@ -22,20 +22,55 @@
         .profile-balance { background: rgba(0,0,0,0.25); padding: 10px 18px; border-radius: 20px; font-weight: 700; }
         
         /* PVP Section */
-        .pvp-section { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-radius: 28px; padding: 32px 20px; margin-bottom: 20px; text-align: center; }
-        .pvp-title { font-size: 28px; font-weight: 900; background: linear-gradient(135deg, #00d4ff, #0088cc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
-        .pvp-subtitle { font-size: 15px; color: rgba(255,255,255,0.6); margin-bottom: 28px; }
+        .pvp-section { background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); border-radius: 28px; padding: 24px 16px; margin-bottom: 20px; text-align: center; }
+        .pvp-title { font-size: 22px; font-weight: 900; background: linear-gradient(135deg, #9C27B0, #7B1FA2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px; }
+        .pvp-subtitle { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 16px; }
         
-        /* Battle Arena */
-        .battle-arena { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 32px; }
-        .player-card { background: rgba(0,136,204,0.15); border: 2px solid rgba(0,212,255,0.4); border-radius: 20px; padding: 20px; min-width: 140px; transition: all 0.3s; }
-        .player-card.opponent { border-color: rgba(255,51,51,0.4); background: rgba(255,51,51,0.1); }
-        .player-card.active { transform: scale(1.05); box-shadow: 0 0 40px rgba(0,212,255,0.5); }
-        .player-avatar { width: 60px; height: 60px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 12px; }
-        .player-name { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 8px; }
-        .player-power { font-size: 12px; color: rgba(255,255,255,0.6); }
-        .player-power .power-value { color: #00d4ff; font-weight: 800; }
-        .vs-badge { font-size: 32px; font-weight: 900; background: linear-gradient(135deg, #FF3333, #FF6666); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        /* Pool Display */
+        .pool-display { background: rgba(255,255,255,0.05); border: 2px solid rgba(156,39,176,0.3); border-radius: 16px; padding: 12px; margin-bottom: 16px; }
+        .pool-label { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
+        .pool-amount { font-size: 24px; font-weight: 900; color: #9C27B0; }
+        .pool-amount span { font-size: 14px; color: rgba(255,255,255,0.7); }
+        
+        /* Timer */
+        .battle-timer { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 8px 20px; display: inline-block; margin-bottom: 16px; }
+        .timer-value { font-size: 24px; font-weight: 900; color: #FFD700; font-family: 'Courier New', monospace; }
+        .timer-label { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+        
+        /* Battle Wheel */
+        .battle-wheel-container { position: relative; width: 240px; height: 240px; margin: 0 auto 16px; }
+        .battle-wheel { width: 100%; height: 100%; border-radius: 50%; border: 4px solid rgba(156,39,176,0.3); position: relative; overflow: hidden; }
+        .wheel-segment { position: absolute; width: 50%; height: 50%; transform-origin: 100% 100%; left: 0; top: 0; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.05); }
+        .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: radial-gradient(circle, #9C27B0, #7B1FA2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; box-shadow: 0 0 30px rgba(156,39,176,0.5); border: 3px solid rgba(255,255,255,0.2); z-index: 10; }
+        
+        /* Player Cards */
+        .players-container { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+        .player-battle-card { background: rgba(255,255,255,0.05); border: 2px solid rgba(156,39,176,0.2); border-radius: 14px; padding: 12px; min-width: 110px; flex: 1; max-width: 140px; position: relative; }
+        .player-battle-card.winner { border-color: #FFD700; box-shadow: 0 0 20px rgba(255,215,0,0.3); }
+        .player-battle-card .avatar { width: 44px; height: 44px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 auto 8px; }
+        .player-battle-card .name { font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .player-battle-card .percentage { font-size: 18px; font-weight: 900; color: #9C27B0; }
+        .player-battle-card .bet-amount { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+        .player-battle-card .winner-badge { position: absolute; top: 6px; right: 6px; font-size: 14px; }
+        
+        /* Bet Selection */
+        .bet-selection { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+        .bet-chip { background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 8px 16px; cursor: pointer; transition: all 0.2s; }
+        .bet-chip.selected { border-color: #FFD700; background: rgba(255,215,0,0.2); }
+        .bet-chip .chip-value { font-size: 14px; font-weight: 800; color: #FFD700; }
+        .bet-chip .chip-label { font-size: 9px; color: rgba(255,255,255,0.4); }
+        
+        /* Battle Button */
+        .battle-btn { background: linear-gradient(135deg, #FFA500, #FF8C00); color: #000; border: none; padding: 14px 48px; border-radius: 32px; font-size: 18px; font-weight: 900; cursor: pointer; box-shadow: 0 6px 24px rgba(255,165,0,0.3); transition: all 0.2s; width: 100%; max-width: 280px; }
+        .battle-btn:active { transform: scale(0.97); }
+        .battle-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .battle-btn.join { background: linear-gradient(135deg, #9C27B0, #7B1FA2); color: #fff; box-shadow: 0 6px 24px rgba(156,39,176,0.3); }
+        
+        /* Stats Row */
+        .stats-row { display: flex; justify-content: space-around; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 14px; margin-top: 12px; }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 18px; font-weight: 800; color: #9C27B0; }
+        .stat-label { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; }
         
         /* Auto Spin Toggle */
         .auto-spin-toggle { display: flex; align-items: center; justify-content: center; gap: 12px; background: rgba(255,255,255,0.08); padding: 14px 24px; border-radius: 24px; margin: 0 auto 24px; max-width: 280px; cursor: pointer; transition: all 0.3s; }
@@ -80,36 +115,72 @@
         <!-- Home Section -->
         <div id="home" class="page-section active">
             <div class="pvp-section">
-                <div class="pvp-title">⚔️ PVP Arena</div>
-                <div class="pvp-subtitle">Battle other players for rewards!</div>
+                <div class="pvp-title">🎁 Epic Gift</div>
+                <div class="pvp-subtitle">Bet TON & Win the Pool!</div>
                 
-                <div class="battle-arena">
-                    <div class="player-card active" id="playerCard">
-                        <div class="player-avatar" id="playerAvatar">👤</div>
-                        <div class="player-name" id="playerName">You</div>
-                        <div class="player-power">Power: <span class="power-value" id="playerPower">100</span></div>
+                <!-- Pool Display -->
+                <div class="pool-display">
+                    <div class="pool-label">TOTAL POOL</div>
+                    <div class="pool-amount" id="totalPool">0.00 <span>TON</span></div>
+                </div>
+                
+                <!-- Timer -->
+                <div class="battle-timer">
+                    <div class="timer-value" id="timerValue">00:30</div>
+                    <div class="timer-label">TIME REMAINING</div>
+                </div>
+                
+                <!-- Battle Wheel -->
+                <div class="battle-wheel-container">
+                    <div class="battle-wheel" id="battleWheel"></div>
+                    <div class="wheel-center">🎁</div>
+                </div>
+                
+                <!-- Players -->
+                <div class="players-container" id="playersContainer">
+                    <!-- Player cards will be inserted here -->
+                </div>
+                
+                <!-- Bet Selection -->
+                <div class="bet-selection" id="betSelection">
+                    <div class="bet-chip selected" data-bet="0.1">
+                        <div class="chip-value">0.1</div>
+                        <div class="chip-label">TON</div>
                     </div>
-                    <div class="vs-badge">VS</div>
-                    <div class="player-card opponent" id="opponentCard">
-                        <div class="player-avatar" id="opponentAvatar">🤖</div>
-                        <div class="player-name" id="opponentName">Opponent</div>
-                        <div class="player-power">Power: <span class="power-value" id="opponentPower">100</span></div>
+                    <div class="bet-chip" data-bet="0.5">
+                        <div class="chip-value">0.5</div>
+                        <div class="chip-label">TON</div>
+                    </div>
+                    <div class="bet-chip" data-bet="1.0">
+                        <div class="chip-value">1.0</div>
+                        <div class="chip-label">TON</div>
+                    </div>
+                    <div class="bet-chip" data-bet="5.0">
+                        <div class="chip-value">5.0</div>
+                        <div class="chip-label">TON</div>
                     </div>
                 </div>
                 
-                <button class="spin-btn" id="battleBtn" style="background: linear-gradient(135deg, #0088cc, #00d4ff); color: #fff; border-color: #00d4ff;">⚔️ BATTLE ⚔️</button>
+                <!-- Battle Button -->
+                <button class="battle-btn join" id="joinBtn">🎮 Join the Battle</button>
                 
-                <div class="auto-spin-toggle" id="dailyChallengeToggle">
-                    <span class="auto-spin-icon">📅</span>
-                    <span class="auto-spin-text" id="dailyChallengeText">Daily Challenge: 3/day</span>
+                <!-- Stats -->
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-value" id="statWins">0</div>
+                        <div class="stat-label">Wins</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="statLosses">0</div>
+                        <div class="stat-label">Losses</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="statEarned">0</div>
+                        <div class="stat-label">Earned (TON)</div>
+                    </div>
                 </div>
                 
-                <div class="spin-credits">
-                    <div style="margin-bottom: 8px;">🏆 Battles Won: <span id="battlesWon" style="color: #00d4ff; font-weight: 800;">0</span></div>
-                    <div>Wins: <span id="winsCount">0</span> | Losses: <span id="lossesCount">0</span></div>
-                </div>
-                
-                <div class="prize-display" id="battleResult">⚔️ Ready to battle!</div>
+                <div class="prize-display" id="battleResult" style="margin-top: 16px;">🎲 Join battle to win!</div>
             </div>
         </div>
 
@@ -187,128 +258,196 @@
             const fullName = `${user.first_name} ${user.last_name || ''}`.trim();
             document.getElementById('userName').textContent = fullName || 'User';
             document.getElementById('userId').textContent = `ID: ${user.id}`;
-            document.getElementById('playerAvatar').textContent = user.first_name?.charAt(0).toUpperCase() || 'U';
+            document.getElementById('userAvatar').textContent = user.first_name?.charAt(0).toUpperCase() || 'U';
         }
 
-        // PVP Game Data
-        const opponentNames = ['Dragon', 'Phoenix', 'Tiger', 'Eagle', 'Wolf', 'Lion', 'Bear', 'Shark'];
-        const opponentEmojis = ['🐉', '🦅', '🐯', '🦅', '🐺', '🦁', '🐻', '🦈'];
+        // Epic Gift Betting Game Data
+        const playerNames = ['Kinandra', 'Dragon', 'Phoenix', 'Tiger', 'Eagle', 'Wolf', 'Lion', 'Bear'];
+        const playerEmojis = ['👤', '🐉', '🦅', '🐯', '🦅', '🐺', '🦁', '🐻'];
         
         let balance = 0;
+        let selectedBet = 0.1;
         let battlesWon = parseInt(localStorage.getItem('tonmands_battlesWon') || '0');
         let battlesLost = parseInt(localStorage.getItem('tonmands_battlesLost') || '0');
-        let dailyChallenges = parseInt(localStorage.getItem('tonmands_dailyChallenges') || '0');
-        let isBattling = false;
-        let battleHistory = JSON.parse(localStorage.getItem('tonmands_battleHistory') || '[]');
+        let totalEarned = parseFloat(localStorage.getItem('tonmands_totalEarned') || '0');
+        let isCreatingBattle = true;
+        let currentPool = 0;
+        let timeRemaining = 30;
+        let battleInterval = null;
+        let players = [];
+        let userIndex = 0;
+        let isBattleActive = false;
 
-        // Generate random opponent
-        function generateOpponent() {
-            const index = Math.floor(Math.random() * opponentNames.length);
-            return {
-                name: opponentNames[index],
-                emoji: opponentEmojis[index],
-                power: Math.floor(Math.random() * 60) + 70 // 70-130
-            };
+        // Create battle wheel segments
+        function createBattleWheel() {
+            const wheel = document.getElementById('battleWheel');
+            const numSegments = 8;
+            const segmentAngle = 360 / numSegments;
+            
+            wheel.innerHTML = '';
+            
+            for (let i = 0; i < numSegments; i++) {
+                const segment = document.createElement('div');
+                segment.className = 'wheel-segment';
+                const rotation = i * segmentAngle;
+                segment.style.transform = `rotate(${rotation}deg) skewY(-${90 - segmentAngle}deg)`;
+                segment.style.background = `rgba(156,39,176,${0.1 + (i * 0.05)})`;
+                segment.innerHTML = `<span style="transform: skewY(${90 - segmentAngle}deg) rotate(-${rotation}deg); font-size: 10px; color: rgba(255,255,255,0.3); font-weight: 700;">EPIC GIFT</span>`;
+                wheel.appendChild(segment);
+            }
         }
 
-        // Battle function
+        // Select bet amount
+        document.querySelectorAll('.bet-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                if (isBattleActive) return;
+                document.querySelectorAll('.bet-chip').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedBet = parseFloat(this.dataset.bet);
+            });
+        });
+
+        // Create new battle
+        function createBattle() {
+            isCreatingBattle = true;
+            isBattleActive = false;
+            currentPool = selectedBet;
+            timeRemaining = 30;
+            
+            // Reset players
+            players = [{
+                name: user?.first_name || 'You',
+                emoji: user?.first_name?.charAt(0).toUpperCase() || 'U',
+                bet: selectedBet,
+                percentage: 100
+            }];
+            
+            userIndex = 0;
+            
+            updateUI();
+            
+            // Start timer
+            if (battleInterval) clearInterval(battleInterval);
+            battleInterval = setInterval(() => {
+                timeRemaining--;
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                document.getElementById('timerValue').textContent = 
+                    `0${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeRemaining <= 0) {
+                    startBattle();
+                }
+            }, 1000);
+        }
+
+        // Start battle
         function startBattle() {
-            if (isBattling) return;
-            if (dailyChallenges >= 3) {
-                alert('Daily challenge limit reached! Come back tomorrow.');
-                return;
+            clearInterval(battleInterval);
+            isCreatingBattle = false;
+            isBattleActive = true;
+            
+            const btn = document.getElementById('joinBtn');
+            btn.disabled = true;
+            btn.textContent = '🎮 Battle in Progress...';
+            
+            // Generate random winner (weighted by bet amount)
+            const totalBet = players.reduce((sum, p) => sum + p.bet, 0);
+            const rand = Math.random() * totalBet;
+            let cumulative = 0;
+            let winnerIndex = 0;
+            
+            for (let i = 0; i < players.length; i++) {
+                cumulative += players[i].bet;
+                if (rand <= cumulative) {
+                    winnerIndex = i;
+                    break;
+                }
             }
             
-            isBattling = true;
-            const btn = document.getElementById('battleBtn');
-            btn.disabled = true;
-            btn.textContent = '⚔️ BATTling...';
-            
-            // Generate opponent
-            const opponent = generateOpponent();
-            document.getElementById('opponentName').textContent = opponent.name;
-            document.getElementById('opponentAvatar').textContent = opponent.emoji;
-            document.getElementById('opponentPower').textContent = opponent.power;
-            
-            // Simulate battle (1.5 seconds)
+            // Simulate result (2 seconds)
             setTimeout(() => {
-                const playerPower = Math.floor(Math.random() * 60) + 70; // 70-130
-                document.getElementById('playerPower').textContent = playerPower;
-                
+                const winner = players[winnerIndex];
+                const won = winnerIndex === userIndex;
                 const resultDisplay = document.getElementById('battleResult');
-                const won = playerPower > opponent.power;
                 
                 if (won) {
-                    const reward = 0.1; // 0.1 TON reward
+                    const reward = currentPool * 0.9; // 90% of pool (10% house edge)
                     balance += reward;
+                    totalEarned += reward;
                     battlesWon++;
-                    dailyChallenges++;
                     resultDisplay.className = 'prize-display win';
-                    resultDisplay.textContent = `🏆 VICTORY! +${reward} TON`;
+                    resultDisplay.textContent = `🏆 YOU WIN! +${reward.toFixed(3)} TON`;
                     createConfetti();
                 } else {
                     battlesLost++;
                     resultDisplay.className = 'prize-display';
-                    resultDisplay.textContent = '💔 DEFEAT! Try again.';
+                    resultDisplay.textContent = `💔 ${winner.name} Wins!`;
                 }
                 
-                // Save to history
-                battleHistory.unshift({
-                    date: new Date().toISOString(),
-                    opponent: opponent.name,
-                    result: won ? 'win' : 'loss',
-                    reward: won ? 0.1 : 0
-                });
-                if (battleHistory.length > 10) battleHistory.pop();
-                
-                // Update UI
+                // Save stats
                 localStorage.setItem('tonmands_battlesWon', battlesWon);
                 localStorage.setItem('tonmands_battlesLost', battlesLost);
-                localStorage.setItem('tonmands_dailyChallenges', dailyChallenges);
-                localStorage.setItem('tonmands_battleHistory', JSON.stringify(battleHistory));
+                localStorage.setItem('tonmands_totalEarned', totalEarned);
                 
-                document.getElementById('battlesWon').textContent = battlesWon;
-                document.getElementById('winsCount').textContent = battlesWon;
-                document.getElementById('lossesCount').textContent = battlesLost;
-                document.getElementById('dailyChallengeText').textContent = `Daily Challenge: ${3 - dailyChallenges}/3 left`;
+                // Update UI
+                document.getElementById('statWins').textContent = battlesWon;
+                document.getElementById('statLosses').textContent = battlesLost;
+                document.getElementById('statEarned').textContent = totalEarned.toFixed(2);
                 document.getElementById('userBalance').textContent = balance;
                 document.getElementById('walletBalance').textContent = balance;
                 
-                // Update battle log
-                updateBattleLog();
-                
                 // Reset
-                isBattling = false;
-                btn.disabled = false;
-                btn.textContent = '⚔️ BATTLE ⚔️';
+                setTimeout(() => {
+                    isBattleActive = false;
+                    btn.disabled = false;
+                    btn.textContent = '🎮 Join the Battle';
+                    createBattle();
+                }, 3000);
                 
-            }, 1500);
+            }, 2000);
         }
 
-        // Update battle log display
-        function updateBattleLog() {
-            const logContainer = document.getElementById('battleLog');
-            if (battleHistory.length === 0) {
-                logContainer.innerHTML = '<div style="color: rgba(255,255,255,0.5); font-size: 14px;">No battles yet</div>';
-                return;
-            }
+        // Update UI
+        function updateUI() {
+            // Update pool
+            document.getElementById('totalPool').textContent = currentPool.toFixed(2);
             
-            let html = '';
-            battleHistory.forEach(battle => {
-                const resultIcon = battle.result === 'win' ? '🏆' : '💔';
-                const resultColor = battle.result === 'win' ? '#00c853' : '#FF5722';
-                html += `<div style="padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #fff; font-weight: 600;">${battle.opponent}</span>
-                        <span style="color: ${resultColor}; font-weight: 700;">${resultIcon}</span>
-                    </div>
-                    <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px;">
-                        ${new Date(battle.date).toLocaleDateString()} ${battle.result === 'win' ? `+${battle.reward} TON` : ''}
-                    </div>
-                </div>`;
+            // Update timer
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timerValue').textContent = 
+                `0${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Update players
+            const container = document.getElementById('playersContainer');
+            container.innerHTML = '';
+            
+            players.forEach((player, index) => {
+                const card = document.createElement('div');
+                card.className = 'player-battle-card' + (index === userIndex ? ' active' : '');
+                const percentage = ((player.bet / currentPool) * 100).toFixed(1);
+                
+                card.innerHTML = `
+                    <div class="avatar">${player.emoji}</div>
+                    <div class="name">${player.name}</div>
+                    <div class="percentage">${percentage}%</div>
+                    <div class="bet-amount">${player.bet} TON</div>
+                    ${index === userIndex ? '<div class="winner-badge">👤</div>' : ''}
+                `;
+                
+                container.appendChild(card);
             });
             
-            logContainer.innerHTML = html;
+            // Update button
+            const btn = document.getElementById('joinBtn');
+            if (isCreatingBattle) {
+                btn.textContent = '🎮 Join the Battle';
+                btn.className = 'battle-btn join';
+            } else {
+                btn.textContent = '⏳ Battle in Progress...';
+                btn.disabled = true;
+            }
         }
 
         // Navigation
@@ -332,8 +471,23 @@
             });
         });
 
-        // Battle button
-        document.getElementById('battleBtn').addEventListener('click', startBattle);
+        // Join battle button
+        document.getElementById('joinBtn').addEventListener('click', () => {
+            if (isCreatingBattle) {
+                // Add player bet to pool
+                currentPool += selectedBet;
+                players.push({
+                    name: playerNames[Math.floor(Math.random() * (playerNames.length - 1)) + 1],
+                    emoji: playerEmojis[Math.floor(Math.random() * (playerEmojis.length - 1)) + 1],
+                    bet: selectedBet,
+                    percentage: 0
+                });
+                updateUI();
+            } else {
+                // Battle already in progress
+                alert('Battle is already in progress!');
+            }
+        });
 
         // Confetti
         function createConfetti() {
@@ -350,14 +504,14 @@
         }
 
         // Initialize
-        document.getElementById('battlesWon').textContent = battlesWon;
-        document.getElementById('winsCount').textContent = battlesWon;
-        document.getElementById('lossesCount').textContent = battlesLost;
-        document.getElementById('dailyChallengeText').textContent = `Daily Challenge: ${3 - dailyChallenges}/3 left`;
+        createBattleWheel();
+        document.getElementById('statWins').textContent = battlesWon;
+        document.getElementById('statLosses').textContent = battlesLost;
+        document.getElementById('statEarned').textContent = totalEarned.toFixed(2);
         document.getElementById('userBalance').textContent = balance;
         document.getElementById('walletBalance').textContent = balance;
-        updateBattleLog();
-        console.log('✅ TON MANDS PVP Ready!');
+        createBattle();
+        console.log('✅ TON MANDS Epic Gift Ready!');
     </script>
 </body>
 </html>
