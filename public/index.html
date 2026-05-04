@@ -4,7 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TON MANDS</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+    // FORCE CACHE CLEAR - Add version query to prevent caching
+    if (window.location.search.indexOf('v=') === -1) {
+        const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?v=' + Date.now();
+        window.history.replaceState({path: newUrl}, '', newUrl);
+    }
+    </script>
     <style>
         * {
             margin: 0;
