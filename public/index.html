@@ -332,7 +332,7 @@
         let userIndex = 0;
         let isBattleActive = false;
 
-        // Create battle wheel segments
+        // Create battle wheel segments with profile photos
         function createBattleWheel() {
             const wheel = document.getElementById('battleWheel');
             const totalBet = players.reduce((sum, p) => sum + p.bet, 0);
@@ -353,7 +353,7 @@
             
             wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
             
-            // Add player labels
+            // Add player labels with profile photos
             wheel.innerHTML = '';
             currentAngle = 0;
             
@@ -369,27 +369,28 @@
                     position: absolute;
                     top: 50%;
                     left: 50%;
-                    width: 100px;
+                    width: 90px;
                     text-align: center;
                     transform-origin: 0 0;
-                    transform: rotate(${centerAngle}deg) translate(70px) rotate(-${centerAngle}deg);
+                    transform: rotate(${centerAngle}deg) translate(65px) rotate(-${centerAngle}deg);
                     z-index: 5;
                 `;
                 
-                // Get Telegram username if available
-                const displayUsername = player.username || '';
                 const displayName = player.name || 'Player';
+                const photoSize = Math.min(50, Math.max(32, 32 + percentage/3));
+                const nameSize = Math.min(13, Math.max(10, 10 + percentage/30));
                 
-                // Auto-scale based on percentage
-                const emojiSize = Math.min(42, Math.max(22, 22 + percentage/3));
-                const nameSize = Math.min(14, Math.max(10, 10 + percentage/30));
-                const userSize = Math.min(11, Math.max(8, 8 + percentage/40));
+                // Use profile photo if available, otherwise use emoji
+                const photoHTML = player.photo ? 
+                    `<div style="width: ${photoSize}px; height: ${photoSize}px; margin: 0 auto 4px; border-radius: 50%; overflow: hidden; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.5);">
+                        <img src="${player.photo}" style="width: 100%; height: 100%; object-fit: cover;" alt="${displayName}">
+                    </div>` :
+                    `<div style="font-size: ${Math.min(40, Math.max(24, 24 + percentage/3))}px; line-height: 1; margin-bottom: 4px;">${player.emoji}</div>`;
                 
                 label.innerHTML = `
-                    <div style="font-size: ${emojiSize}px; line-height: 1; margin-bottom: 4px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));">${player.emoji}</div>
+                    ${photoHTML}
                     <div style="font-size: ${nameSize}px; color: #fff; font-weight: 700; text-shadow: 0 2px 6px rgba(0,0,0,0.9); white-space: nowrap;">${displayName}</div>
-                    ${displayUsername ? `<div style="font-size: ${userSize}px; color: rgba(255,255,255,0.85); margin-top: 2px; text-shadow: 0 1px 4px rgba(0,0,0,0.8);">${displayUsername}</div>` : ''}
-                    <div style="font-size: ${Math.max(11, nameSize)}px; color: rgba(255,255,255,0.95); margin-top: 3px; font-weight: 800;">${percentage.toFixed(0)}%</div>
+                    <div style="font-size: ${Math.max(11, nameSize)}px; color: rgba(255,255,255,0.95); margin-top: 2px; font-weight: 800;">${percentage.toFixed(0)}%</div>
                 `;
                 
                 wheel.appendChild(label);
@@ -426,11 +427,11 @@
             // Reset players - show user immediately with Telegram info
             const userName = user ? (user.first_name || 'You') : 'You';
             const userEmoji = user?.first_name?.charAt(0).toUpperCase() || '👤';
-            const userUsername = user?.username ? `@${user.username}` : '';
+            const userPhoto = user?.photo_url || null;
             
             players = [{
                 name: userName,
-                username: userUsername,
+                photo: userPhoto,
                 emoji: userEmoji,
                 bet: selectedBet,
                 percentage: 100
@@ -469,7 +470,7 @@
                 currentPool += botBet;
                 players.push({
                     name: playerNames[Math.floor(Math.random() * (playerNames.length - 1)) + 1],
-                    username: '',
+                    photo: null,
                     emoji: playerEmojis[Math.floor(Math.random() * (playerEmojis.length - 1)) + 1],
                     bet: parseFloat(botBet.toFixed(3)),
                     percentage: 0
@@ -710,7 +711,7 @@
                 currentPool += selectedBet;
                 const userName = user ? (user.first_name || 'You') : 'You';
                 const userEmoji = user?.first_name?.charAt(0).toUpperCase() || '👤';
-                const userUsername = user?.username ? `@${user.username}` : '';
+                const userPhoto = user?.photo_url || null;
                 
                 // Check if user already exists - if yes, add to their bet (merge)
                 const existingIndex = players.findIndex(p => p.name === userName);
@@ -721,7 +722,7 @@
                     // New player
                     players.push({
                         name: userName,
-                        username: userUsername,
+                        photo: userPhoto,
                         emoji: userEmoji,
                         bet: selectedBet,
                         percentage: 0
