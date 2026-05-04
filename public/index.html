@@ -335,10 +335,10 @@
         let userIndex = 0;
         let isBattleActive = false;
 
-        // Create battle wheel segments
+        // Create battle wheel segments with player profiles
         function createBattleWheel() {
             const wheel = document.getElementById('battleWheel');
-            const numSegments = 8;
+            const numSegments = Math.max(players.length, 8);
             const segmentAngle = 360 / numSegments;
             
             wheel.innerHTML = '';
@@ -348,9 +348,32 @@
                 segment.className = 'wheel-segment';
                 const rotation = i * segmentAngle;
                 segment.style.transform = `rotate(${rotation}deg) skewY(-${90 - segmentAngle}deg)`;
-                const colors = ['#00d4ff', '#0099cc', '#0077aa', '#005588', '#004477', '#003366', '#002255', '#001144'];
-                segment.style.background = colors[i];
-                segment.innerHTML = `<span style="transform: skewY(${90 - segmentAngle}deg) rotate(-${rotation}deg); font-size: 10px; color: rgba(255,255,255,0.6); font-weight: 700;">PVP</span>`;
+                
+                // Check if there's a player for this segment
+                const hasPlayer = i < players.length;
+                const player = hasPlayer ? players[i] : null;
+                
+                // Segment color
+                if (hasPlayer) {
+                    segment.style.background = `linear-gradient(135deg, rgba(0,212,255,0.3), rgba(0,136,204,0.2))`;
+                    segment.style.border = `1px solid rgba(0,212,255,0.4)`;
+                } else {
+                    const colors = ['rgba(255,255,255,0.05)', 'rgba(255,255,255,0.03)'];
+                    segment.style.background = colors[i % 2];
+                }
+                
+                // Segment content
+                if (hasPlayer && player.emoji) {
+                    segment.innerHTML = `
+                        <div style="transform: skewY(${90 - segmentAngle}deg) rotate(-${rotation}deg); display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%;">
+                            <div style="font-size: 18px; margin-bottom: 2px;">${player.emoji}</div>
+                            <div style="font-size: 8px; color: rgba(255,255,255,0.7); font-weight: 600; text-align: center;">${player.name.substring(0, 6)}</div>
+                        </div>
+                    `;
+                } else {
+                    segment.innerHTML = `<span style="transform: skewY(${90 - segmentAngle}deg) rotate(-${rotation}deg); font-size: 10px; color: rgba(255,255,255,0.3); font-weight: 700;">PVP</span>`;
+                }
+                
                 wheel.appendChild(segment);
             }
             
@@ -581,13 +604,16 @@
                 container.appendChild(card);
             });
             
+            // Update wheel with player profiles
+            createBattleWheel();
+            
             // Update button
             const btn = document.getElementById('joinBtn');
             if (isCreatingBattle && !isBattleActive) {
                 const userJoined = players.length > 1;
                 btn.textContent = userJoined ? '✅ Joined! Waiting...' : '⚔️ JOIN BATTLE';
                 btn.className = 'battle-btn join';
-                btn.disabled = players.length > 1; // Disable after joining
+                btn.disabled = players.length > 1;
             } else {
                 btn.textContent = '⏳ Battle in Progress...';
                 btn.disabled = true;
