@@ -757,15 +757,21 @@
             navigator.clipboard.writeText(link).then(() => alert('Link copied!'));
         }
 
-        // Setup navigation
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                handleNav(this.dataset.page);
+        // Setup navigation (wrapped to ensure DOM is ready)
+        function setupNavigation() {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const page = this.dataset.page;
+                    if (page) {
+                        handleNav(page);
+                    }
+                });
             });
-        });
-
-        // Join battle button (client-side only)
-        document.getElementById('joinBtn').addEventListener('click', () => {
+            
+            // Setup join button
+            const joinBtn = document.getElementById('joinBtn');
+            if (joinBtn) {
+                joinBtn.addEventListener('click', () => {
             // Check if betting is still open
             if (!isBettingOpen) {
                 alert('Betting is closed! Wait for next battle.');
@@ -804,7 +810,12 @@
             } else {
                 alert('Battle is already in progress!');
             }
-        });
+                });
+            }
+        }
+        
+        // Setup when DOM is ready
+        setupNavigation();
 
         // Confetti
         function createConfetti() {
