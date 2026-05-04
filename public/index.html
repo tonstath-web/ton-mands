@@ -1207,8 +1207,10 @@
             </div>
             
             <div class="spin-credits">
-                <div style="margin-bottom: 8px;">Total Spins: <span id="totalSpins" style="color: #FFD700; font-weight: 800;">0</span></div>
+                <div style="margin-bottom: 8px;">🎯 Total Spins: <span id="totalSpins" style="color: #FFD700; font-weight: 800;">0</span></div>
+                <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 8px;">Next reward at: <span id="nextReward" style="color: #00d4ff;">5 spins</span></div>
                 <div>Spins Left: <span id="spinCredits">3</span>/day | Tickets: <span id="ticketCredits">0</span></div>
+                <button onclick="resetSpins()" style="margin-top: 12px; background: rgba(255,0,0,0.2); border: 1px solid rgba(255,0,0,0.5); color: #ff6666; padding: 8px 16px; border-radius: 12px; font-size: 11px; cursor: pointer;">🔄 Reset Spins (Debug)</button>
             </div>
             
             <div class="prize-display" id="prizeDisplay">
@@ -1381,7 +1383,12 @@
         let autoSpinEnabled = false;
         let autoSpinInterval = null;
         let winningSegmentIndex = 0;
-        let totalSpins = 0; // Track total spins for requirements
+        
+        // Load totalSpins from localStorage (persist across sessions!)
+        let totalSpins = parseInt(localStorage.getItem('tonmands_totalSpins') || '0');
+        
+        // DEBUG: Log current spin count on load
+        console.log('🎡 TON MANDS Loaded | Total Spins:', totalSpins);
 
         // Generate wheel segments using conic gradient
         function createWheel() {
@@ -1422,10 +1429,23 @@
 
         // Weighted random selection based on probability and spin requirements
         function getWeightedResult() {
-            // STRICT: If totalSpins < 5, MUST be Try Again (no exceptions!)
-            if (totalSpins < 5) {
+            // FORCE MODE: Spin 1-4 MUST be Try Again (HARDCODED!)
+            if (totalSpins <= 4) {
+                console.log('🔒 FORCE Try Again - Spin #', totalSpins, '< 5');
                 return wheelSegments.findIndex(seg => seg.text === 'Try Again');
             }
+            
+            // Spin 5-9: 99.99% Try Again (almost impossible to win)
+            if (totalSpins <= 9) {
+                const forceTryAgain = Math.random() < 0.9999;
+                if (forceTryAgain) {
+                    console.log('🔒 FORCE Try Again - Spin #', totalSpins, '(99.99% forced)');
+                    return wheelSegments.findIndex(seg => seg.text === 'Try Again');
+                }
+            }
+            
+            // Normal probability for spin 10+
+            console.log('🎲 Normal probability - Spin #', totalSpins);
             
             // Filter segments that meet spin requirements
             const eligibleSegments = wheelSegments.filter(seg => totalSpins >= seg.minSpins && seg.text !== 'Try Again');
@@ -1483,6 +1503,9 @@
             // Increment total spins BEFORE getting result
             totalSpins++;
             
+            // SAVE to localStorage (persist across sessions!)
+            localStorage.setItem('tonmands_totalSpins', totalSpins.toString());
+            
             // DEBUG: Log spin count
             console.log('🎡 SPIN #', totalSpins, '| Eligible rewards:', wheelSegments.filter(seg => totalSpins >= seg.minSpins && seg.text !== 'Try Again').length);
             
@@ -1531,6 +1554,9 @@
                 document.getElementById('ticketCredits').textContent = ticketCredits;
                 document.getElementById('totalSpins').textContent = totalSpins;
                 
+                // Update next reward info
+                updateNextRewardDisplay();
+                
                 // Check auto spin
                 if (autoSpinEnabled && spinCredits > 0) {
                     setTimeout(spinWheel, 2000);
@@ -1578,6 +1604,33 @@
             } else {
                 toggle.classList.remove('active');
                 text.textContent = 'Auto Spin OFF';
+            }
+        }
+
+        function resetSpins() {
+            if (confirm('Reset total spins to 0? This will clear your progress!')) {
+                totalSpins = 0;
+                localStorage.setItem('tonmands_totalSpins', '0');
+                document.getElementById('totalSpins').textContent = '0';
+                updateNextRewardDisplay();
+                console.log('🔄 Spins reset to 0');
+            }
+        }
+
+        function updateNextRewardDisplay() {
+            const nextReward = wheelSegments.find(seg => seg.text !== 'Try Again' && totalSpins < seg.minSpins);
+            const nextRewardEl = document.getElementById('nextReward');
+            
+            if (nextReward) {
+                const spinsNeeded = nextReward.minSpins - totalSpins;
+                if (spinsNeeded > 0) {
+                    nextRewardEl.textContent = `${nextReward.text} in ${spinsNeeded} spins`;
+                } else {
+                    nextRewardEl.textContent = `${nextReward.text} UNLOCKED!`;
+                    nextRewardEl.style.color = '#00ff00';
+                }
+            } else {
+                nextRewardEl.textContent = 'All rewards unlocked!';
             }
         }
 
@@ -1690,6 +1743,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Create wheel segments
             createWheel();
+            
+            // Update next reward display
+            updateNextRewardDisplay();
             
             // Setup nav items
             document.querySelectorAll('.nav-item').forEach(item => {
