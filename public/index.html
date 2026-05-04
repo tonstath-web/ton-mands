@@ -1558,21 +1558,34 @@
             const segmentAngle = 360 / wheelSegments.length;
             const minSpins = 5;
             
-            // Pointer is at TOP (0 degrees / -90 in CSS)
-            // To land segment at top, we need to rotate the wheel so that segment is at -90deg
-            // Segment center angle from start
+            // Wheel segments are drawn starting from 3 o'clock (0 deg in CSS)
+            // Each segment center is at: index * segmentAngle + segmentAngle/2
+            // To land segment at TOP (12 o'clock = -90deg or 270deg):
+            // We need: segment_center + rotation = 270 (mod 360)
+            // So: rotation = 270 - segment_center
+            
             const segmentCenterAngle = (winningSegmentIndex * segmentAngle) + (segmentAngle / 2);
             
-            // Calculate target rotation: 
-            // - We want segmentCenterAngle to end up at -90deg (top)
-            // - So we rotate: -90 - segmentCenterAngle
-            // - Plus minimum spins for animation
-            const extraSpins = (minSpins * 360);
-            const targetPosition = -90 - segmentCenterAngle;
+            // Target rotation to bring this segment to top
+            const baseTargetRotation = 270 - segmentCenterAngle;
             
-            // Round to nearest 360 to keep rotation smooth
-            const fullRotations = Math.ceil((currentRotation - targetPosition) / 360) * 360;
-            const totalRotation = fullRotations + extraSpins + targetPosition;
+            // Add minimum full spins for animation effect
+            const extraSpins = (minSpins * 360);
+            
+            // Calculate final rotation (always positive, always increasing)
+            // Find the next rotation value that's >= currentRotation + extraSpins
+            let totalRotation = currentRotation + extraSpins;
+            
+            // Adjust to land exactly on target
+            const rotationMod = totalRotation % 360;
+            let adjustment = baseTargetRotation - rotationMod;
+            
+            // Make sure we always rotate forward (positive)
+            if (adjustment < 0) adjustment += 360;
+            
+            totalRotation += adjustment;
+            
+            console.log('🎡 Segment:', winningSegmentIndex, '| Center:', segmentCenterAngle, '| Target:', baseTargetRotation, '| Final:', totalRotation);
             
             const wheel = document.getElementById('luckyWheel');
             wheel.style.transform = `rotate(${totalRotation}deg)`;
