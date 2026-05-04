@@ -207,8 +207,8 @@
         /* Lucky Wheel Styles */
         .lucky-wheel-container {
             position: relative;
-            width: 280px;
-            height: 280px;
+            width: 320px;
+            height: 320px;
             margin: 0 auto 32px;
         }
 
@@ -217,70 +217,27 @@
             height: 100%;
             border-radius: 50%;
             position: relative;
-            overflow: hidden;
             transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
             box-shadow: 
-                0 0 0 8px #FFD700,
-                0 0 0 14px #FF8C00,
+                0 0 0 10px #FFD700,
+                0 0 0 16px #FF8C00,
                 0 20px 60px rgba(0, 0, 0, 0.6),
-                0 0 100px rgba(255, 215, 0, 0.4);
-            border: 5px solid #FFA500;
+                0 0 120px rgba(255, 215, 0, 0.5);
+            border: 6px solid #FFA500;
         }
 
-        .lucky-wheel::before {
-            content: '';
+        .wheel-pointer {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
-            pointer-events: none;
-            z-index: 5;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 30;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
         }
 
-        .wheel-segment {
-            position: absolute;
-            width: 50%;
-            height: 50%;
-            transform-origin: 100% 100%;
-            top: 0;
-            left: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            clip-path: polygon(0 0, 100% 0, 100% 100%);
-        }
-
-        .segment-content {
-            position: absolute;
-            left: 60%;
-            top: 60%;
-            transform: translate(-50%, -50%);
-            font-size: 13px;
-            font-weight: 800;
-            color: white;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 0, 0, 0.5);
-            text-align: center;
-            white-space: nowrap;
-            line-height: 1.4;
-            z-index: 10;
-        }
-
-        .segment-icon {
-            font-size: 32px;
-            margin-bottom: 4px;
-            display: block;
-            filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
-        }
-
-        .segment-text {
-            font-size: 12px;
-            font-weight: 700;
-            display: block;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
+        .wheel-pointer svg {
+            width: 50px;
+            height: 60px;
         }
 
         .wheel-center {
@@ -288,57 +245,49 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 80px;
-            height: 80px;
-            background: radial-gradient(circle, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+            width: 90px;
+            height: 90px;
+            background: radial-gradient(circle, #FFD700 0%, #FFA500 100%);
             border-radius: 50%;
             box-shadow: 
                 0 8px 32px rgba(0, 0, 0, 0.6),
-                inset 0 4px 16px rgba(255, 255, 255, 0.5),
-                0 0 40px rgba(255, 215, 0, 0.5);
-            border: 5px solid rgba(255, 255, 255, 0.4);
+                inset 0 4px 20px rgba(255, 255, 255, 0.6),
+                0 0 50px rgba(255, 215, 0, 0.6);
+            border: 6px solid rgba(255, 255, 255, 0.5);
             z-index: 20;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
+            font-size: 40px;
         }
 
-        /* Segment dividers */
-        .wheel-segment::after {
-            content: '';
+        .wheel-label {
             position: absolute;
-            top: 0;
-            right: 0;
-            width: 2px;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .wheel-pointer {
-            position: absolute;
-            top: -25px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 18px solid transparent;
-            border-right: 18px solid transparent;
-            border-top: 50px solid #FF3333;
-            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
-            z-index: 25;
+            transform-origin: 0 0;
+            text-align: center;
+            z-index: 15;
+            pointer-events: none;
         }
 
-        .wheel-pointer::after {
-            content: '';
-            position: absolute;
-            top: 8px;
-            left: -18px;
-            width: 0;
-            height: 0;
-            border-left: 18px solid transparent;
-            border-right: 18px solid transparent;
-            border-top: 42px solid #FF6666;
+        .wheel-icon {
+            font-size: 36px;
+            display: block;
+            line-height: 1;
+            filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.5));
+        }
+
+        .wheel-label-text {
+            font-size: 13px;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 0, 0, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            display: block;
+            margin-top: 4px;
         }
 
         .spin-title {
@@ -1236,7 +1185,12 @@
             <div class="spin-subtitle">Spin to win amazing rewards!</div>
             
             <div class="lucky-wheel-container">
-                <div class="wheel-pointer"></div>
+                <div class="wheel-pointer">
+                    <svg viewBox="0 0 50 60" fill="none">
+                        <path d="M25 60L0 0L50 0L25 60Z" fill="#FF3333" stroke="#FF6666" stroke-width="2"/>
+                        <circle cx="25" cy="15" r="8" fill="#FFD700"/>
+                    </svg>
+                </div>
                 <div class="lucky-wheel" id="luckyWheel">
                     <!-- Segments will be generated by JS -->
                 </div>
@@ -1427,29 +1381,40 @@
         let autoSpinInterval = null;
         let winningSegmentIndex = 0;
 
-        // Generate wheel segments
+        // Generate wheel segments using conic gradient
         function createWheel() {
             const wheel = document.getElementById('luckyWheel');
             const segmentAngle = 360 / wheelSegments.length;
             
+            // Create conic gradient for wheel background
+            let gradientParts = [];
             wheelSegments.forEach((segment, index) => {
-                const segmentEl = document.createElement('div');
-                segmentEl.className = 'wheel-segment';
-                segmentEl.style.background = segment.color;
+                const startAngle = index * segmentAngle;
+                const endAngle = (index + 1) * segmentAngle;
+                gradientParts.push(`${segment.color} ${startAngle}deg ${endAngle}deg`);
+            });
+            wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
+            
+            // Add segment labels
+            wheelSegments.forEach((segment, index) => {
+                const label = document.createElement('div');
+                label.className = 'wheel-label';
                 
-                // Calculate rotation for this segment
-                const rotation = index * segmentAngle;
-                segmentEl.style.transform = `rotate(${rotation}deg)`;
+                // Position at 70% radius from center
+                const radius = 110; // pixels from center
+                const angle = (index * segmentAngle) + (segmentAngle / 2); // center of segment
+                const radians = (angle - 90) * (Math.PI / 180); // -90 to start from top
                 
-                const content = document.createElement('div');
-                content.className = 'segment-content';
-                // Rotate content to be readable
-                const contentRotation = rotation + (segmentAngle / 2);
-                content.style.transform = `translate(-50%, -50%) rotate(${contentRotation}deg)`;
-                content.innerHTML = `<span class="segment-icon">${segment.icon}</span><span class="segment-text">${segment.text}</span>`;
+                const x = Math.cos(radians) * radius;
+                const y = Math.sin(radians) * radius;
                 
-                segmentEl.appendChild(content);
-                wheel.appendChild(segmentEl);
+                label.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+                label.innerHTML = `
+                    <span class="wheel-icon">${segment.icon}</span>
+                    <span class="wheel-label-text">${segment.text}</span>
+                `;
+                
+                wheel.appendChild(label);
             });
         }
 
