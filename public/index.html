@@ -1422,28 +1422,45 @@
 
         // Weighted random selection based on probability and spin requirements
         function getWeightedResult() {
-            // Filter segments that meet spin requirements
-            const eligibleSegments = wheelSegments.filter(seg => totalSpins >= seg.minSpins);
-            
-            // If no segments eligible (shouldn't happen), allow Try Again
-            if (eligibleSegments.length === 0) {
+            // STRICT: If totalSpins < 5, MUST be Try Again (no exceptions!)
+            if (totalSpins < 5) {
                 return wheelSegments.findIndex(seg => seg.text === 'Try Again');
             }
             
-            // Calculate total probability of eligible segments
-            const totalProbability = eligibleSegments.reduce((sum, seg) => sum + seg.probability, 0);
+            // Filter segments that meet spin requirements
+            const eligibleSegments = wheelSegments.filter(seg => totalSpins >= seg.minSpins && seg.text !== 'Try Again');
+            
+            // Get Try Again segment
+            const tryAgainIndex = wheelSegments.findIndex(seg => seg.text === 'Try Again');
+            const tryAgainProb = wheelSegments.find(seg => seg.text === 'Try Again').probability;
+            
+            // If no rewards eligible yet, return Try Again
+            if (eligibleSegments.length === 0) {
+                return tryAgainIndex;
+            }
+            
+            // Calculate total probability (rewards only)
+            const totalRewardProbability = eligibleSegments.reduce((sum, seg) => sum + seg.probability, 0);
+            const totalProbability = totalRewardProbability + tryAgainProb;
+            
             let random = Math.random() * totalProbability;
             
+            // First check if it's Try Again
+            if (random < tryAgainProb) {
+                return tryAgainIndex;
+            }
+            
+            // Otherwise pick a reward
+            random -= tryAgainProb;
             for (let i = 0; i < eligibleSegments.length; i++) {
                 random -= eligibleSegments[i].probability;
                 if (random <= 0) {
-                    // Find original index
                     return wheelSegments.findIndex(seg => seg.text === eligibleSegments[i].text);
                 }
             }
             
             // Fallback to Try Again
-            return wheelSegments.findIndex(seg => seg.text === 'Try Again');
+            return tryAgainIndex;
         }
 
         function spinWheel() {
