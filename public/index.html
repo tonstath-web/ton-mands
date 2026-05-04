@@ -26,20 +26,14 @@
         .spin-title { font-size: 28px; font-weight: 900; background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
         .spin-subtitle { font-size: 15px; color: rgba(255,255,255,0.6); margin-bottom: 28px; }
         
-        /* Lucky Wheel */
+        /* Lucky Wheel - CLEAN DESIGN */
         .lucky-wheel-container { position: relative; width: 280px; height: 280px; margin: 0 auto 32px; }
-        .lucky-wheel { width: 100%; height: 100%; border-radius: 50%; transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); box-shadow: 0 0 0 10px #FFD700, 0 0 0 16px #FF8C00, 0 20px 60px rgba(0,0,0,0.6); border: 6px solid #FFA500; }
+        .lucky-wheel { width: 100%; height: 100%; border-radius: 50%; transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); box-shadow: 0 0 0 8px #FFD700, 0 0 0 14px #FF8C00, 0 20px 60px rgba(0,0,0,0.6); border: 5px solid #FFA500; }
         .lucky-wheel.spinning { animation: blurSpin 0.05s linear infinite; }
         @keyframes blurSpin { 0% { filter: blur(0px); } 50% { filter: blur(2px); } 100% { filter: blur(0px); } }
-        .lucky-wheel.spinning { animation: wheelShake 0.1s infinite, blurEffect 0.05s infinite; }
-        @keyframes wheelShake { 0%, 100% { transform: rotate(0deg) translateX(0); } 25% { transform: rotate(0deg) translateX(-2px); } 75% { transform: rotate(0deg) translateX(2px); } }
-        @keyframes blurEffect { 0%, 100% { filter: blur(0px); } 50% { filter: blur(3px); } }
-        .wheel-pointer { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); z-index: 30; }
-        .wheel-pointer svg { width: 50px; height: 60px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6)); }
-        .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90px; height: 90px; background: radial-gradient(circle, #FFD700, #FFA500); border-radius: 50%; box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 4px 20px rgba(255,255,255,0.6); border: 6px solid rgba(255,255,255,0.5); z-index: 20; display: flex; align-items: center; justify-content: center; font-size: 40px; }
-        .wheel-label { position: absolute; top: 50%; left: 50%; transform-origin: 0 0; text-align: center; z-index: 15; pointer-events: none; }
-        .wheel-icon { font-size: 36px; display: block; line-height: 1; filter: drop-shadow(0 3px 8px rgba(0,0,0,0.5)); }
-        .wheel-label-text { font-size: 13px; font-weight: 800; color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.8); text-transform: uppercase; display: block; margin-top: 4px; }
+        .wheel-pointer { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); z-index: 30; }
+        .wheel-pointer svg { width: 40px; height: 50px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6)); }
+        .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: radial-gradient(circle, #FFD700, #FFA500); border-radius: 50%; box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 4px 20px rgba(255,255,255,0.6); border: 5px solid rgba(255,255,255,0.5); z-index: 20; display: flex; align-items: center; justify-content: center; font-size: 32px; }
         
         /* Spin Button */
         .spin-btn { background: linear-gradient(135deg, #9C27B0, #7B1FA2, #6A1B9A); color: #FFD700; border: 3px solid #FFD700; padding: 20px 72px; border-radius: 40px; font-size: 28px; font-weight: 900; cursor: pointer; box-shadow: 0 8px 32px rgba(156,39,176,0.5), 0 0 80px rgba(255,215,0,0.2); transition: all 0.3s; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 16px; }
@@ -50,7 +44,8 @@
         .auto-spin-toggle { display: flex; align-items: center; justify-content: center; gap: 12px; background: rgba(255,255,255,0.08); padding: 14px 24px; border-radius: 24px; margin: 0 auto 24px; max-width: 280px; cursor: pointer; transition: all 0.3s; }
         .auto-spin-toggle.active { background: rgba(156,39,176,0.3); border: 1px solid #9C27B0; }
         .auto-spin-icon { font-size: 20px; }
-        .auto-spin-text { font-size: 14px; font-weight: 700; }
+        .auto-spin-text { font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.7); }
+        .auto-spin-toggle.active .auto-spin-text { color: #9C27B0; }
         
         /* Spin Credits */
         .spin-credits { background: rgba(0,0,0,0.25); padding: 14px 24px; border-radius: 18px; display: inline-block; font-size: 15px; color: rgba(255,255,255,0.6); }
@@ -118,7 +113,7 @@
             </div>
         </div>
 
-        <!-- Spin Section (same as home for now) -->
+        <!-- Spin Section -->
         <div id="spin" class="page-section">
             <div class="spin-section">
                 <div class="spin-title">🎡 Lucky Wheel</div>
@@ -193,15 +188,15 @@
             document.getElementById('userAvatar').textContent = user.first_name?.charAt(0).toUpperCase() || 'U';
         }
 
-        // Wheel segments - ORDER MATTERS! First segment will be at TOP (12 o'clock)
+        // Wheel segments - CLEAN (no icons/text on wheel)
         const wheelSegments = [
-            { color: '#FF3333', icon: '❌', text: 'TRY AGAIN' },
-            { color: '#FF6666', icon: '💎', text: '0.02 TON' },
-            { color: '#FF9999', icon: '💰', text: '0.2 TON' },
-            { color: '#E040FB', icon: '🎁', text: '0.4 TON' },
-            { color: '#7C4DFF', icon: '⭐', text: '0.8 TON' },
-            { color: '#536DFE', icon: '🏆', text: '1 TON' },
-            { color: '#FFD740', icon: '👑', text: '50 TON' }
+            { color: '#FF3333', text: 'TRY AGAIN' },
+            { color: '#FF6666', text: '0.02 TON' },
+            { color: '#FF9999', text: '0.2 TON' },
+            { color: '#E040FB', text: '0.4 TON' },
+            { color: '#7C4DFF', text: '0.8 TON' },
+            { color: '#536DFE', text: '1 TON' },
+            { color: '#FFD740', text: '50 TON' }
         ];
 
         const prizes = {
@@ -222,14 +217,13 @@
         let totalSpins = parseInt(localStorage.getItem('tonmands_totalSpins') || '0');
         let autoSpinEnabled = false;
 
-        // Create wheel
+        // Create wheel - CLEAN (just colors, no labels)
         function createWheel() {
             const wheel = document.getElementById('luckyWheel');
             const segmentAngle = 360 / wheelSegments.length;
             const halfSegment = segmentAngle / 2;
             
-            // CRITICAL: Center segment 0 (TRY AGAIN) at TOP (12 o'clock)
-            // Shift all segments by -halfSegment so segment 0 is centered at 0°
+            // Center segment 0 (TRY AGAIN) at TOP (12 o'clock)
             let gradientParts = [];
             wheelSegments.forEach((segment, index) => {
                 const startAngle = (index * segmentAngle) - halfSegment;
@@ -238,37 +232,19 @@
             });
             wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
             
-            // Position labels at center of each segment
-            wheelSegments.forEach((segment, index) => {
-                const label = document.createElement('div');
-                label.className = 'wheel-label';
-                const radius = 90;
-                const angle = (index * segmentAngle) - halfSegment;
-                const radians = angle * (Math.PI / 180);
-                const x = Math.cos(radians) * radius;
-                const y = Math.sin(radians) * radius;
-                label.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
-                label.innerHTML = `<span class="wheel-icon">${segment.icon}</span><span class="wheel-label-text">${segment.text}</span>`;
-                wheel.appendChild(label);
-            });
-            
             // Initialize wheel rotation (TRY AGAIN at TOP = 0°)
             currentRotation = 0;
             wheel.style.transform = 'rotate(0deg)';
             
-            console.log('✅ Wheel created | Segment 0 (TRY AGAIN) centered at 0° (12 o\'clock)');
-            console.log('   Segment Angle:', segmentAngle.toFixed(2) + '°');
-            console.log('   Half Segment:', halfSegment.toFixed(2) + '°');
+            console.log('✅ Wheel created | Segment 0 (TRY AGAIN) centered at 12 o\'clock');
         }
 
-        // Get result (Try Again for first 4 spins)
+        // Get result (TRY AGAIN for first 4 spins)
         function getResult() {
-            // HARDCODE: First 4 spins MUST be Try Again (index 0)
             if (totalSpins <= 4) {
-                console.log('🔒 Spin #' + totalSpins + ': FORCED Try Again (index 0)');
-                return 0; // Try Again
+                console.log('🔒 Spin #' + totalSpins + ': FORCED TRY AGAIN');
+                return 0;
             }
-            // After 4 spins: 99.9% Try Again, 0.1% random reward
             return Math.random() < 0.001 ? Math.floor(Math.random() * 6) + 1 : 0;
         }
 
@@ -288,31 +264,23 @@
             
             isSpinning = true;
             const btn = document.getElementById('spinBtn');
+            const wheel = document.getElementById('luckyWheel');
             btn.disabled = true;
             btn.textContent = '🔄 SPINNING...';
             
             // Add spinning animation
-            const wheel = document.getElementById('luckyWheel');
             wheel.classList.add('spinning');
             
             const winningIndex = getResult();
             const segmentAngle = 360 / wheelSegments.length;
-            const extraSpins = 5 * 360; // 1800°
+            const extraSpins = 5 * 360;
             
-            console.log('🎡 SPIN #' + totalSpins + ' STARTED');
-            console.log('   Winning Index: ' + winningIndex);
-            console.log('   Winning Segment: ' + wheelSegments[winningIndex].text);
+            console.log('🎡 SPIN #' + totalSpins + ' | Index: ' + winningIndex + ' (' + wheelSegments[winningIndex].text + ')');
             
             // Segment 0 (TRY AGAIN) is CENTERED at 0° (12 o'clock)
-            // Other segments are at: index * segmentAngle (from 0°)
-            // To bring segment to TOP: rotate by -(index * segmentAngle)
-            
             const segmentPosition = winningIndex * segmentAngle;
-            
-            // Target: bring this segment to 0° (TOP)
             const targetRotationMod = (360 - segmentPosition) % 360;
             
-            // Calculate total rotation (5 spins + adjustment to land on target)
             let targetRotation = currentRotation + extraSpins;
             const remainder = targetRotation % 360;
             let adjustment = targetRotationMod - remainder;
@@ -320,12 +288,8 @@
             
             targetRotation += adjustment;
             
-            console.log('   Segment Position: ' + segmentPosition.toFixed(2) + '°');
-            console.log('   Target Mod: ' + targetRotationMod.toFixed(2) + '°');
-            console.log('   Total Rotation: ' + targetRotation.toFixed(2) + '°');
-            console.log('   (Final % 360): ' + (targetRotation % 360).toFixed(2) + '°');
+            console.log('   Rotation: ' + targetRotation.toFixed(2) + '° | Final: ' + (targetRotation % 360).toFixed(2) + '°');
             
-            const wheel = document.getElementById('luckyWheel');
             wheel.style.transform = `rotate(${targetRotation}deg)`;
             
             setTimeout(() => {
