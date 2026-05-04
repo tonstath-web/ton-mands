@@ -293,7 +293,15 @@
             console.log('🎡 SPIN #' + totalSpins + ' | Index: ' + winningIndex + ' (' + wheelSegments[winningIndex].text + ')');
             
             // Segment 0 (TRY AGAIN) is CENTERED at 0° (12 o'clock)
-            const segmentPosition = winningIndex * segmentAngle;
+            // Add random offset within segment for natural look (except for rewards)
+            let offset = 0;
+            if (winningIndex === 0) {
+                // TRY AGAIN: Random position within segment (-20° to +20° from center)
+                offset = (Math.random() - 0.5) * 40;
+                console.log('   TRY AGAIN offset: ' + offset.toFixed(2) + '°');
+            }
+            
+            const segmentPosition = (winningIndex * segmentAngle) + offset;
             const targetRotationMod = (360 - segmentPosition) % 360;
             
             let targetRotation = currentRotation + extraSpins;
