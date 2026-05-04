@@ -190,100 +190,170 @@
         .spin-section {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 28px 20px;
+            border-radius: 28px;
+            padding: 32px 20px;
             margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
             display: none;
+            position: relative;
         }
 
         .spin-section.active {
             display: block;
         }
 
-        .spin-title {
-            font-size: 24px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
+        /* Lucky Wheel Styles */
+        .lucky-wheel-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin: 0 auto 32px;
         }
 
-        .spin-subtitle {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 20px;
-        }
-
-        .slot-machine {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-
-        .reel {
-            width: 80px;
-            height: 100px;
-            background: linear-gradient(180deg, #1a2d4a 0%, #0a0e1a 100%);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 44px;
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.5),
-                inset 0 2px 12px rgba(255, 255, 255, 0.1),
-                0 0 40px rgba(0, 212, 255, 0.2);
-            border: 3px solid #00d4ff;
+        .lucky-wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
             position: relative;
             overflow: hidden;
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            box-shadow: 
+                0 0 0 8px #FFD700,
+                0 0 0 12px #FFA500,
+                0 16px 48px rgba(0, 0, 0, 0.5),
+                inset 0 0 30px rgba(0, 0, 0, 0.3);
         }
 
-        .reel::before {
+        .lucky-wheel::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 40%;
-            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            bottom: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,215,0,0.2) 0%, transparent 70%);
             pointer-events: none;
         }
 
-        .reel.spinning {
-            animation: blur 0.1s infinite;
+        .wheel-segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: bottom right;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            clip-path: polygon(0 0, 100% 0, 100% 100%);
         }
 
-        @keyframes blur {
-            0% { filter: blur(0); }
-            50% { filter: blur(2px); }
-            100% { filter: blur(0); }
+        .segment-content {
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .segment-icon {
+            font-size: 32px;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #FFD700 0%, #FFA500 100%);
+            border-radius: 50%;
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.4),
+                inset 0 2px 8px rgba(255, 255, 255, 0.4);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 40px solid #FFD700;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+            z-index: 20;
+        }
+
+        .wheel-pointer::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: -22px;
+            width: 0;
+            height: 0;
+            border-left: 22px solid transparent;
+            border-right: 22px solid transparent;
+            border-top: 44px solid #FFA500;
+        }
+
+        .spin-title {
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .spin-subtitle {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 28px;
+            font-weight: 500;
         }
 
         .spin-btn {
-            background: linear-gradient(135deg, #FFD700 0%, #FF8C00 50%, #FFD700 100%);
+            background: linear-gradient(135deg, #9C27B0 0%, #7B1FA2 50%, #6A1B9A 100%);
             background-size: 200% 100%;
-            color: #000000;
-            border: none;
-            padding: 20px 64px;
-            border-radius: 36px;
-            font-size: 22px;
+            color: #FFD700;
+            border: 3px solid #FFD700;
+            padding: 20px 72px;
+            border-radius: 40px;
+            font-size: 28px;
             font-weight: 900;
             cursor: pointer;
             box-shadow: 
-                0 8px 32px rgba(255, 215, 0, 0.5),
-                0 0 60px rgba(255, 140, 0, 0.3),
-                inset 0 2px 0 rgba(255, 255, 255, 0.4);
+                0 8px 32px rgba(156, 39, 176, 0.5),
+                0 0 60px rgba(156, 39, 176, 0.3),
+                0 0 80px rgba(255, 215, 0, 0.2),
+                inset 0 2px 0 rgba(255, 255, 255, 0.3);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             position: relative;
             overflow: hidden;
+            margin-bottom: 16px;
         }
 
         .spin-btn::before {
@@ -293,8 +363,8 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.5s;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
         }
 
         .spin-btn:hover::before {
@@ -302,10 +372,63 @@
         }
 
         .spin-btn:active {
-            transform: scale(0.92);
+            transform: scale(0.95);
             box-shadow: 
-                0 4px 16px rgba(255, 215, 0, 0.5),
-                0 0 30px rgba(255, 140, 0, 0.3);
+                0 4px 16px rgba(156, 39, 176, 0.5),
+                0 0 40px rgba(156, 39, 176, 0.3);
+        }
+
+        .spin-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auto-spin-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 14px 24px;
+            border-radius: 24px;
+            margin: 0 auto 24px;
+            max-width: 280px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            user-select: none;
+        }
+
+        .auto-spin-toggle.active {
+            background: rgba(156, 39, 176, 0.3);
+            border-color: #9C27B0;
+        }
+
+        .auto-spin-icon {
+            font-size: 20px;
+            filter: grayscale(0.5);
+            transition: all 0.3s;
+        }
+
+        .auto-spin-toggle.active .auto-spin-icon {
+            filter: grayscale(0);
+            animation: pulse 1.5s infinite;
+        }
+
+        .auto-spin-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .auto-spin-toggle.active .auto-spin-text {
+            color: #9C27B0;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
         }
 
         .spin-btn:disabled {
@@ -314,20 +437,22 @@
         }
 
         .spin-credits {
-            margin-top: 24px;
+            margin-top: 20px;
             font-size: 15px;
-            color: rgba(255, 255, 255, 0.5);
-            background: rgba(0, 0, 0, 0.2);
-            padding: 12px 20px;
-            border-radius: 16px;
+            color: rgba(255, 255, 255, 0.6);
+            background: rgba(0, 0, 0, 0.25);
+            padding: 14px 24px;
+            border-radius: 18px;
             display: inline-block;
             border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
         }
 
         .spin-credits span {
             color: #FFD700;
             font-weight: 800;
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            font-size: 16px;
         }
 
         /* Prize Display */
@@ -1081,21 +1206,28 @@
 
         <!-- Spin Section -->
         <div id="spin" class="page-section spin-section">
-            <div class="spin-title">🎰 TON Spin</div>
-            <div class="spin-subtitle">Spin to win crypto rewards!</div>
+            <div class="spin-title">🎡 Lucky Wheel</div>
+            <div class="spin-subtitle">Spin to win amazing rewards!</div>
             
-            <div class="slot-machine">
-                <div class="reel" id="reel1">🍒</div>
-                <div class="reel" id="reel2">🍋</div>
-                <div class="reel" id="reel3">🍇</div>
+            <div class="lucky-wheel-container">
+                <div class="wheel-pointer"></div>
+                <div class="lucky-wheel" id="luckyWheel">
+                    <!-- Segments will be generated by JS -->
+                </div>
+                <div class="wheel-center">💎</div>
             </div>
             
-            <button class="spin-btn" id="spinBtn" onclick="spin()">
-                SPIN!
+            <button class="spin-btn" id="spinBtn" onclick="spinWheel()">
+                ⭐ SPIN ⭐
             </button>
             
+            <div class="auto-spin-toggle" onclick="toggleAutoSpin()">
+                <span class="auto-spin-icon">🔄</span>
+                <span class="auto-spin-text" id="autoSpinText">Auto Spin OFF</span>
+            </div>
+            
             <div class="spin-credits">
-                Free Spins: <span id="spinCredits">3</span>/day | Tickets: <span id="ticketCredits">0</span>
+                Spins Left: <span id="spinCredits">3</span>/day | Tickets: <span id="ticketCredits">0</span>
             </div>
             
             <div class="prize-display" id="prizeDisplay">
@@ -1239,31 +1371,67 @@
             document.getElementById('userAvatar').textContent = initial;
         }
 
-        // Spin feature
-        const symbols = ['🍒', '🍋', '🍇', '💎', '7️⃣', '🔔'];
+        // Lucky Wheel feature
+        const wheelSegments = [
+            { color: '#9C27B0', icon: '🔑', text: '+1 Key' },
+            { color: '#E91E63', icon: '💰', text: '$0.01 USDT' },
+            { color: '#673AB7', icon: '🎁', text: '$0.1 USDT' },
+            { color: '#3F51B5', icon: '💎', text: '$10 USDT' },
+            { color: '#2196F3', icon: '💵', text: '$0.50 USDT' },
+            { color: '#03A9F4', icon: '⭐', text: '+500 XP' },
+            { color: '#00BCD4', icon: '🎁', text: 'Box' },
+            { color: '#4CAF50', icon: '⭐', text: '+300 XP' },
+            { color: '#8BC34A', icon: '⭐', text: '+2000 XP' }
+        ];
+
         const prizes = {
-            '🍒': 0.01,
-            '🍋': 0.02,
-            '🍇': 0.05,
-            '💎': 0.1,
-            '7️⃣': 0.25,
-            '🔔': 0.5
+            '+1 Key': { type: 'key', value: 1 },
+            '$0.01 USDT': { type: 'usdt', value: 0.01 },
+            '$0.1 USDT': { type: 'usdt', value: 0.1 },
+            '$0.50 USDT': { type: 'usdt', value: 0.5 },
+            '$10 USDT': { type: 'usdt', value: 10 },
+            '+300 XP': { type: 'xp', value: 300 },
+            '+500 XP': { type: 'xp', value: 500 },
+            '+2000 XP': { type: 'xp', value: 2000 },
+            'Box': { type: 'box', value: 'random' }
         };
 
         let spinCredits = 3;
         let ticketCredits = 0;
         let balance = 0;
         let isSpinning = false;
+        let currentRotation = 0;
+        let autoSpinEnabled = false;
+        let autoSpinInterval = null;
 
-        function spin() {
+        // Generate wheel segments
+        function createWheel() {
+            const wheel = document.getElementById('luckyWheel');
+            const segmentAngle = 360 / wheelSegments.length;
+            
+            wheelSegments.forEach((segment, index) => {
+                const segmentEl = document.createElement('div');
+                segmentEl.className = 'wheel-segment';
+                segmentEl.style.background = segment.color;
+                segmentEl.style.transform = `rotate(${index * segmentAngle}deg) skewY(-${90 - segmentAngle}deg)`;
+                
+                const content = document.createElement('div');
+                content.className = 'segment-content';
+                content.innerHTML = `<span class="segment-icon">${segment.icon}</span>${segment.text}`;
+                content.style.transform = `skewY(${90 - segmentAngle}deg) rotate(${segmentAngle / 2}deg)`;
+                
+                segmentEl.appendChild(content);
+                wheel.appendChild(segmentEl);
+            });
+        }
+
+        function spinWheel() {
             if (isSpinning) return;
             
             // Check if has tickets
             if (spinCredits > 0) {
-                useTicket(spinCredits);
                 spinCredits--;
             } else if (ticketCredits > 0) {
-                useTicket(ticketCredits);
                 ticketCredits--;
             } else {
                 tg.showPopup({
@@ -1283,82 +1451,88 @@
             
             tg.HapticFeedback.impactOccurred('medium');
             
-            // Start spinning animation
-            const reels = [document.getElementById('reel1'), document.getElementById('reel2'), document.getElementById('reel3')];
-            reels.forEach(reel => reel.classList.add('spinning'));
+            // Calculate random rotation (minimum 5 full spins + random segment)
+            const minSpins = 5;
+            const segmentAngle = 360 / wheelSegments.length;
+            const randomOffset = Math.floor(Math.random() * wheelSegments.length);
+            const extraRotation = Math.floor(Math.random() * 360);
+            const totalRotation = currentRotation + (minSpins * 360) + (randomOffset * segmentAngle) + extraRotation;
             
-            // Random symbols during spin
-            const spinInterval = setInterval(() => {
-                reels.forEach(reel => {
-                    reel.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-                });
-            }, 100);
+            const wheel = document.getElementById('luckyWheel');
+            wheel.style.transform = `rotate(-${totalRotation}deg)`;
             
-            // Stop after 2 seconds
+            // Wait for animation to complete
             setTimeout(() => {
-                clearInterval(spinInterval);
-                
-                // Determine result
-                const results = [
-                    symbols[Math.floor(Math.random() * symbols.length)],
-                    symbols[Math.floor(Math.random() * symbols.length)],
-                    symbols[Math.floor(Math.random() * symbols.length)]
-                ];
-                
-                // Show results
-                reels.forEach((reel, i) => {
-                    reel.classList.remove('spinning');
-                    reel.textContent = results[i];
-                });
-                
-                // Check win
-                const prize = calculatePrize(results);
-                
-                if (prize > 0) {
-                    balance += prize;
-                    document.getElementById('prizeDisplay').className = 'prize-display win';
-                    document.getElementById('prizeDisplay').textContent = `🎉 WIN: ${prize} TON!`;
-                    tg.HapticFeedback.notificationOccurred('success');
-                    createConfetti();
-                    updateBalanceDisplay();
-                } else {
-                    document.getElementById('prizeDisplay').className = 'prize-display';
-                    document.getElementById('prizeDisplay').textContent = 'Try again!';
-                    tg.HapticFeedback.impactOccurred('light');
-                }
-                
+                currentRotation = totalRotation;
                 isSpinning = false;
                 btn.disabled = false;
-                btn.textContent = 'SPIN!';
+                btn.textContent = '⭐ SPIN ⭐';
+                
+                // Calculate winning segment
+                const normalizedRotation = totalRotation % 360;
+                const winningIndex = Math.floor(normalizedRotation / segmentAngle);
+                const winningSegment = wheelSegments[winningIndex];
+                const prize = prizes[winningSegment.text];
+                
+                // Show result
+                displayPrize(winningSegment, prize);
                 
                 // Update displays
                 document.getElementById('spinCredits').textContent = spinCredits;
                 document.getElementById('ticketCredits').textContent = ticketCredits;
-            }, 2000);
+                
+                // Check auto spin
+                if (autoSpinEnabled && spinCredits > 0) {
+                    setTimeout(spinWheel, 2000);
+                }
+            }, 4000);
         }
 
-        function calculatePrize(results) {
-            const [r1, r2, r3] = results;
+        function displayPrize(segment, prize) {
+            const prizeDisplay = document.getElementById('prizeDisplay');
             
-            // Jackpot - all same
-            if (r1 === r2 && r2 === r3) {
-                return prizes[r1] * 10;
-            }
-            
-            // Two same
-            if (r1 === r2 || r2 === r3 || r1 === r3) {
-                return prizes[r1] + prizes[r2] + prizes[r3];
-            }
-            
-            // No win
-            return 0;
-        }
-
-        function useTicket(credits) {
-            if (credits === 0) {
-                spinCredits--;
+            if (prize.type === 'usdt') {
+                balance += prize.value;
+                prizeDisplay.className = 'prize-display win';
+                prizeDisplay.textContent = `🎉 WIN: ${prize.value} USDT!`;
+                tg.HapticFeedback.notificationOccurred('success');
+                createConfetti();
+                updateBalanceDisplay();
+            } else if (prize.type === 'key') {
+                prizeDisplay.className = 'prize-display win';
+                prizeDisplay.textContent = `🔑 WIN: +1 Key!`;
+                tg.HapticFeedback.notificationOccurred('success');
+                createConfetti();
+            } else if (prize.type === 'xp') {
+                prizeDisplay.className = 'prize-display win';
+                prizeDisplay.textContent = `⭐ WIN: +${prize.value} XP!`;
+                tg.HapticFeedback.notificationOccurred('success');
+            } else if (prize.type === 'box') {
+                prizeDisplay.className = 'prize-display win';
+                prizeDisplay.textContent = `🎁 WIN: Mystery Box!`;
+                tg.HapticFeedback.notificationOccurred('success');
+                createConfetti();
             } else {
-                ticketCredits--;
+                prizeDisplay.className = 'prize-display';
+                prizeDisplay.textContent = `Result: ${segment.text}`;
+                tg.HapticFeedback.impactOccurred('light');
+            }
+        }
+
+        function toggleAutoSpin() {
+            autoSpinEnabled = !autoSpinEnabled;
+            const toggle = document.querySelector('.auto-spin-toggle');
+            const text = document.getElementById('autoSpinText');
+            
+            if (autoSpinEnabled) {
+                toggle.classList.add('active');
+                text.textContent = 'Auto Spin ON';
+                if (spinCredits > 0) {
+                    spinWheel();
+                }
+            } else {
+                toggle.classList.remove('active');
+                text.textContent = 'Auto Spin OFF';
             }
         }
 
@@ -1467,8 +1641,12 @@
             document.getElementById(page).classList.add('active');
         }
 
-        // Setup nav click handlers
+        // Setup nav click handlers and wheel
         document.addEventListener('DOMContentLoaded', () => {
+            // Create wheel segments
+            createWheel();
+            
+            // Setup nav items
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.addEventListener('click', function(e) {
                     e.preventDefault();
