@@ -395,16 +395,17 @@
             currentPool = selectedBet;
             timeRemaining = 30;
             
-            // Reset players - only real users
+            // Reset players - show user immediately
             players = [{
                 name: user?.first_name || 'You',
-                emoji: '👤',
+                emoji: user?.first_name?.charAt(0).toUpperCase() || '👤',
                 bet: selectedBet,
                 percentage: 100
             }];
             
             userIndex = 0;
             
+            // Update UI immediately to show player on wheel
             updateUI();
             
             // Start timer
@@ -440,6 +441,7 @@
                     percentage: 0
                 });
             }
+            // Update UI to show all players on wheel
             updateUI();
         }
 
@@ -672,10 +674,12 @@
                 currentPool += selectedBet;
                 players.push({
                     name: user?.first_name || 'You',
-                    emoji: '👤',
+                    emoji: user?.first_name?.charAt(0).toUpperCase() || '👤',
                     bet: selectedBet,
                     percentage: 0
                 });
+                
+                // Update UI immediately
                 updateUI();
                 
                 // Auto-add bots if enough players
