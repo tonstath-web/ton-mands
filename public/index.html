@@ -4,1148 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TON MANDS</title>
-    <meta http-equiv="Cache-Control" content="no-cache">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #0a0e1a 0%, #0d1b2a 40%, #1a2d4a 100%);
-            min-height: 100vh;
-            padding-bottom: 80px;
-            margin: 0;
-            overflow-x: hidden;
-            color: #ffffff;
-            position: relative;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(0, 136, 204, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .container {
-            padding: 16px;
-            max-width: 480px;
-            margin: 0 auto;
-        }
-
-        /* Profile Header */
-        .profile-header {
-            background: linear-gradient(135deg, rgba(0, 136, 204, 0.95) 0%, rgba(0, 212, 255, 0.9) 100%);
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            box-shadow: 
-                0 8px 32px rgba(0, 136, 204, 0.4),
-                0 0 60px rgba(0, 212, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .profile-header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .profile-avatar {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 28px;
-            font-weight: 700;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        .profile-info {
-            flex: 1;
-            color: white;
-        }
-
-        .profile-name {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .profile-id {
-            font-size: 13px;
-            opacity: 0.9;
-        }
-
-        .profile-balance {
-            background: rgba(0, 0, 0, 0.25);
-            padding: 10px 18px;
-            border-radius: 20px;
-            color: white;
-            font-weight: 700;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Stats Card */
-        .stats-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .stats-title {
-            color: #ffffff !important;
-        }
-
-        .stats-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .stats-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .stats-limit {
-            background: linear-gradient(135deg, #00c853 0%, #69f0ae 100%);
-            color: #000000;
-            padding: 6px 14px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 700;
-            box-shadow: 0 2px 8px rgba(0, 200, 83, 0.3);
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 48px 24px;
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .empty-icon {
-            font-size: 56px;
-            margin-bottom: 16px;
-            opacity: 0.4;
-            filter: grayscale(0.5);
-            display: inline-block;
-            animation: emptyFloat 3s ease-in-out infinite;
-        }
-
-        @keyframes emptyFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        .empty-text {
-            font-size: 15px;
-            font-weight: 500;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        body { background: linear-gradient(135deg, #0a0e1a 0%, #1a2d4a 100%); min-height: 100vh; padding-bottom: 80px; color: #fff; }
+        .container { padding: 16px; max-width: 480px; margin: 0 auto; }
+        .page-section { display: none; animation: fadeIn 0.3s; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Profile */
+        .profile-header { background: linear-gradient(135deg, #0088cc, #00d4ff); border-radius: 24px; padding: 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 8px 32px rgba(0, 136, 204, 0.4); }
+        .profile-avatar { width: 64px; height: 64px; background: rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; }
+        .profile-info { flex: 1; }
+        .profile-name { font-size: 18px; font-weight: 600; }
+        .profile-id { font-size: 13px; opacity: 0.9; }
+        .profile-balance { background: rgba(0,0,0,0.25); padding: 10px 18px; border-radius: 20px; font-weight: 700; }
+        
         /* Spin Section */
-        .spin-section {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            border-radius: 28px;
-            padding: 32px 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            display: none;
-            position: relative;
-        }
-
-        .spin-section.active {
-            display: block;
-        }
-
-        /* Lucky Wheel Styles */
-        .lucky-wheel-container {
-            position: relative;
-            width: 320px;
-            height: 320px;
-            margin: 0 auto 32px;
-        }
-
-        .lucky-wheel {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            position: relative;
-            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
-            box-shadow: 
-                0 0 0 10px #FFD700,
-                0 0 0 16px #FF8C00,
-                0 20px 60px rgba(0, 0, 0, 0.6),
-                0 0 120px rgba(255, 215, 0, 0.5);
-            border: 6px solid #FFA500;
-        }
-
-        .wheel-pointer {
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 30;
-            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
-        }
-
-        .wheel-pointer svg {
-            width: 50px;
-            height: 60px;
-        }
-
-        .wheel-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90px;
-            height: 90px;
-            background: radial-gradient(circle, #FFD700 0%, #FFA500 100%);
-            border-radius: 50%;
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.6),
-                inset 0 4px 20px rgba(255, 255, 255, 0.6),
-                0 0 50px rgba(255, 215, 0, 0.6);
-            border: 6px solid rgba(255, 255, 255, 0.5);
-            z-index: 20;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-        }
-
-        .wheel-label {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform-origin: 0 0;
-            text-align: center;
-            z-index: 15;
-            pointer-events: none;
-        }
-
-        .wheel-icon {
-            font-size: 36px;
-            display: block;
-            line-height: 1;
-            filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.5));
-        }
-
-        .wheel-label-text {
-            font-size: 13px;
-            font-weight: 800;
-            color: white;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 0, 0, 0.6);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-            display: block;
-            margin-top: 4px;
-        }
-
-        .spin-title {
-            font-size: 28px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
-            text-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
-        }
-
-        .spin-subtitle {
-            font-size: 15px;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 28px;
-            font-weight: 500;
-        }
-
-        .spin-btn {
-            background: linear-gradient(135deg, #9C27B0 0%, #7B1FA2 50%, #6A1B9A 100%);
-            background-size: 200% 100%;
-            color: #FFD700;
-            border: 3px solid #FFD700;
-            padding: 20px 72px;
-            border-radius: 40px;
-            font-size: 28px;
-            font-weight: 900;
-            cursor: pointer;
-            box-shadow: 
-                0 8px 32px rgba(156, 39, 176, 0.5),
-                0 0 60px rgba(156, 39, 176, 0.3),
-                0 0 80px rgba(255, 215, 0, 0.2),
-                inset 0 2px 0 rgba(255, 255, 255, 0.3);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 16px;
-        }
-
-        .spin-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.6s;
-        }
-
-        .spin-btn:hover::before {
-            left: 100%;
-        }
-
-        .spin-btn:active {
-            transform: scale(0.95);
-            box-shadow: 
-                0 4px 16px rgba(156, 39, 176, 0.5),
-                0 0 40px rgba(156, 39, 176, 0.3);
-        }
-
-        .spin-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .auto-spin-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: rgba(255, 255, 255, 0.08);
-            padding: 14px 24px;
-            border-radius: 24px;
-            margin: 0 auto 24px;
-            max-width: 280px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-            transition: all 0.3s;
-            user-select: none;
-        }
-
-        .auto-spin-toggle.active {
-            background: rgba(156, 39, 176, 0.3);
-            border-color: #9C27B0;
-        }
-
-        .auto-spin-icon {
-            font-size: 20px;
-            filter: grayscale(0.5);
-            transition: all 0.3s;
-        }
-
-        .auto-spin-toggle.active .auto-spin-icon {
-            filter: grayscale(0);
-            animation: pulse 1.5s infinite;
-        }
-
-        .auto-spin-text {
-            font-size: 14px;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .auto-spin-toggle.active .auto-spin-text {
-            color: #9C27B0;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-
-        .spin-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .spin-credits {
-            margin-top: 20px;
-            font-size: 15px;
-            color: rgba(255, 255, 255, 0.6);
-            background: rgba(0, 0, 0, 0.25);
-            padding: 14px 24px;
-            border-radius: 18px;
-            display: inline-block;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-        }
-
-        .spin-credits span {
-            color: #FFD700;
-            font-weight: 800;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-            font-size: 16px;
-        }
-
+        .spin-section { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-radius: 28px; padding: 32px 20px; margin-bottom: 20px; text-align: center; }
+        .spin-title { font-size: 28px; font-weight: 900; background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+        .spin-subtitle { font-size: 15px; color: rgba(255,255,255,0.6); margin-bottom: 28px; }
+        
+        /* Lucky Wheel */
+        .lucky-wheel-container { position: relative; width: 280px; height: 280px; margin: 0 auto 32px; }
+        .lucky-wheel { width: 100%; height: 100%; border-radius: 50%; transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); box-shadow: 0 0 0 10px #FFD700, 0 0 0 16px #FF8C00, 0 20px 60px rgba(0,0,0,0.6); border: 6px solid #FFA500; }
+        .wheel-pointer { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); z-index: 30; }
+        .wheel-pointer svg { width: 50px; height: 60px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6)); }
+        .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90px; height: 90px; background: radial-gradient(circle, #FFD700, #FFA500); border-radius: 50%; box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 4px 20px rgba(255,255,255,0.6); border: 6px solid rgba(255,255,255,0.5); z-index: 20; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+        .wheel-label { position: absolute; top: 50%; left: 50%; transform-origin: 0 0; text-align: center; z-index: 15; pointer-events: none; }
+        .wheel-icon { font-size: 36px; display: block; line-height: 1; filter: drop-shadow(0 3px 8px rgba(0,0,0,0.5)); }
+        .wheel-label-text { font-size: 13px; font-weight: 800; color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.8); text-transform: uppercase; display: block; margin-top: 4px; }
+        
+        /* Spin Button */
+        .spin-btn { background: linear-gradient(135deg, #9C27B0, #7B1FA2, #6A1B9A); color: #FFD700; border: 3px solid #FFD700; padding: 20px 72px; border-radius: 40px; font-size: 28px; font-weight: 900; cursor: pointer; box-shadow: 0 8px 32px rgba(156,39,176,0.5), 0 0 80px rgba(255,215,0,0.2); transition: all 0.3s; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 16px; }
+        .spin-btn:active { transform: scale(0.95); }
+        .spin-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        /* Auto Spin Toggle */
+        .auto-spin-toggle { display: flex; align-items: center; justify-content: center; gap: 12px; background: rgba(255,255,255,0.08); padding: 14px 24px; border-radius: 24px; margin: 0 auto 24px; max-width: 280px; cursor: pointer; transition: all 0.3s; }
+        .auto-spin-toggle.active { background: rgba(156,39,176,0.3); border: 1px solid #9C27B0; }
+        .auto-spin-icon { font-size: 20px; }
+        .auto-spin-text { font-size: 14px; font-weight: 700; }
+        
+        /* Spin Credits */
+        .spin-credits { background: rgba(0,0,0,0.25); padding: 14px 24px; border-radius: 18px; display: inline-block; font-size: 15px; color: rgba(255,255,255,0.6); }
+        .spin-credits span { color: #FFD700; font-weight: 800; }
+        
         /* Prize Display */
-        .prize-display {
-            margin-top: 24px;
-            padding: 20px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.04);
-            font-size: 20px;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.7);
-            min-height: 60px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .prize-display.win {
-            background: linear-gradient(135deg, #00c853 0%, #00e676 50%, #69f0ae 100%);
-            color: #000000;
-            animation: winPulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 
-                0 8px 32px rgba(0, 200, 83, 0.5),
-                0 0 60px rgba(0, 230, 118, 0.3);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        @keyframes winPulse {
-            0% { 
-                transform: scale(0.9);
-                opacity: 0.5;
-            }
-            50% { 
-                transform: scale(1.08);
-            }
-            100% { 
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        /* Refer Section */
-        .refer-section {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 28px 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            display: none;
-        }
-
-        .refer-section.active {
-            display: block;
-        }
-
-        .refer-title {
-            font-size: 28px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 50%, #0088cc 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
-            text-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
-        }
-
-        .refer-subtitle {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 20px;
-        }
-
-        .referral-link {
-            background: linear-gradient(135deg, rgba(0, 136, 204, 0.15) 0%, rgba(0, 212, 255, 0.1) 100%);
-            padding: 24px;
-            border-radius: 20px;
-            margin: 24px 0;
-            word-break: break-all;
-            font-size: 15px;
-            color: #00d4ff;
-            border: 2px dashed rgba(0, 212, 255, 0.4);
-            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
-            font-family: 'Monaco', 'Consolas', monospace;
-            position: relative;
-        }
-
-        .referral-link::before {
-            content: '🔗';
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #00d4ff, #0088cc);
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.4);
-        }
-
-        .copy-btn {
-            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 50%, #0088cc 100%);
-            color: #000000;
-            border: none;
-            padding: 18px 44px;
-            border-radius: 30px;
-            font-size: 17px;
-            font-weight: 800;
-            cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 
-                0 6px 24px rgba(0, 212, 255, 0.4),
-                0 0 40px rgba(0, 212, 255, 0.2),
-                inset 0 2px 0 rgba(255, 255, 255, 0.3);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .copy-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.5s;
-        }
-
-        .copy-btn:hover::before {
-            left: 100%;
-        }
-
-        .copy-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 
-                0 10px 32px rgba(0, 212, 255, 0.5),
-                0 0 60px rgba(0, 212, 255, 0.3);
-        }
-
-        .copy-btn:active {
-            transform: scale(0.95);
-            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.3);
-        }
-
-        /* Shop Section */
-        .shop-section {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(20px);
-            border-radius: 28px;
-            padding: 32px 24px;
-            margin-bottom: 20px;
-            box-shadow: 
-                0 12px 48px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            display: none;
-            position: relative;
-        }
-
-        .shop-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.5), transparent);
-            border-radius: 2px;
-        }
-
-        .shop-section.active {
-            display: block;
-        }
-
-        .shop-header {
-            text-align: center;
-            margin-bottom: 28px;
-            padding: 0 8px;
-        }
-
-        .shop-title {
-            font-size: 28px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #FF6B35 0%, #FF8C00 50%, #FFD700 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-            letter-spacing: -0.5px;
-        }
-
-        .shop-subtitle {
-            font-size: 15px;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 500;
-        }
-
-        .shop-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-        }
-
-        .shop-card {
-            position: relative;
-            border-radius: 24px;
-            padding: 28px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-        }
-
-        .shop-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 60%);
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .shop-card::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-            pointer-events: none;
-        }
-
-        .shop-card:hover::before {
-            opacity: 1;
-        }
-
-        .shop-card:hover::after {
-            width: 300px;
-            height: 300px;
-        }
-
-        .shop-card:hover {
-            transform: translateY(-8px) scale(1.03);
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.3),
-                0 0 40px rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.25);
-        }
-
-        /* Starter Card */
-        .shop-card.starter {
-            background: linear-gradient(135deg, #ff4757 0%, #ff6b81 50%, #ff7f50 100%);
-            color: white;
-            box-shadow: 0 8px 24px rgba(255, 71, 87, 0.3);
-        }
-
-        .shop-card.starter:hover {
-            box-shadow: 
-                0 16px 48px rgba(255, 71, 87, 0.4),
-                0 0 60px rgba(255, 107, 129, 0.3);
-        }
-
-        /* Pro Card */
-        .shop-card.pro {
-            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 50%, #0088cc 100%);
-            color: white;
-            box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3);
-        }
-
-        .shop-card.pro:hover {
-            box-shadow: 
-                0 16px 48px rgba(0, 212, 255, 0.4),
-                0 0 60px rgba(0, 153, 255, 0.3);
-        }
-
-        /* VIP Card */
-        .shop-card.vip {
-            background: linear-gradient(135deg, #FFD700 0%, #FFC400 30%, #FFA500 70%, #FF8C00 100%);
-            color: #000000;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 
-                0 8px 32px rgba(255, 215, 0, 0.4),
-                0 0 80px rgba(255, 196, 0, 0.2);
-        }
-
-        .shop-card.vip::after {
-            content: '💎';
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            font-size: 100px;
-            opacity: 0.15;
-            transform: rotate(15deg);
-            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
-        }
-
-        .shop-card.vip:hover {
-            box-shadow: 
-                0 20px 60px rgba(255, 215, 0, 0.5),
-                0 0 100px rgba(255, 196, 0, 0.3);
-        }
-
-        .best-value-badge {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
-            color: #00c853;
-            padding: 8px 16px;
-            border-radius: 24px;
-            font-size: 11px;
-            font-weight: 900;
-            letter-spacing: 0.8px;
-            box-shadow: 
-                0 4px 16px rgba(0, 0, 0, 0.2),
-                0 0 20px rgba(0, 200, 83, 0.3);
-            border: 2px solid rgba(0, 200, 83, 0.2);
-            text-transform: uppercase;
-        }
-
-        .vip-badge {
-            background: linear-gradient(135deg, #FFD700 0%, #FFC400 100%);
-            color: #1a1a2e;
-            box-shadow: 
-                0 4px 16px rgba(0, 0, 0, 0.2),
-                0 0 20px rgba(255, 215, 0, 0.4);
-        }
-
-        .shop-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .shop-card-title {
-            font-size: 22px;
-            font-weight: 800;
-            margin: 0;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .shop-card-price {
-            font-size: 28px;
-            font-weight: 900;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-        }
-
-        .shop-card-tickets {
-            text-align: center;
-            padding: 24px 0;
-            position: relative;
-        }
-
-        .ticket-icon {
-            font-size: 64px;
-            margin: 16px 0;
-            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
-            animation: float 3s ease-in-out infinite;
-            display: inline-block;
-        }
-
-        @keyframes float {
-            0%, 100% { 
-                transform: translateY(0) rotate(0deg);
-            }
-            50% { 
-                transform: translateY(-12px) rotate(5deg);
-            }
-        }
-
-        @keyframes shimmer {
-            0% { background-position: -200% center; }
-            100% { background-position: 200% center; }
-        }
-
-        .shop-card-desc {
-            font-size: 18px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .tickets-count {
-            font-size: 32px;
-            font-weight: 900;
-            margin: 8px 0;
-        }
-
-        .tickets-label {
-            font-size: 13px;
-            opacity: 0.9;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .buy-btn {
-            background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
-            color: #000000;
-            border: none;
-            padding: 18px 40px;
-            border-radius: 32px;
-            font-size: 18px;
-            font-weight: 900;
-            cursor: pointer;
-            width: 100%;
-            box-shadow: 
-                0 8px 24px rgba(0, 0, 0, 0.3),
-                inset 0 2px 0 rgba(255, 255, 255, 0.8);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .buy-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-            transition: left 0.5s;
-        }
-
-        .buy-btn:hover::before {
-            left: 100%;
-        }
-
-        .buy-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 
-                0 12px 32px rgba(0, 0, 0, 0.4),
-                inset 0 2px 0 rgba(255, 255, 255, 0.8);
-        }
-
-        .buy-btn:active {
-            transform: scale(0.95) translateY(0);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Balance Section */
-        .balance-section {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(20px);
-            border-radius: 28px;
-            padding: 28px;
-            margin-bottom: 20px;
-            box-shadow: 
-                0 12px 48px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            display: none;
-        }
-
-        .balance-section.active {
-            display: block;
-        }
-
-        .balance-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 16px;
-        }
-
-        .balance-card {
-            background: linear-gradient(135deg, #00c853 0%, #00e676 40%, #69f0ae 100%);
-            border-radius: 24px;
-            padding: 32px 24px;
-            margin-bottom: 24px;
-            text-align: center;
-            box-shadow: 
-                0 12px 40px rgba(0, 200, 83, 0.4),
-                0 0 80px rgba(0, 230, 118, 0.2),
-                inset 0 2px 0 rgba(255, 255, 255, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .balance-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -30%;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .balance-amount {
-            font-size: 48px;
-            font-weight: 900;
-            color: #000000;
-            margin: 16px 0;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            letter-spacing: -1px;
-        }
-
-        .balance-label {
-            font-size: 14px;
-            color: rgba(0, 0, 0, 0.7);
-        }
-
-        .balance-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .balance-btn {
-            border: none;
-            padding: 20px 28px;
-            border-radius: 18px;
-            font-size: 16px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 
-                0 6px 20px rgba(0, 0, 0, 0.3),
-                inset 0 2px 0 rgba(255, 255, 255, 0.2);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .balance-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.5s, height 0.5s;
-        }
-
-        .balance-btn:active::before {
-            width: 200px;
-            height: 200px;
-        }
-
-        .deposit-btn {
-            background: linear-gradient(135deg, #00c853 0%, #00e676 50%, #69f0ae 100%);
-            color: #000000;
-        }
-
-        .deposit-btn:hover {
-            box-shadow: 
-                0 10px 30px rgba(0, 200, 83, 0.4),
-                inset 0 2px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        .withdraw-btn {
-            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 50%, #0088cc 100%);
-            color: #000000;
-        }
-
-        .withdraw-btn:hover {
-            box-shadow: 
-                0 10px 30px rgba(0, 212, 255, 0.4),
-                inset 0 2px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        .balance-btn:active {
-            transform: scale(0.95);
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
-        }
-
+        .prize-display { margin-top: 24px; padding: 20px; border-radius: 20px; background: rgba(255,255,255,0.04); font-size: 20px; font-weight: 700; color: rgba(255,255,255,0.7); min-height: 60px; display: flex; align-items: center; justify-content: center; }
+        .prize-display.win { background: linear-gradient(135deg, #00c853, #69f0ae); color: #000; animation: winPulse 0.6s; }
+        @keyframes winPulse { 0% { transform: scale(0.9); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+        
         /* Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(180deg, rgba(10, 14, 26, 0.98) 0%, rgba(5, 8, 15, 0.99) 100%);
-            backdrop-filter: blur(30px);
-            border-top: 1px solid rgba(0, 212, 255, 0.15);
-            display: flex;
-            justify-content: space-around;
-            padding: 14px 8px 20px 8px;
-            box-shadow: 
-                0 -8px 32px rgba(0, 0, 0, 0.6),
-                0 -2px 8px rgba(0, 212, 255, 0.1);
-            z-index: 9999;
-            pointer-events: auto;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            padding: 10px 16px;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 11px;
-            font-weight: 600;
-            transition: all 0.2s;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-            min-width: 60px;
-            border-radius: 12px;
-            margin: 0 4px;
-        }
-
-        .nav-item:active {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-item.active {
-            color: #00d4ff;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(0, 136, 204, 0.15) 100%);
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-        }
-
-        .nav-icon {
-            font-size: 28px;
-            display: block;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-        }
-
-        .nav-item.active .nav-icon {
-            transform: translateY(-4px) scale(1.1);
-            filter: drop-shadow(0 4px 12px rgba(0, 212, 255, 0.5));
-        }
-
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: linear-gradient(180deg, rgba(10,14,26,0.98), rgba(5,8,15,0.99)); backdrop-filter: blur(30px); border-top: 1px solid rgba(0,212,255,0.15); display: flex; justify-content: space-around; padding: 14px 8px 20px; box-shadow: 0 -8px 32px rgba(0,0,0,0.6); z-index: 9999; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 16px; color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 600; cursor: pointer; border-radius: 12px; margin: 0 4px; transition: all 0.2s; }
+        .nav-item.active { color: #00d4ff; background: rgba(0,212,255,0.15); box-shadow: 0 0 20px rgba(0,212,255,0.3); }
+        .nav-icon { font-size: 28px; transition: all 0.3s; }
+        .nav-item.active .nav-icon { transform: translateY(-4px) scale(1.1); }
+        
         /* Confetti */
-        .confetti {
-            position: fixed;
-            width: 12px;
-            height: 12px;
-            border-radius: 2px;
-            animation: confetti-fall 4s ease-in-out forwards;
-            z-index: 9999;
-            pointer-events: none;
-        }
-
-        @keyframes confetti-fall {
-            0% { 
-                transform: translateY(-100vh) rotate(0deg) scale(1);
-                opacity: 1;
-            }
-            100% { 
-                transform: translateY(100vh) rotate(720deg) scale(0.5);
-                opacity: 0;
-            }
-        }
-
-        /* Page transitions */
-        .page-section {
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Loading shimmer effect */
-        .shimmer {
-            background: linear-gradient(
-                90deg,
-                rgba(255, 255, 255, 0.05) 0%,
-                rgba(255, 255, 255, 0.15) 50%,
-                rgba(255, 255, 255, 0.05) 100%
-            );
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
+        .confetti { position: fixed; width: 12px; height: 12px; animation: confetti-fall 4s forwards; z-index: 9999; pointer-events: none; }
+        @keyframes confetti-fall { 0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
     </style>
 </head>
 <body>
@@ -1157,182 +77,97 @@
                 <div class="profile-name" id="userName">Kinandra</div>
                 <div class="profile-id" id="userId">ID: 1750653290</div>
             </div>
-            <div class="profile-balance">
-                💰 <span id="userBalance">0</span> TON
-            </div>
+            <div class="profile-balance">💰 <span id="userBalance">0</span> TON</div>
         </div>
 
         <!-- Home Section -->
         <div id="home" class="page-section active">
-            <div class="stats-card">
-                <div class="stats-header">
-                    <div class="stats-title">
-                        📊 Today's Tasks
+            <div class="spin-section">
+                <div class="spin-title">🎡 Lucky Wheel</div>
+                <div class="spin-subtitle">Spin to win amazing rewards!</div>
+                
+                <div class="lucky-wheel-container">
+                    <div class="wheel-pointer">
+                        <svg viewBox="0 0 50 60" fill="none">
+                            <path d="M25 60L0 0L50 0L25 60Z" fill="#FF3333" stroke="#FF6666" stroke-width="2"/>
+                            <circle cx="25" cy="15" r="8" fill="#FFD700"/>
+                        </svg>
                     </div>
-                    <div class="stats-limit">
-                        0/20
-                    </div>
+                    <div class="lucky-wheel" id="luckyWheel"></div>
+                    <div class="wheel-center">💎</div>
                 </div>
-                <div class="empty-state">
-                    <div class="empty-icon">📋</div>
-                    <div class="empty-text">No tasks available</div>
+                
+                <button class="spin-btn" id="spinBtn">⭐ SPIN ⭐</button>
+                
+                <div class="auto-spin-toggle" id="autoSpinToggle">
+                    <span class="auto-spin-icon">🔄</span>
+                    <span class="auto-spin-text" id="autoSpinText">Auto Spin OFF</span>
                 </div>
+                
+                <div class="spin-credits">
+                    <div style="margin-bottom: 8px;">🎯 Total Spins: <span id="totalSpins" style="color: #FFD700; font-weight: 800;">0</span></div>
+                    <div>Spins Left: <span id="spinCredits">3</span>/day | Tickets: <span id="ticketCredits">0</span></div>
+                </div>
+                
+                <div class="prize-display" id="prizeDisplay">🎲 Good luck!</div>
             </div>
         </div>
 
-        <!-- Spin Section -->
-        <div id="spin" class="page-section spin-section">
-            <div class="spin-title">🎡 Lucky Wheel</div>
-            <div class="spin-subtitle">Spin to win amazing rewards!</div>
-            
-            <div class="lucky-wheel-container">
-                <div class="wheel-pointer">
-                    <svg viewBox="0 0 50 60" fill="none">
-                        <path d="M25 60L0 0L50 0L25 60Z" fill="#FF3333" stroke="#FF6666" stroke-width="2"/>
-                        <circle cx="25" cy="15" r="8" fill="#FFD700"/>
-                    </svg>
-                </div>
-                <div class="lucky-wheel" id="luckyWheel">
-                    <!-- Segments will be generated by JS -->
-                </div>
-                <div class="wheel-center">💎</div>
-            </div>
-            
-            <button class="spin-btn" id="spinBtn" onclick="spinWheel()">
-                ⭐ SPIN ⭐
-            </button>
-            
-            <div class="auto-spin-toggle" onclick="toggleAutoSpin()">
-                <span class="auto-spin-icon">🔄</span>
-                <span class="auto-spin-text" id="autoSpinText">Auto Spin OFF</span>
-            </div>
-            
-            <div class="spin-credits">
-                <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-bottom: 4px;">Version: <span id="appVersion" style="font-family: monospace;">v2.0</span></div>
-                <div style="margin-bottom: 8px;">🎯 Total Spins: <span id="totalSpins" style="color: #FFD700; font-weight: 800;">0</span></div>
-                <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 8px;">Next reward at: <span id="nextReward" style="color: #00d4ff;">5 spins</span></div>
-                <div>Spins Left: <span id="spinCredits">3</span>/day | Tickets: <span id="ticketCredits">0</span></div>
-                <button onclick="resetSpins()" style="margin-top: 12px; background: rgba(255,0,0,0.2); border: 1px solid rgba(255,0,0,0.5); color: #ff6666; padding: 8px 16px; border-radius: 12px; font-size: 11px; cursor: pointer;">🔄 Reset Spins (Debug)</button>
-            </div>
-            
-            <div class="prize-display" id="prizeDisplay">
-                🎲 Good luck!
+        <!-- Spin Section (same as home for now) -->
+        <div id="spin" class="page-section">
+            <div class="spin-section">
+                <div class="spin-title">🎡 Lucky Wheel</div>
+                <div class="spin-subtitle">Navigate to Home to spin!</div>
+                <button class="spin-btn" onclick="handleNav('home')">🏠 Go Home</button>
             </div>
         </div>
 
         <!-- Refer Section -->
-        <div id="refer" class="page-section refer-section">
-            <div class="refer-title">👥 Refer & Earn</div>
-            <div class="refer-subtitle">Invite friends and earn TON!</div>
-            
-            <div class="referral-link" id="referralLink">
-                https://t.me/tonsaikhbot?start=ref1750653290
+        <div id="refer" class="page-section">
+            <div class="spin-section">
+                <div class="spin-title">👥 Refer & Earn</div>
+                <div class="spin-subtitle">Invite friends and earn TON!</div>
+                <div style="background: rgba(0,136,204,0.15); padding: 24px; border-radius: 20px; margin: 20px 0; word-break: break-all; font-size: 14px; color: #00d4ff; border: 2px dashed rgba(0,212,255,0.4);" id="referralLink">https://t.me/tonmandsbot?start=ref1750653290</div>
+                <button class="spin-btn" onclick="copyReferral()">📋 Copy Link</button>
             </div>
-            
-            <button class="copy-btn" onclick="copyReferral()">
-                📋 Copy Link
-            </button>
         </div>
 
         <!-- Shop Section -->
-        <div id="shop" class="page-section shop-section">
-            <div class="shop-header">
-                <div class="shop-title">🛒 Spin Tickets Shop</div>
-                <div class="shop-subtitle">More tickets = More chances to win! 🎰</div>
-            </div>
-            
-            <div class="shop-grid">
-                <!-- Starter Pack -->
-                <div class="shop-card">
-                    <div class="shop-card-header">
-                        <div class="shop-card-title">🎫 Starter</div>
-                        <div class="shop-card-price">0.5 TON</div>
-                    </div>
-                    <div class="shop-card-tickets">
-                        <div class="ticket-icon">🎫🎫🎫</div>
-                        <div class="shop-card-desc">10 Tickets</div>
-                    </div>
-                    <button class="buy-btn" onclick="buyTickets(0.5, 10)">BUY NOW</button>
-                </div>
-                
-                <!-- Pro Pack -->
-                <div class="shop-card">
-                    <div class="best-value-badge">⭐ BEST VALUE</div>
-                    <div class="shop-card-header">
-                        <div class="shop-card-title">🎫 Pro</div>
-                        <div class="shop-card-price">1 TON</div>
-                    </div>
-                    <div class="shop-card-tickets">
-                        <div class="ticket-icon">🎫🎫🎫🎫🎫</div>
-                        <div class="shop-card-desc">20 Tickets</div>
-                    </div>
-                    <button class="buy-btn" onclick="buyTickets(1, 20)">BUY NOW</button>
-                </div>
-                
-                <!-- VIP Pack -->
-                <div class="shop-card vip">
-                    <div class="best-value-badge">💎 VIP</div>
-                    <div class="shop-card-header">
-                        <div class="shop-card-title">💎 VIP</div>
-                        <div class="shop-card-price">2 TON</div>
-                    </div>
-                    <div class="shop-card-tickets">
-                        <div class="ticket-icon">🎫🎫🎫🎫🎫🎫🎫</div>
-                        <div class="shop-card-desc">50 Tickets</div>
-                    </div>
-                    <button class="buy-btn" onclick="buyTickets(2, 50)">BUY NOW</button>
-                </div>
+        <div id="shop" class="page-section">
+            <div class="spin-section">
+                <div class="spin-title">🛒 Shop</div>
+                <div class="spin-subtitle">Coming soon!</div>
             </div>
         </div>
 
         <!-- Balance Section -->
-        <div id="balance" class="page-section balance-section">
-            <div class="balance-title">💳 Deposit & Withdraw</div>
-            
-            <div class="balance-card">
-                <div class="balance-label">Your Balance</div>
-                <div class="balance-amount" id="balanceAmount">0 TON</div>
-                <div class="balance-label">Available to withdraw</div>
-            </div>
-            
-            <div class="balance-actions">
-                <button class="balance-btn deposit-btn" onclick="deposit()">
-                    💰 Deposit
-                </button>
-                <button class="balance-btn withdraw-btn" onclick="withdraw()">
-                    💸 Withdraw
-                </button>
-            </div>
-            
-            <div style="margin-top: 24px;">
-                <div class="balance-label" style="margin-bottom: 12px;">📊 Transaction History</div>
-                <div class="empty-state">
-                    <div class="empty-icon">📋</div>
-                    <div class="empty-text">No transactions yet</div>
-                </div>
+        <div id="balance" class="page-section">
+            <div class="spin-section">
+                <div class="spin-title">💳 Wallet</div>
+                <div class="spin-subtitle">Balance: <span id="walletBalance">0</span> TON</div>
             </div>
         </div>
     </div>
 
     <!-- Bottom Navigation -->
-    <div class="bottom-nav" id="bottomNav">
-        <div class="nav-item active" data-page="home" onclick="handleNav('home')">
+    <div class="bottom-nav">
+        <div class="nav-item active" data-page="home">
             <span class="nav-icon">🏠</span>
             <span>Home</span>
         </div>
-        <div class="nav-item" data-page="spin" onclick="handleNav('spin')">
+        <div class="nav-item" data-page="spin">
             <span class="nav-icon">🎰</span>
             <span>Spin</span>
         </div>
-        <div class="nav-item" data-page="refer" onclick="handleNav('refer')">
+        <div class="nav-item" data-page="refer">
             <span class="nav-icon">👥</span>
             <span>Refer</span>
         </div>
-        <div class="nav-item" data-page="shop" onclick="handleNav('shop')">
+        <div class="nav-item" data-page="shop">
             <span class="nav-icon">🛒</span>
             <span>Shop</span>
         </div>
-        <div class="nav-item" data-page="balance" onclick="handleNav('balance')">
+        <div class="nav-item" data-page="balance">
             <span class="nav-icon">💳</span>
             <span>Wallet</span>
         </div>
@@ -1344,27 +179,24 @@
         tg.ready();
         tg.expand();
 
-        // Get user data from Telegram
+        // Get user data
         const user = tg.initDataUnsafe?.user;
-        
         if (user) {
             const fullName = `${user.first_name} ${user.last_name || ''}`.trim();
-            document.getElementById('userName').textContent = fullName;
+            document.getElementById('userName').textContent = fullName || 'User';
             document.getElementById('userId').textContent = `ID: ${user.id}`;
-            
-            const initial = user.first_name?.charAt(0).toUpperCase() || 'U';
-            document.getElementById('userAvatar').textContent = initial;
+            document.getElementById('userAvatar').textContent = user.first_name?.charAt(0).toUpperCase() || 'U';
         }
 
-        // Lucky Wheel feature with weighted probabilities and spin requirements
+        // Wheel segments
         const wheelSegments = [
-            { color: '#FF5252', icon: '💎', text: '0.02 TON', probability: 0.1, minSpins: 5 },
-            { color: '#FF4081', icon: '💰', text: '0.2 TON', probability: 0.0005, minSpins: 70 },
-            { color: '#E040FB', icon: '🎁', text: '0.4 TON', probability: 0.0003, minSpins: 150 },
-            { color: '#7C4DFF', icon: '⭐', text: '0.8 TON', probability: 0.0002, minSpins: 200 },
-            { color: '#536DFE', icon: '🏆', text: '1 TON', probability: 0.0001, minSpins: 500 },
-            { color: '#FFD740', icon: '👑', text: '50 TON', probability: 0.00001, minSpins: 100000 },
-            { color: '#69F0AE', icon: '❌', text: 'Try Again', probability: 99.89889, minSpins: 0 }
+            { color: '#69F0AE', icon: '❌', text: 'Try Again' },
+            { color: '#FF5252', icon: '💎', text: '0.02 TON' },
+            { color: '#FF4081', icon: '💰', text: '0.2 TON' },
+            { color: '#E040FB', icon: '🎁', text: '0.4 TON' },
+            { color: '#7C4DFF', icon: '⭐', text: '0.8 TON' },
+            { color: '#536DFE', icon: '🏆', text: '1 TON' },
+            { color: '#FFD740', icon: '👑', text: '50 TON' }
         ];
 
         const prizes = {
@@ -1382,38 +214,14 @@
         let balance = 0;
         let isSpinning = false;
         let currentRotation = 0;
-        let autoSpinEnabled = false;
-        let autoSpinInterval = null;
-        let winningSegmentIndex = 0;
-        
-        // Version check (force cache clear)
-        const APP_VERSION = 'v2.1-SIMPLE-FIX';
-        const savedVersion = localStorage.getItem('tonmands_version');
-        
-        // Force clear if version changed
-        if (savedVersion !== APP_VERSION) {
-            console.log('🔄 Version change detected! Clearing old data...');
-            localStorage.clear();
-            localStorage.setItem('tonmands_version', APP_VERSION);
-        }
-        
-        // Load totalSpins from localStorage (persist across sessions!)
         let totalSpins = parseInt(localStorage.getItem('tonmands_totalSpins') || '0');
-        
-        // DEBUG: Log current spin count on load
-        console.log('🎡 TON MANDS Loaded | Version:', APP_VERSION, '| Total Spins:', totalSpins);
+        let autoSpinEnabled = false;
 
-        // Generate wheel segments using conic gradient
+        // Create wheel
         function createWheel() {
             const wheel = document.getElementById('luckyWheel');
             const segmentAngle = 360 / wheelSegments.length;
             
-            console.log('🎡 Creating wheel with', wheelSegments.length, 'segments');
-            console.log('   Segment 0 (Try Again) will be at TOP (0° - ' + segmentAngle.toFixed(2) + '°)');
-            
-            // Create conic gradient for wheel background
-            // Standard conic-gradient starts from TOP (12 o'clock) and goes clockwise
-            // Segment 0 (Try Again) will be at 0° to 51.43° (TOP position!)
             let gradientParts = [];
             wheelSegments.forEach((segment, index) => {
                 const startAngle = index * segmentAngle;
@@ -1422,463 +230,145 @@
             });
             wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
             
-            // Add segment labels - positioned from center
             wheelSegments.forEach((segment, index) => {
                 const label = document.createElement('div');
                 label.className = 'wheel-label';
-                
-                // Position at 65% radius from center
-                const radius = 100; // pixels from center
-                // Segment center angle (conic-gradient starts from TOP = 0deg)
+                const radius = 90;
                 const angle = (index * segmentAngle) + (segmentAngle / 2);
                 const radians = angle * (Math.PI / 180);
-                
                 const x = Math.cos(radians) * radius;
                 const y = Math.sin(radians) * radius;
-                
                 label.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
-                label.innerHTML = `
-                    <span class="wheel-icon">${segment.icon}</span>
-                    <span class="wheel-label-text">${segment.text}</span>
-                `;
-                
+                label.innerHTML = `<span class="wheel-icon">${segment.icon}</span><span class="wheel-label-text">${segment.text}</span>`;
                 wheel.appendChild(label);
             });
-            
-            // Initialize wheel at 0deg (Try Again at TOP)
-            currentRotation = 0;
-            if (wheel) {
-                wheel.style.transform = 'rotate(0deg)';
-                console.log('✅ Wheel initialized at 0deg');
-            }
         }
 
-        // Weighted random selection based on probability and spin requirements
-        function getWeightedResult() {
-            // FORCE MODE: Spin 1-4 MUST be Try Again (HARDCODED!)
-            if (totalSpins <= 4) {
-                console.log('🔒 FORCE Try Again - Spin #', totalSpins, '< 5');
-                
-                // DOUBLE CHECK - Show alert if somehow trying to give reward
-                const tryAgainIndex = wheelSegments.findIndex(seg => seg.text === 'Try Again');
-                
-                // Show popup warning on first spin
-                if (totalSpins === 1) {
-                    setTimeout(() => {
-                        alert('⚠️ SPIN 1 FIX: This should be Try Again. If you see a reward, screenshot this!');
-                    }, 100);
-                }
-                
-                return tryAgainIndex;
-            }
-            
-            // Spin 5-9: 99.99% Try Again (almost impossible to win)
-            if (totalSpins <= 9) {
-                const forceTryAgain = Math.random() < 0.9999;
-                if (forceTryAgain) {
-                    console.log('🔒 FORCE Try Again - Spin #', totalSpins, '(99.99% forced)');
-                    return wheelSegments.findIndex(seg => seg.text === 'Try Again');
-                }
-            }
-            
-            // Normal probability for spin 10+
-            console.log('🎲 Normal probability - Spin #', totalSpins);
-            
-            // Filter segments that meet spin requirements
-            const eligibleSegments = wheelSegments.filter(seg => totalSpins >= seg.minSpins && seg.text !== 'Try Again');
-            
-            // Get Try Again segment
-            const tryAgainIndex = wheelSegments.findIndex(seg => seg.text === 'Try Again');
-            const tryAgainProb = wheelSegments.find(seg => seg.text === 'Try Again').probability;
-            
-            // If no rewards eligible yet, return Try Again
-            if (eligibleSegments.length === 0) {
-                return tryAgainIndex;
-            }
-            
-            // Calculate total probability (rewards only)
-            const totalRewardProbability = eligibleSegments.reduce((sum, seg) => sum + seg.probability, 0);
-            const totalProbability = totalRewardProbability + tryAgainProb;
-            
-            let random = Math.random() * totalProbability;
-            
-            // First check if it's Try Again
-            if (random < tryAgainProb) {
-                return tryAgainIndex;
-            }
-            
-            // Otherwise pick a reward
-            random -= tryAgainProb;
-            for (let i = 0; i < eligibleSegments.length; i++) {
-                random -= eligibleSegments[i].probability;
-                if (random <= 0) {
-                    return wheelSegments.findIndex(seg => seg.text === eligibleSegments[i].text);
-                }
-            }
-            
-            // Fallback to Try Again
-            return tryAgainIndex;
+        // Get result (Try Again for first 4 spins)
+        function getResult() {
+            if (totalSpins <= 4) return 0; // Try Again
+            return Math.random() < 0.001 ? Math.floor(Math.random() * 6) + 1 : 0;
         }
 
+        // Spin function
         function spinWheel() {
-            console.log('🎯 spinWheel() called | isSpinning:', isSpinning);
-            
-            if (isSpinning) {
-                console.log('⚠️ Already spinning!');
+            if (isSpinning) return;
+            if (spinCredits <= 0 && ticketCredits <= 0) {
+                alert('No tickets! Visit shop to buy more.');
                 return;
             }
             
-            // Check if has tickets
-            if (spinCredits > 0) {
-                spinCredits--;
-                console.log('✅ Using free spin. Remaining:', spinCredits);
-            } else if (ticketCredits > 0) {
-                ticketCredits--;
-                console.log('✅ Using ticket. Remaining:', ticketCredits);
-            } else {
-                console.log('❌ No tickets!');
-                tg.showPopup({
-                    title: 'No Tickets!',
-                    message: 'You don\'t have any spin tickets!\\n\\nVisit Shop to buy more.',
-                    buttons: [{type: 'ok'}]
-                });
-                return;
-            }
+            if (spinCredits > 0) spinCredits--;
+            else ticketCredits--;
             
-            // Increment total spins BEFORE getting result
             totalSpins++;
-            
-            // SAVE to localStorage (persist across sessions!)
             localStorage.setItem('tonmands_totalSpins', totalSpins.toString());
             
-            updateBalanceDisplay();
             isSpinning = true;
-            
             const btn = document.getElementById('spinBtn');
             btn.disabled = true;
             btn.textContent = 'SPINNING...';
             
-            tg.HapticFeedback.impactOccurred('medium');
-            
-            // Get weighted result based on total spins
-            winningSegmentIndex = getWeightedResult();
-            const winningSegment = wheelSegments[winningSegmentIndex];
-            
-            console.log('🎯 Result:', winningSegment.text, '| Index:', winningSegmentIndex);
-            
-            // Calculate rotation to land on winning segment at TOP (pointer position)
+            const winningIndex = getResult();
             const segmentAngle = 360 / wheelSegments.length;
-            const minSpins = 5;
+            const extraSpins = 5 * 360;
             
-            // Conic-gradient starts from TOP (0deg) and goes clockwise
-            // Segment 0 (Try Again): 0° to 51.43°, center at 25.71°
-            // To bring segment CENTER to TOP (0deg):
-            // - Segment is currently at segmentCenterAngle degrees from top
-            // - We need to rotate wheel so segment center aligns with pointer at top
-            // - Rotation = 360 - segmentCenterAngle (brings segment to top)
-            
-            // SIMPLE SOLUTION: Just add full rotations
-            // For spin 1-4 (Try Again), wheel stays in place + 5 full spins
-            // This keeps Try Again at TOP where it started!
-            
-            const minSpins = 5;
-            const extraSpins = (minSpins * 360);
-            
-            // Simple: just add 5 full rotations to current
-            // This makes wheel spin but land back at same position
-            let totalRotation = currentRotation + extraSpins;
-            
-            // For segments other than Try Again, we'll adjust later
-            // But for Try Again (index 0), no adjustment needed!
-            if (winningSegmentIndex !== 0) {
-                const segmentCenterAngle = (winningSegmentIndex * segmentAngle) + (segmentAngle / 2);
-                const targetRotation = 360 - segmentCenterAngle;
-                
-                // Adjust to land on target
-                const remainder = totalRotation % 360;
-                let adjustment = targetRotation - remainder;
-                if (adjustment < 0) adjustment += 360;
-                totalRotation += adjustment;
+            // For Try Again (index 0), just do full rotations
+            // For other rewards, calculate rotation to land at top
+            let targetRotation;
+            if (winningIndex === 0) {
+                targetRotation = currentRotation + extraSpins;
+            } else {
+                const segmentCenter = (winningIndex * segmentAngle) + (segmentAngle / 2);
+                targetRotation = currentRotation + extraSpins + (360 - segmentCenter);
             }
             
-            console.log('🎡 Wheel Rotation:');
-            console.log('   Winning: Segment', winningSegmentIndex, '(' + winningSegment.text + ')');
-            console.log('   Segment Center:', segmentCenterAngle.toFixed(2) + '°');
-            console.log('   Target Rotation:', targetRotation.toFixed(2) + '°');
-            console.log('   Total Rotation:', totalRotation.toFixed(2) + '°');
-            console.log('   (Total % 360):', (totalRotation % 360).toFixed(2) + '°');
-            
             const wheel = document.getElementById('luckyWheel');
-            wheel.style.transform = `rotate(${totalRotation}deg)`;
+            wheel.style.transform = `rotate(${targetRotation}deg)`;
             
-            // Wait for animation to complete
             setTimeout(() => {
-                currentRotation = totalRotation;
+                currentRotation = targetRotation;
                 isSpinning = false;
                 btn.disabled = false;
                 btn.textContent = '⭐ SPIN ⭐';
                 
-                const prize = prizes[winningSegment.text];
+                const segment = wheelSegments[winningIndex];
+                const prize = prizes[segment.text];
+                const prizeDisplay = document.getElementById('prizeDisplay');
                 
-                // Show result
-                displayPrize(winningSegment, prize);
+                if (prize.type === 'ton') {
+                    balance += prize.value;
+                    prizeDisplay.className = 'prize-display win';
+                    prizeDisplay.textContent = `🎉 WIN: ${prize.value} TON!`;
+                    createConfetti();
+                } else {
+                    prizeDisplay.className = 'prize-display';
+                    prizeDisplay.textContent = '😢 Try Again!';
+                }
                 
-                // Update displays
+                document.getElementById('totalSpins').textContent = totalSpins;
                 document.getElementById('spinCredits').textContent = spinCredits;
                 document.getElementById('ticketCredits').textContent = ticketCredits;
-                document.getElementById('totalSpins').textContent = totalSpins;
+                document.getElementById('userBalance').textContent = balance;
+                document.getElementById('walletBalance').textContent = balance;
                 
-                // Update next reward info
-                updateNextRewardDisplay();
-                
-                // Check auto spin
                 if (autoSpinEnabled && spinCredits > 0) {
                     setTimeout(spinWheel, 2000);
                 }
             }, 4000);
         }
 
-        function displayPrize(segment, prize) {
-            const prizeDisplay = document.getElementById('prizeDisplay');
-            
-            // DEBUG: Show spin count for first 10 spins
-            if (totalSpins <= 10) {
-                console.log('📊 Spin #' + totalSpins + ' Result:', segment.text, '| Prize type:', prize.type);
-            }
-            
-            if (prize.type === 'ton') {
-                balance += prize.value;
-                prizeDisplay.className = 'prize-display win';
-                prizeDisplay.textContent = `🎉 WIN: ${prize.value} TON! (Spin #${totalSpins})`;
-                tg.HapticFeedback.notificationOccurred('success');
-                createConfetti();
-                updateBalanceDisplay();
-            } else if (prize.type === 'none') {
-                prizeDisplay.className = 'prize-display';
-                prizeDisplay.textContent = `😢 Try Again! (Spin #${totalSpins})`;
-                tg.HapticFeedback.impactOccurred('light');
-            } else {
-                prizeDisplay.className = 'prize-display';
-                prizeDisplay.textContent = `Result: ${segment.text} (Spin #${totalSpins})`;
-                tg.HapticFeedback.impactOccurred('light');
-            }
+        // Navigation
+        function handleNav(page) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(page).classList.add('active');
+            document.querySelector(`[data-page="${page}"]`).classList.add('active');
         }
 
-        function toggleAutoSpin() {
-            autoSpinEnabled = !autoSpinEnabled;
-            const toggle = document.querySelector('.auto-spin-toggle');
-            const text = document.getElementById('autoSpinText');
-            
-            if (autoSpinEnabled) {
-                toggle.classList.add('active');
-                text.textContent = 'Auto Spin ON';
-                if (spinCredits > 0) {
-                    spinWheel();
-                }
-            } else {
-                toggle.classList.remove('active');
-                text.textContent = 'Auto Spin OFF';
-            }
-        }
-
-        function resetSpins() {
-            if (confirm('Reset total spins to 0? This will clear your progress!')) {
-                totalSpins = 0;
-                localStorage.setItem('tonmands_totalSpins', '0');
-                document.getElementById('totalSpins').textContent = '0';
-                updateNextRewardDisplay();
-                console.log('🔄 Spins reset to 0');
-            }
-        }
-
-        function updateNextRewardDisplay() {
-            const nextReward = wheelSegments.find(seg => seg.text !== 'Try Again' && totalSpins < seg.minSpins);
-            const nextRewardEl = document.getElementById('nextReward');
-            
-            if (nextReward) {
-                const spinsNeeded = nextReward.minSpins - totalSpins;
-                if (spinsNeeded > 0) {
-                    nextRewardEl.textContent = `${nextReward.text} in ${spinsNeeded} spins`;
-                } else {
-                    nextRewardEl.textContent = `${nextReward.text} UNLOCKED!`;
-                    nextRewardEl.style.color = '#00ff00';
-                }
-            } else {
-                nextRewardEl.textContent = 'All rewards unlocked!';
-            }
-        }
-
-        // Buy tickets
-        function buyTickets(price, tickets) {
-            if (balance >= price) {
-                balance -= price;
-                ticketCredits += tickets;
-                
-                tg.HapticFeedback.notificationOccurred('success');
-                tg.showPopup({
-                    title: 'Purchase Successful!',
-                    message: `You bought ${tickets} spin tickets for ${price} TON!`,
-                    buttons: [{type: 'ok'}]
-                });
-                
-                updateBalanceDisplay();
-                document.getElementById('ticketCredits').textContent = ticketCredits;
-            } else {
-                tg.showPopup({
-                    title: 'Insufficient Balance',
-                    message: `You need ${price} TON but only have ${balance} TON.\\n\\nPlease deposit more TON.`,
-                    buttons: [{type: 'ok'}]
-                });
-            }
-        }
-
-        // Copy referral link
+        // Copy referral
         function copyReferral() {
             const link = document.getElementById('referralLink').textContent;
-            navigator.clipboard.writeText(link).then(() => {
-                tg.HapticFeedback.notificationOccurred('success');
-                tg.showPopup({
-                    title: 'Copied!',
-                    message: 'Referral link copied to clipboard!',
-                    buttons: [{type: 'ok'}]
-                });
+            navigator.clipboard.writeText(link).then(() => alert('Link copied!'));
+        }
+
+        // Auto spin toggle
+        document.getElementById('autoSpinToggle').addEventListener('click', () => {
+            autoSpinEnabled = !autoSpinEnabled;
+            const text = document.getElementById('autoSpinText');
+            text.textContent = autoSpinEnabled ? 'Auto Spin ON' : 'Auto Spin OFF';
+            document.getElementById('autoSpinToggle').classList.toggle('active');
+            if (autoSpinEnabled) spinWheel();
+        });
+
+        // Setup navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                handleNav(this.dataset.page);
             });
-        }
+        });
 
-        // Deposit
-        function deposit() {
-            tg.showPopup({
-                title: '💰 Deposit TON',
-                message: 'To deposit TON, please send to:\\n\\nUQD...[Wallet Address]\\n\\nAfter payment, your balance will be updated automatically.',
-                buttons: [{type: 'ok'}]
-            });
-        }
+        // Spin button
+        document.getElementById('spinBtn').addEventListener('click', spinWheel);
 
-        // Withdraw
-        function withdraw() {
-            if (balance <= 0) {
-                tg.showPopup({
-                    title: 'No Balance',
-                    message: 'You don\'t have any balance to withdraw.\\n\\nSpin and win to earn TON!',
-                    buttons: [{type: 'ok'}]
-                });
-                return;
-            }
-            
-            tg.showPopup({
-                title: '💸 Withdraw',
-                message: `Withdraw ${balance} TON?\\n\\nYour TON will be sent to your wallet after approval.`,
-                buttons: [
-                    {type: 'ok', text: 'Yes'},
-                    {type: 'default', text: 'Cancel'}
-                ],
-                on_close: (confirmed) => {
-                    if (confirmed) {
-                        balance = 0;
-                        tg.HapticFeedback.notificationOccurred('success');
-                        tg.showPopup({
-                            title: 'Withdrawal Requested',
-                            message: 'Your withdrawal request has been submitted. It will be processed shortly.',
-                            buttons: [{type: 'ok'}]
-                        });
-                        updateBalanceDisplay();
-                    }
-                }
-            });
-        }
-
-        function updateBalanceDisplay() {
-            document.getElementById('userBalance').textContent = balance;
-            document.getElementById('balanceAmount').textContent = `${balance} TON`;
-        }
-
-        // Navigation function
-        function handleNav(page) {
-            if (isSpinning) return;
-            
-            tg.HapticFeedback.impactOccurred('light');
-            
-            // Update active state
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-                if (item.dataset.page === page) {
-                    item.classList.add('active');
-                }
-            });
-            
-            // Show/hide sections
-            document.querySelectorAll('.page-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(page).classList.add('active');
-        }
-
-        // Initialize app
-        function initApp() {
-            try {
-                console.log('🚀 TON MANDS v' + APP_VERSION);
-                
-                // Show version
-                const versionEl = document.getElementById('appVersion');
-                if (versionEl) versionEl.textContent = APP_VERSION;
-                
-                // Create wheel
-                createWheel();
-                
-                // Update next reward
-                updateNextRewardDisplay();
-                
-                // Enable spin button
-                const spinBtn = document.getElementById('spinBtn');
-                if (spinBtn) {
-                    spinBtn.disabled = false;
-                    spinBtn.style.pointerEvents = 'auto';
-                    spinBtn.style.cursor = 'pointer';
-                    spinBtn.addEventListener('click', spinWheel);
-                    console.log('✅ Spin button enabled');
-                }
-                
-                // Setup nav - ADD EVENT LISTENERS
-                document.querySelectorAll('.nav-item').forEach(item => {
-                    item.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const page = this.dataset.page;
-                        console.log('🧭 Nav clicked:', page);
-                        handleNav(page);
-                    });
-                    item.style.cursor = 'pointer';
-                });
-                
-                console.log('✅ App ready!');
-            } catch (e) {
-                console.error('❌ Init error:', e);
-                alert('Init error: ' + e.message);
-            }
-        }
-        
-        // Start app when DOM ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initApp);
-        } else {
-            setTimeout(initApp, 100);
-        }
-
-        // Confetti effect
+        // Confetti
         function createConfetti() {
             const colors = ['#FF9800', '#FF5722', '#4CAF50', '#2196F3', '#9C27B0'];
-            
             for (let i = 0; i < 50; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
                 confetti.style.left = Math.random() * 100 + 'vw';
                 confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                confetti.style.animationDelay = Math.random() * 2 + 's';
                 document.body.appendChild(confetti);
-                
                 setTimeout(() => confetti.remove(), 5000);
             }
         }
+
+        // Initialize
+        createWheel();
+        document.getElementById('totalSpins').textContent = totalSpins;
+        console.log('✅ TON MANDS Ready!');
     </script>
 </body>
 </html>
