@@ -221,20 +221,25 @@
         function createWheel() {
             const wheel = document.getElementById('luckyWheel');
             const segmentAngle = 360 / wheelSegments.length;
+            const halfSegment = segmentAngle / 2;
             
+            // CRITICAL FIX: Center segment 0 (Try Again) at TOP (0°)
+            // Shift all segments by -halfSegment so segment 0 is centered at 0°
             let gradientParts = [];
             wheelSegments.forEach((segment, index) => {
-                const startAngle = index * segmentAngle;
-                const endAngle = (index + 1) * segmentAngle;
+                const startAngle = (index * segmentAngle) - halfSegment;
+                const endAngle = ((index + 1) * segmentAngle) - halfSegment;
                 gradientParts.push(`${segment.color} ${startAngle}deg ${endAngle}deg`);
             });
             wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
             
+            // Position labels at center of each segment
             wheelSegments.forEach((segment, index) => {
                 const label = document.createElement('div');
                 label.className = 'wheel-label';
                 const radius = 90;
-                const angle = (index * segmentAngle) + (segmentAngle / 2);
+                // Label at center of segment (already shifted by -halfSegment)
+                const angle = (index * segmentAngle) - halfSegment;
                 const radians = angle * (Math.PI / 180);
                 const x = Math.cos(radians) * radius;
                 const y = Math.sin(radians) * radius;
@@ -273,15 +278,27 @@
             const segmentAngle = 360 / wheelSegments.length;
             const extraSpins = 5 * 360;
             
-            // For Try Again (index 0), just do full rotations
-            // For other rewards, calculate rotation to land at top
-            let targetRotation;
-            if (winningIndex === 0) {
-                targetRotation = currentRotation + extraSpins;
-            } else {
-                const segmentCenter = (winningIndex * segmentAngle) + (segmentAngle / 2);
-                targetRotation = currentRotation + extraSpins + (360 - segmentCenter);
-            }
+            // CRITICAL: Segment 0 (Try Again) is centered at 0° (TOP)
+            // Other segments are at: index * segmentAngle
+            // To bring segment to TOP: rotate by -(index * segmentAngle)
+            
+            const segmentPosition = winningIndex * segmentAngle;
+            
+            // Simple formula: rotate so segment ends at TOP (0°)
+            // targetRotation % 360 should equal (360 - segmentPosition) % 360
+            const targetMod = (360 - segmentPosition) % 360;
+            
+            // Start with 5 full spins from current
+            let targetRotation = currentRotation + extraSpins;
+            
+            // Find remainder
+            const remainder = targetRotation % 360;
+            
+            // Calculate how much to add to reach target
+            let adjustment = targetMod - remainder;
+            if (adjustment < 0) adjustment += 360;
+            
+            targetRotation += adjustment;
             
             const wheel = document.getElementById('luckyWheel');
             wheel.style.transform = `rotate(${targetRotation}deg)`;
