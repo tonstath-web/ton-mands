@@ -22,11 +22,9 @@
         .profile-balance { background: rgba(0,0,0,0.25); padding: 10px 18px; border-radius: 20px; font-weight: 700; }
         
         /* PVP Section */
-        .pvp-section { background: linear-gradient(135deg, rgba(0,0,0,0.6), rgba(20,10,40,0.8)); backdrop-filter: blur(30px); border-radius: 32px; padding: 28px 20px; margin-bottom: 20px; text-align: center; border: 2px solid rgba(156,39,176,0.3); box-shadow: 0 8px 32px rgba(156,39,176,0.2); position: relative; overflow: hidden; }
-        .pvp-section::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(156,39,176,0.1) 0%, transparent 70%); animation: rotate 20s linear infinite; }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .pvp-title { font-size: 26px; font-weight: 900; background: linear-gradient(135deg, #FFD700, #FFA500, #FF6B6B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; text-shadow: 0 0 40px rgba(255,215,0,0.5); position: relative; z-index: 1; }
-        .pvp-subtitle { font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 20px; position: relative; z-index: 1; }
+        .pvp-section { background: rgba(10,14,26,0.95); backdrop-filter: blur(20px); border-radius: 24px; padding: 24px 16px; margin-bottom: 20px; text-align: center; border: 1px solid rgba(0,212,255,0.2); box-shadow: 0 4px 24px rgba(0,0,0,0.4); }
+        .pvp-title { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #00d4ff, #0088cc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+        .pvp-subtitle { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 20px; }
         
         /* Pool Display */
         .pool-display { background: rgba(255,255,255,0.05); border: 2px solid rgba(156,39,176,0.3); border-radius: 16px; padding: 12px; margin-bottom: 16px; }
@@ -46,43 +44,34 @@
         .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: radial-gradient(circle, #9C27B0, #7B1FA2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; box-shadow: 0 0 30px rgba(156,39,176,0.5); border: 3px solid rgba(255,255,255,0.2); z-index: 10; }
         
         /* Player Cards */
-        .players-container { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; }
-        .player-battle-card { background: linear-gradient(135deg, rgba(156,39,176,0.2), rgba(123,31,162,0.15)); border: 2px solid rgba(156,39,176,0.4); border-radius: 18px; padding: 14px; min-width: 120px; flex: 1; max-width: 150px; position: relative; transition: all 0.3s; animation: playerSlide 0.5s ease-out; box-shadow: 0 4px 20px rgba(156,39,176,0.2); }
-        @keyframes playerSlide { from { opacity: 0; transform: translateY(20px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        .player-battle-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(156,39,176,0.4); }
-        .player-battle-card.winner { border-color: #FFD700; box-shadow: 0 0 30px rgba(255,215,0,0.5); animation: winnerPulse 1s infinite; }
-        .player-battle-card .avatar { width: 50px; height: 50px; background: linear-gradient(135deg, #9C27B0, #7B1FA2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 10px; border: 3px solid rgba(255,255,255,0.2); box-shadow: 0 4px 15px rgba(156,39,176,0.3); transition: all 0.3s; }
-        .player-battle-card:hover .avatar { transform: scale(1.1); }
-        .player-battle-card .name { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .player-battle-card .percentage { font-size: 20px; font-weight: 900; background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .player-battle-card .bet-amount { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 6px; font-weight: 600; }
-        .player-battle-card .winner-badge { position: absolute; top: 8px; right: 8px; font-size: 18px; animation: sparkle 1s infinite; }
-        @keyframes sparkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } }
+        .players-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px; margin-bottom: 24px; }
+        .player-battle-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px 12px; text-align: center; transition: all 0.3s; }
+        .player-battle-card.winner { border-color: #FFD700; background: rgba(255,215,0,0.1); }
+        .player-battle-card .avatar { width: 48px; height: 48px; background: rgba(0,212,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; margin: 0 auto 10px; border: 2px solid rgba(0,212,255,0.3); }
+        .player-battle-card .name { font-size: 12px; font-weight: 600; color: #fff; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .player-battle-card .percentage { font-size: 22px; font-weight: 900; color: #00d4ff; margin-bottom: 4px; }
+        .player-battle-card .bet-amount { font-size: 11px; color: rgba(255,255,255,0.5); }
+        .player-battle-card .winner-badge { position: absolute; top: 8px; right: 8px; font-size: 16px; }
         
         /* Bet Selection */
-        .bet-selection { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; }
-        .bet-chip { background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(156,39,176,0.2)); border: 2px solid rgba(156,39,176,0.3); border-radius: 20px; padding: 12px 24px; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
-        .bet-chip::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: left 0.5s; }
-        .bet-chip:hover::before { left: 100%; }
-        .bet-chip:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(156,39,176,0.3); }
-        .bet-chip.selected { border-color: #FFD700; background: linear-gradient(135deg, rgba(255,215,0,0.3), rgba(255,165,0,0.2)); box-shadow: 0 0 20px rgba(255,215,0,0.4); transform: translateY(-2px); }
-        .bet-chip .chip-value { font-size: 16px; font-weight: 900; color: #FFD700; text-shadow: 0 0 10px rgba(255,215,0,0.5); }
-        .bet-chip .chip-label { font-size: 10px; color: rgba(255,255,255,0.7); font-weight: 600; margin-top: 2px; }
+        .bet-selection { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 24px; }
+        .bet-chip { background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 8px; cursor: pointer; transition: all 0.2s; text-align: center; }
+        .bet-chip:hover { border-color: rgba(0,212,255,0.5); background: rgba(0,212,255,0.1); }
+        .bet-chip.selected { border-color: #00d4ff; background: rgba(0,212,255,0.15); }
+        .bet-chip .chip-value { font-size: 16px; font-weight: 800; color: #00d4ff; display: block; }
+        .bet-chip .chip-label { font-size: 10px; color: rgba(255,255,255,0.5); display: block; margin-top: 2px; }
         
         /* Battle Button */
-        .battle-btn { background: linear-gradient(135deg, #FFD700, #FFA500, #FF6B6B); color: #000; border: none; padding: 18px 56px; border-radius: 36px; font-size: 20px; font-weight: 900; cursor: pointer; box-shadow: 0 8px 32px rgba(255,215,0,0.4); transition: all 0.3s; width: 100%; max-width: 320px; position: relative; overflow: hidden; animation: buttonPulse 2s infinite; }
-        .battle-btn::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%); opacity: 0; transition: opacity 0.3s; }
-        .battle-btn:hover::after { opacity: 1; }
-        .battle-btn:active { transform: scale(0.95); }
-        .battle-btn:disabled { opacity: 0.5; cursor: not-allowed; animation: none; }
-        .battle-btn.join { background: linear-gradient(135deg, #00d4ff, #0088cc, #0066ff); color: #fff; box-shadow: 0 8px 32px rgba(0,212,255,0.4); }
-        @keyframes buttonPulse { 0%, 100% { box-shadow: 0 8px 32px rgba(255,215,0,0.4); } 50% { box-shadow: 0 8px 48px rgba(255,215,0,0.6); } }
+        .battle-btn { background: linear-gradient(135deg, #00d4ff, #0088cc); color: #fff; border: none; padding: 16px 48px; border-radius: 14px; font-size: 18px; font-weight: 700; cursor: pointer; transition: all 0.2s; width: 100%; max-width: 280px; }
+        .battle-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,212,255,0.3); }
+        .battle-btn:active { transform: translateY(0); }
+        .battle-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         
         /* Stats Row */
-        .stats-row { display: flex; justify-content: space-around; padding: 16px; background: linear-gradient(135deg, rgba(156,39,176,0.15), rgba(123,31,162,0.1)); border-radius: 18px; margin-top: 16px; border: 1px solid rgba(156,39,176,0.2); }
-        .stat-item { text-align: center; padding: 8px 12px; }
-        .stat-value { font-size: 20px; font-weight: 900; background: linear-gradient(135deg, #9C27B0, #FFD700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .stat-label { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 4px; font-weight: 600; }
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+        .stat-item { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 12px 8px; }
+        .stat-value { font-size: 18px; font-weight: 800; color: #00d4ff; display: block; }
+        .stat-label { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 4px; display: block; }
         
         /* Auto Spin Toggle */
         .auto-spin-toggle { display: flex; align-items: center; justify-content: center; gap: 12px; background: rgba(255,255,255,0.08); padding: 14px 24px; border-radius: 24px; margin: 0 auto 24px; max-width: 280px; cursor: pointer; transition: all 0.3s; }
@@ -131,24 +120,21 @@
                 <div class="pvp-subtitle">Bet TON & Win the Pool!</div>
                 
                 <!-- Pool Display -->
-                <div class="pool-display" style="background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,165,0,0.15)); border: 2px solid rgba(255,215,0,0.5); box-shadow: 0 0 30px rgba(255,215,0,0.3);">
-                    <div class="pool-label" style="background: rgba(0,0,0,0.3); display: inline-block; padding: 4px 16px; border-radius: 20px; font-size: 11px; color: #FFD700; font-weight: 700; margin-bottom: 8px;">💎 TOTAL POOL</div>
-                    <div class="pool-amount" id="totalPool" style="font-size: 32px; font-weight: 900; background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">0.00 <span style="font-size: 18px; color: #FFD700; font-weight: 700;">TON</span></div>
+                <div style="background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); border-radius: 16px; padding: 16px; margin-bottom: 16px;">
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px;">Total Pool</div>
+                    <div style="font-size: 36px; font-weight: 900; color: #00d4ff;" id="totalPool">0.00 <span style="font-size: 18px; color: rgba(255,255,255,0.6);">TON</span></div>
                 </div>
                 
                 <!-- Timer -->
-                <div class="battle-timer" style="background: linear-gradient(135deg, rgba(255,87,34,0.2), rgba(255,165,0,0.15)); border: 2px solid rgba(255,87,34,0.5); border-radius: 16px; padding: 12px 28px; display: inline-block; margin-bottom: 24px; box-shadow: 0 0 20px rgba(255,87,34,0.3);">
-                    <div class="timer-value" id="timerValue" style="font-size: 32px; font-weight: 900; color: #FF5722; font-family: 'Courier New', monospace; text-shadow: 0 0 20px rgba(255,87,34,0.5);">00:30</div>
-                    <div class="timer-label" style="font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 6px; font-weight: 700;">⏳ TIME REMAINING</div>
+                <div style="background: rgba(255,87,34,0.1); border: 1px solid rgba(255,87,34,0.3); border-radius: 12px; padding: 10px 24px; display: inline-block; margin-bottom: 20px;">
+                    <div style="font-size: 28px; font-weight: 900; color: #FF5722; font-family: monospace;" id="timerValue">00:30</div>
+                    <div style="font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 4px;">TIME REMAINING</div>
                 </div>
                 
                 <!-- Battle Wheel -->
-                <div class="battle-wheel-container">
-                    <div class="battle-wheel" id="battleWheel" style="transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);"></div>
-                    <div class="wheel-center" style="animation: pulse 2s infinite;">⚔️</div>
-                    <style>
-                        @keyframes pulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 30px rgba(156,39,176,0.5); } 50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 50px rgba(156,39,176,0.8); } }
-                    </style>
+                <div class="battle-wheel-container" style="margin-bottom: 24px;">
+                    <div class="battle-wheel" id="battleWheel" style="transition: transform 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);"></div>
+                    <div class="wheel-center" style="width: 60px; height: 60px; background: linear-gradient(135deg, #00d4ff, #0088cc); font-size: 28px;">🎯</div>
                 </div>
                 
                 <!-- Players -->
@@ -353,9 +339,9 @@
                 segment.className = 'wheel-segment';
                 const rotation = i * segmentAngle;
                 segment.style.transform = `rotate(${rotation}deg) skewY(-${90 - segmentAngle}deg)`;
-                const colors = ['#9C27B0', '#7B1FA2', '#6A1B9A', '#512DA8', '#4A148C', '#311B92', '#283593', '#1A237E'];
-                segment.style.background = `linear-gradient(135deg, ${colors[i]}, ${colors[(i+1)%8]})`;
-                segment.innerHTML = `<span style="transform: skewY(${90 - segmentAngle}deg) rotate(-${rotation}deg); font-size: 12px; color: rgba(255,255,255,0.9); font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">⚔️ PVP</span>`;
+                const colors = ['#00d4ff', '#0099cc', '#0077aa', '#005588', '#004477', '#003366', '#002255', '#001144'];
+                segment.style.background = colors[i];
+                segment.innerHTML = `<span style="transform: skewY(${90 - segmentAngle}deg) rotate(-${rotation}deg); font-size: 10px; color: rgba(255,255,255,0.6); font-weight: 700;">PVP</span>`;
                 wheel.appendChild(segment);
             }
             
@@ -489,12 +475,17 @@
                 playerCards.forEach((card, idx) => {
                     if (idx === winnerIndex) {
                         card.classList.add('winner');
-                        card.querySelector('.winner-badge').textContent = '👑';
+                        const avatar = card.querySelector('.avatar');
+                        if (avatar) {
+                            avatar.innerHTML = '👑';
+                            avatar.style.background = 'rgba(255,215,0,0.2)';
+                            avatar.style.borderColor = '#FFD700';
+                        }
                     }
                 });
                 
                 if (won) {
-                    const reward = currentPool * 0.9; // 90% of pool (10% house edge)
+                    const reward = currentPool * 0.9;
                     balance += reward;
                     totalEarned += reward;
                     battlesWon++;
@@ -507,25 +498,21 @@
                     resultDisplay.textContent = `💔 ${winner.name} Wins!`;
                 }
                 
-                // Save stats
                 localStorage.setItem('tonmands_battlesWon', battlesWon);
                 localStorage.setItem('tonmands_battlesLost', battlesLost);
                 localStorage.setItem('tonmands_totalEarned', totalEarned);
                 
-                // Update UI
                 document.getElementById('statWins').textContent = battlesWon;
                 document.getElementById('statLosses').textContent = battlesLost;
                 document.getElementById('statEarned').textContent = totalEarned.toFixed(2);
                 document.getElementById('userBalance').textContent = balance;
                 document.getElementById('walletBalance').textContent = balance;
                 
-                // Reset
                 setTimeout(() => {
                     isBattleActive = false;
                     btn.disabled = false;
                     btn.textContent = '⚔️ JOIN BATTLE';
                     
-                    // Reset wheel
                     wheel.style.transition = 'none';
                     wheel.style.transform = 'rotate(0deg)';
                     wheel.style.animation = 'spin 10s linear infinite';
@@ -553,15 +540,17 @@
             
             players.forEach((player, index) => {
                 const card = document.createElement('div');
-                card.className = 'player-battle-card' + (index === userIndex ? ' active' : '');
+                card.className = 'player-battle-card';
                 const percentage = ((player.bet / currentPool) * 100).toFixed(1);
                 
                 card.innerHTML = `
-                    <div class="avatar">${player.emoji}</div>
+                    <div style="position: relative;">
+                        <div class="avatar">${player.emoji}</div>
+                        ${index === userIndex ? '<div style="position: absolute; bottom: -2px; right: -2px; background: #00d4ff; border-radius: 50%; padding: 2px 4px; font-size: 10px;">👤</div>' : ''}
+                    </div>
                     <div class="name">${player.name}</div>
                     <div class="percentage">${percentage}%</div>
                     <div class="bet-amount">${player.bet} TON</div>
-                    ${index === userIndex ? '<div class="winner-badge">👤</div>' : ''}
                 `;
                 
                 container.appendChild(card);
