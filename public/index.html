@@ -1396,7 +1396,7 @@
         let winningSegmentIndex = 0;
         
         // Version check (force cache clear)
-        const APP_VERSION = 'v2.0-FORCE-MODE';
+        const APP_VERSION = 'v2.1-SIMPLE-FIX';
         const savedVersion = localStorage.getItem('tonmands_version');
         
         // Force clear if version changed
@@ -1456,7 +1456,10 @@
             
             // Initialize wheel at 0deg (Try Again at TOP)
             currentRotation = 0;
-            wheel.style.transform = 'rotate(0deg)';
+            if (wheel) {
+                wheel.style.transform = 'rotate(0deg)';
+                console.log('✅ Wheel initialized at 0deg');
+            }
         }
 
         // Weighted random selection based on probability and spin requirements
@@ -1527,14 +1530,22 @@
         }
 
         function spinWheel() {
-            if (isSpinning) return;
+            console.log('🎯 spinWheel() called | isSpinning:', isSpinning);
+            
+            if (isSpinning) {
+                console.log('⚠️ Already spinning!');
+                return;
+            }
             
             // Check if has tickets
             if (spinCredits > 0) {
                 spinCredits--;
+                console.log('✅ Using free spin. Remaining:', spinCredits);
             } else if (ticketCredits > 0) {
                 ticketCredits--;
+                console.log('✅ Using ticket. Remaining:', ticketCredits);
             } else {
+                console.log('❌ No tickets!');
                 tg.showPopup({
                     title: 'No Tickets!',
                     message: 'You don\'t have any spin tickets!\\n\\nVisit Shop to buy more.',
@@ -1813,6 +1824,8 @@
 
         // Setup nav click handlers and wheel
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 TON MANDS Initializing...');
+            
             // Show version
             document.getElementById('appVersion').textContent = APP_VERSION;
             
@@ -1821,6 +1834,18 @@
             
             // Update next reward display
             updateNextRewardDisplay();
+            
+            // Ensure spin button is enabled
+            const spinBtn = document.getElementById('spinBtn');
+            if (spinBtn) {
+                spinBtn.disabled = false;
+                spinBtn.style.pointerEvents = 'auto';
+                spinBtn.style.cursor = 'pointer';
+                spinBtn.textContent = '⭐ SPIN ⭐';
+                console.log('✅ Spin button ready');
+            } else {
+                console.error('❌ Spin button not found!');
+            }
             
             // Setup nav items
             document.querySelectorAll('.nav-item').forEach(item => {
@@ -1840,6 +1865,8 @@
                     this.style.opacity = '1';
                 });
             });
+            
+            console.log('✅ TON MANDS Ready!');
         });
 
         // Confetti effect
