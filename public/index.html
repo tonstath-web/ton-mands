@@ -305,10 +305,10 @@
         /* Shop Section */
         .shop-section {
             background: white;
-            border-radius: 20px;
-            padding: 24px;
+            border-radius: 24px;
+            padding: 28px 20px;
             margin-bottom: 16px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
             display: none;
         }
 
@@ -318,129 +318,204 @@
 
         .shop-header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
+            padding: 0 8px;
         }
 
         .shop-title {
-            font-size: 24px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #FF9800 0%, #FF5722 100%);
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FF6B35 0%, #FF8C00 50%, #FFD700 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
         }
 
         .shop-subtitle {
-            font-size: 14px;
-            color: #666;
+            font-size: 15px;
+            color: #757575;
+            font-weight: 500;
         }
 
         .shop-grid {
-            display: grid;
-            gap: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
         }
 
         .shop-card {
-            background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
-            border-radius: 16px;
-            padding: 20px;
-            border: 2px solid #FFD54F;
             position: relative;
+            border-radius: 20px;
+            padding: 24px;
+            border: none;
             overflow: hidden;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .shop-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+            pointer-events: none;
         }
 
         .shop-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(255, 152, 0, 0.3);
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
         }
 
-        .shop-card.vip {
-            background: linear-gradient(135deg, #1A237E 0%, #3949AB 100%);
-            border: 2px solid #7986CB;
-        }
-
-        .shop-card.vip .shop-card-title,
-        .shop-card.vip .shop-card-desc {
+        /* Starter Card */
+        .shop-card.starter {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
             color: white;
         }
 
-        .shop-card.vip .shop-card-price {
-            color: #FFD700;
+        /* Pro Card */
+        .shop-card.pro {
+            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+            color: white;
         }
 
-        .shop-card.vip .buy-btn {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA000 100%);
-            color: #1A237E;
+        /* VIP Card */
+        .shop-card.vip {
+            background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .shop-card.vip::after {
+            content: '💎';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 80px;
+            opacity: 0.2;
+            transform: rotate(15deg);
         }
 
         .best-value-badge {
             position: absolute;
-            top: 12px;
-            right: 12px;
-            background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #4CAF50;
+            padding: 6px 14px;
+            border-radius: 20px;
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .vip-badge {
+            background: rgba(255, 215, 0, 0.95);
+            color: #667EEA;
         }
 
         .shop-card-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            position: relative;
         }
 
         .shop-card-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #333;
+            font-size: 22px;
+            font-weight: 800;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .shop-card-price {
-            font-size: 22px;
-            font-weight: 800;
-            color: #FF9800;
+            font-size: 28px;
+            font-weight: 900;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
         }
 
         .shop-card-tickets {
             text-align: center;
-            padding: 20px 0;
+            padding: 24px 0;
+            position: relative;
         }
 
         .ticket-icon {
-            font-size: 42px;
-            margin: 8px 0;
+            font-size: 56px;
+            margin: 12px 0;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
 
         .shop-card-desc {
-            font-size: 15px;
-            color: #666;
+            font-size: 18px;
+            font-weight: 700;
             text-align: center;
-            font-weight: 600;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tickets-count {
+            font-size: 32px;
+            font-weight: 900;
+            margin: 8px 0;
+        }
+
+        .tickets-label {
+            font-size: 13px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .buy-btn {
-            background: linear-gradient(135deg, #FF9800 0%, #FF5722 100%);
-            color: white;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
             border: none;
-            padding: 14px 28px;
-            border-radius: 24px;
-            font-size: 16px;
-            font-weight: 700;
+            padding: 16px 32px;
+            border-radius: 30px;
+            font-size: 17px;
+            font-weight: 800;
             cursor: pointer;
             width: 100%;
-            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
-            transition: all 0.2s;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .buy-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .buy-btn:active::before {
+            width: 300px;
+            height: 300px;
         }
 
         .buy-btn:active {
             transform: scale(0.96);
-            box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         }
 
         /* Balance Section */
