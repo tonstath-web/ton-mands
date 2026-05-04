@@ -1,26 +1,11 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "backend/app.py",
-      "use": "@vercel/python"
-    },
-    {
-      "src": "public/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "backend/app.py"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "public/$1"
-    }
-  ],
   "env": {
-    "PYTHON_VERSION": "3.11"
+    "TELEGRAM_BOT_TOKEN": "8790293521:AAHgFk1ACJbdMAaJEdOHMa23u4OA_VFyYEw"
+  },
+  "api": {
+    "bodyParser": {
+      "sizeLimit": "1mb"
+    }
   }
 }

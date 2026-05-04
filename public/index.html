@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TON MANDS</title>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    <script src="../firebase-config.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
@@ -329,9 +325,9 @@
         let battlesLost = parseInt(localStorage.getItem('tonmands_battlesLost') || '0');
         let totalEarned = parseFloat(localStorage.getItem('tonmands_totalEarned') || '0');
         
-        // Battle state with Firebase
+        // Battle state with Telegram Backend
         let currentBattleId = null;
-        let battleListener = null;
+        let userPlayerId = null;
         let isCreatingBattle = true;
         let isBattleActive = false;
         let isBettingOpen = true;
@@ -340,13 +336,70 @@
         let battleInterval = null;
         let players = [];
         let userIndex = 0;
-        let userPlayerKey = null;
         const MAX_PLAYERS = 20;
         const MIN_PLAYERS_TO_START = 2;
         
-        // Check if Firebase is available
-        const isFirebaseEnabled = typeof firebase !== 'undefined' && firebaseDB;
-        console.log('Firebase enabled:', isFirebaseEnabled);
+        // Backend API URL (Vercel)
+        const API_URL = '/api/battle';
+        
+        // Call backend API
+        async function callAPI(action, data = {}) {
+          try {
+            const response = await fetch(API_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ action, battleId: currentBattleId, data })
+            });
+            const result = await response.json();
+            return result;
+          } catch (error) {
+            console.error('API error:', error);
+            return { success: false, error: error.message };
+          }
+        }
+        
+        // Poll battle updates
+        let pollInterval = null;
+        function startPolling() {
+          if (pollInterval) clearInterval(pollInterval);
+          pollInterval = setInterval(async () => {
+            if (currentBattleId && isCreatingBattle) {
+              const result = await callAPI('get');
+              if (result.success && result.battle) {
+                syncBattle(result.battle);
+              }
+            }
+          }, 1000); // Poll every second
+        }
+        
+        // Sync battle from server
+        function syncBattle(battle) {
+          const remotePlayers = [];
+          let idx = 0;
+          Object.entries(battle.players).forEach(([key, player]) => {
+            remotePlayers.push({
+              ...player,
+              playerId: key
+            });
+            if (player.userId === user?.id) {
+              userIndex = idx;
+              userPlayerId = key;
+            }
+            idx++;
+          });
+          
+          players = remotePlayers;
+          currentPool = battle.pool;
+          timeRemaining = battle.timer || 30;
+          
+          if (battle.status === 'spinning' && !isBattleActive) {
+            startBattleFromRemote(battle);
+          }
+          
+          updateUI();
+        }
+        
+        console.log('✅ Telegram Backend enabled');
 
         // Create battle wheel segments with profile photos
         function createBattleWheel() {
@@ -441,7 +494,7 @@
         });
 
         // Create new battle
-        function createBattle() {
+        async function createBattle() {
             isCreatingBattle = true;
             isBattleActive = false;
             isBettingOpen = true;
@@ -464,65 +517,22 @@
             }];
             
             userIndex = 0;
-            userPlayerKey = null;
+            userPlayerId = null;
             
-            // Create battle in Firebase if enabled
-            if (isFirebaseEnabled && firebaseDB) {
-                // Cleanup old listener
-                if (battleListener) {
-                    battleListener.off('value');
-                }
-                
-                // Create new battle
-                const battleData = {
-                    players: {
-                        'player_0': {
-                            name: userName,
-                            photo: userPhoto,
-                            emoji: userEmoji,
-                            bet: selectedBet,
-                            userId: userId
-                        }
-                    },
-                    pool: selectedBet,
-                    timer: 30,
-                    status: 'waiting',
-                    hostId: userId
-                };
-                
-                currentBattleId = firebaseDB.createBattleInFirebase(battleData);
+            // Create battle in Telegram Backend
+            const result = await callAPI('create', {
+                name: userName,
+                userId: userId,
+                bet: selectedBet,
+                emoji: userEmoji,
+                photo: userPhoto
+            });
+            
+            if (result.success) {
+                currentBattleId = result.battle.id;
                 console.log('Battle created:', currentBattleId);
-                
-                // Listen for changes
-                battleListener = firebaseDB.listenToBattle(currentBattleId, (battleData) => {
-                    if (battleData.status === 'spinning' && !isBattleActive) {
-                        // Battle started by another player
-                        startBattleFromRemote(battleData);
-                    } else if (battleData.status === 'waiting') {
-                        // Sync players from Firebase
-                        const remotePlayers = [];
-                        let playerIndex = 0;
-                        Object.keys(battleData.players || {}).forEach((key, index) => {
-                            const p = battleData.players[key];
-                            remotePlayers.push({
-                                name: p.name,
-                                photo: p.photo,
-                                emoji: p.emoji,
-                                bet: p.bet,
-                                userId: p.userId,
-                                key: key
-                            });
-                            if (p.userId === userId) {
-                                userIndex = index;
-                                userPlayerKey = key;
-                            }
-                        });
-                        players = remotePlayers;
-                        currentPool = battleData.pool || 0;
-                        timeRemaining = battleData.timer || 30;
-                        updateUI();
-                    }
-                });
+                syncBattle(result.battle);
+                startPolling();
             }
             
             // Update UI immediately to show player on wheel
@@ -530,16 +540,16 @@
             
             // Start timer
             if (battleInterval) clearInterval(battleInterval);
-            battleInterval = setInterval(() => {
+            battleInterval = setInterval(async () => {
                 timeRemaining--;
                 const minutes = Math.floor(timeRemaining / 60);
                 const seconds = timeRemaining % 60;
                 document.getElementById('timerValue').textContent = 
                     `0${minutes}:${seconds.toString().padStart(2, '0')}`;
                 
-                // Update Firebase timer
-                if (isFirebaseEnabled && currentBattleId) {
-                    firebaseDB.updateBattleInFirebase(currentBattleId, { timer: timeRemaining });
+                // Update backend timer
+                if (currentBattleId && timeRemaining % 5 === 0) {
+                    await callAPI('update', { timer: timeRemaining });
                 }
                 
                 // Close betting when timer reaches 0
@@ -549,12 +559,10 @@
                     if (players.length >= MIN_PLAYERS_TO_START) {
                         startBattle();
                     } else if (players.length === 1) {
-                        // Only 1 player - add 1 bot and extend timer
                         addBotPlayers();
                         timeRemaining = 15;
                         isBettingOpen = true;
                     } else {
-                        // No players - reset battle
                         createBattle();
                     }
                 }
@@ -613,7 +621,7 @@
         }
 
         // Start battle
-        function startBattle() {
+        async function startBattle() {
             clearInterval(battleInterval);
             isCreatingBattle = false;
             isBattleActive = false;
@@ -637,12 +645,9 @@
                 }
             }
             
-            // Update Firebase with winner and start spinning
-            if (isFirebaseEnabled && currentBattleId) {
-                firebaseDB.updateBattleInFirebase(currentBattleId, {
-                    status: 'spinning',
-                    winnerIndex: winnerIndex
-                });
+            // Update backend with winner
+            if (currentBattleId) {
+                await callAPI('start', { winnerIndex });
             }
             
             // Perform the spin
@@ -847,7 +852,7 @@
         });
 
         // Join battle button
-        document.getElementById('joinBtn').addEventListener('click', () => {
+        document.getElementById('joinBtn').addEventListener('click', async () => {
             // Check if betting is still open
             if (!isBettingOpen) {
                 alert('Betting is closed! Wait for next battle.');
@@ -866,49 +871,24 @@
                 const userPhoto = user?.photo_url || null;
                 const userId = user?.id || 'unknown';
                 
-                // Check if user already exists - if yes, add to their bet (merge)
-                const existingIndex = players.findIndex(p => p.userId === userId);
-                if (existingIndex !== -1) {
-                    // User already joined - add to their bet
-                    players[existingIndex].bet += selectedBet;
-                    currentPool += selectedBet;
-                    
-                    // Update Firebase
-                    if (isFirebaseEnabled && currentBattleId && players[existingIndex].key) {
-                        firebaseDB.db.ref(`battles/${currentBattleId}/players/${players[existingIndex].key}`).update({
-                            bet: players[existingIndex].bet
-                        });
-                        firebaseDB.db.ref(`battles/${currentBattleId}`).update({ pool: currentPool });
-                    }
-                } else {
-                    // New player - join battle
-                    currentPool += selectedBet;
-                    const newPlayer = {
-                        name: userName,
-                        photo: userPhoto,
-                        emoji: userEmoji,
-                        bet: selectedBet,
-                        userId: userId
-                    };
-                    
-                    // Add to Firebase
-                    if (isFirebaseEnabled && currentBattleId) {
-                        const playerKey = firebaseDB.joinBattle(currentBattleId, newPlayer);
-                        newPlayer.key = playerKey;
-                        firebaseDB.db.ref(`battles/${currentBattleId}`).update({ pool: currentPool });
-                    } else {
-                        players.push(newPlayer);
-                    }
-                    
-                    if (players[existingIndex] !== newPlayer) {
-                        players.push(newPlayer);
-                    }
-                }
+                // Join battle via API
+                const result = await callAPI('join', {
+                    name: userName,
+                    userId: userId,
+                    bet: selectedBet,
+                    emoji: userEmoji,
+                    photo: userPhoto
+                });
                 
-                // Update UI immediately
-                updateUI();
+                if (result.success) {
+                    currentBattleId = result.battle.id;
+                    userPlayerId = result.playerId;
+                    syncBattle(result.battle);
+                    updateUI();
+                } else {
+                    alert(result.error || 'Failed to join battle');
+                }
             } else {
-                // Battle already in progress
                 alert('Battle is already in progress!');
             }
         });
