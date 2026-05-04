@@ -278,23 +278,23 @@
 
     <!-- Bottom Navigation -->
     <div class="bottom-nav">
-        <div class="nav-item active" data-page="home">
+        <div class="nav-item active" onclick="handleNav('home')">
             <span class="nav-icon">🏠</span>
             <span>Home</span>
         </div>
-        <div class="nav-item" data-page="spin">
+        <div class="nav-item" onclick="handleNav('spin')">
             <span class="nav-icon">📊</span>
             <span>Stats</span>
         </div>
-        <div class="nav-item" data-page="refer">
+        <div class="nav-item" onclick="handleNav('refer')">
             <span class="nav-icon">👥</span>
             <span>Refer</span>
         </div>
-        <div class="nav-item" data-page="shop">
+        <div class="nav-item" onclick="handleNav('shop')">
             <span class="nav-icon">👤</span>
             <span>Profile</span>
         </div>
-        <div class="nav-item" data-page="balance">
+        <div class="nav-item" onclick="handleNav('balance')">
             <span class="nav-icon">💳</span>
             <span>Wallet</span>
         </div>
@@ -762,12 +762,7 @@
             navigator.clipboard.writeText(link).then(() => alert('Link copied!'));
         }
 
-        // Setup navigation immediately
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.onclick = function() {
-                handleNav(this.dataset.page);
-            };
-        });
+
             // Check if betting is still open
             if (!isBettingOpen) {
                 alert('Betting is closed! Wait for next battle.');
