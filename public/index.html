@@ -21,25 +21,21 @@
         .profile-id { font-size: 13px; opacity: 0.9; }
         .profile-balance { background: rgba(0,0,0,0.25); padding: 10px 18px; border-radius: 20px; font-weight: 700; }
         
-        /* Spin Section */
-        .spin-section { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-radius: 28px; padding: 32px 20px; margin-bottom: 20px; text-align: center; }
-        .spin-title { font-size: 28px; font-weight: 900; background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
-        .spin-subtitle { font-size: 15px; color: rgba(255,255,255,0.6); margin-bottom: 28px; }
+        /* PVP Section */
+        .pvp-section { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-radius: 28px; padding: 32px 20px; margin-bottom: 20px; text-align: center; }
+        .pvp-title { font-size: 28px; font-weight: 900; background: linear-gradient(135deg, #00d4ff, #0088cc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+        .pvp-subtitle { font-size: 15px; color: rgba(255,255,255,0.6); margin-bottom: 28px; }
         
-        /* Lucky Wheel - CLEAN DESIGN */
-        .lucky-wheel-container { position: relative; width: 280px; height: 280px; margin: 0 auto 32px; }
-        .lucky-wheel { width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 0 0 8px #FFD700, 0 0 0 14px #FF8C00, 0 20px 60px rgba(0,0,0,0.6); border: 5px solid #FFA500; }
-        .lucky-wheel.spinning { transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); }
-        .wheel-pointer { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); z-index: 30; }
-        .wheel-pointer svg { width: 40px; height: 50px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6)); }
-        .wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: radial-gradient(circle, #FFD700, #FFA500); border-radius: 50%; box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 4px 20px rgba(255,255,255,0.6); border: 5px solid rgba(255,255,255,0.5); z-index: 20; display: flex; align-items: center; justify-content: center; font-size: 32px; }
-        .wheel-label { position: absolute; top: 50%; left: 50%; transform-origin: 0 0; text-align: center; z-index: 15; pointer-events: none; }
-        .wheel-label-text { font-size: 11px; font-weight: 800; color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.9), 0 0 10px rgba(0,0,0,0.8); text-transform: uppercase; display: block; line-height: 1.2; letter-spacing: 0.3px; }
-        
-        /* Spin Button */
-        .spin-btn { background: linear-gradient(135deg, #9C27B0, #7B1FA2, #6A1B9A); color: #FFD700; border: 3px solid #FFD700; padding: 20px 72px; border-radius: 40px; font-size: 28px; font-weight: 900; cursor: pointer; box-shadow: 0 8px 32px rgba(156,39,176,0.5), 0 0 80px rgba(255,215,0,0.2); transition: all 0.3s; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 16px; }
-        .spin-btn:active { transform: scale(0.95); }
-        .spin-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        /* Battle Arena */
+        .battle-arena { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 32px; }
+        .player-card { background: rgba(0,136,204,0.15); border: 2px solid rgba(0,212,255,0.4); border-radius: 20px; padding: 20px; min-width: 140px; transition: all 0.3s; }
+        .player-card.opponent { border-color: rgba(255,51,51,0.4); background: rgba(255,51,51,0.1); }
+        .player-card.active { transform: scale(1.05); box-shadow: 0 0 40px rgba(0,212,255,0.5); }
+        .player-avatar { width: 60px; height: 60px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 12px; }
+        .player-name { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+        .player-power { font-size: 12px; color: rgba(255,255,255,0.6); }
+        .player-power .power-value { color: #00d4ff; font-weight: 800; }
+        .vs-badge { font-size: 32px; font-weight: 900; background: linear-gradient(135deg, #FF3333, #FF6666); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
         /* Auto Spin Toggle */
         .auto-spin-toggle { display: flex; align-items: center; justify-content: center; gap: 12px; background: rgba(255,255,255,0.08); padding: 14px 24px; border-radius: 24px; margin: 0 auto 24px; max-width: 280px; cursor: pointer; transition: all 0.3s; }
@@ -83,43 +79,48 @@
 
         <!-- Home Section -->
         <div id="home" class="page-section active">
-            <div class="spin-section">
-                <div class="spin-title">🎡 Lucky Wheel</div>
-                <div class="spin-subtitle">Spin to win amazing rewards!</div>
+            <div class="pvp-section">
+                <div class="pvp-title">⚔️ PVP Arena</div>
+                <div class="pvp-subtitle">Battle other players for rewards!</div>
                 
-                <div class="lucky-wheel-container">
-                    <div class="wheel-pointer">
-                        <svg viewBox="0 0 50 60" fill="none">
-                            <path d="M25 60L0 0L50 0L25 60Z" fill="#FF3333" stroke="#FF6666" stroke-width="2"/>
-                            <circle cx="25" cy="15" r="8" fill="#FFD700"/>
-                        </svg>
+                <div class="battle-arena">
+                    <div class="player-card active" id="playerCard">
+                        <div class="player-avatar" id="playerAvatar">👤</div>
+                        <div class="player-name" id="playerName">You</div>
+                        <div class="player-power">Power: <span class="power-value" id="playerPower">100</span></div>
                     </div>
-                    <div class="lucky-wheel" id="luckyWheel"></div>
-                    <div class="wheel-center">💎</div>
+                    <div class="vs-badge">VS</div>
+                    <div class="player-card opponent" id="opponentCard">
+                        <div class="player-avatar" id="opponentAvatar">🤖</div>
+                        <div class="player-name" id="opponentName">Opponent</div>
+                        <div class="player-power">Power: <span class="power-value" id="opponentPower">100</span></div>
+                    </div>
                 </div>
                 
-                <button class="spin-btn" id="spinBtn">⭐ SPIN ⭐</button>
+                <button class="spin-btn" id="battleBtn" style="background: linear-gradient(135deg, #0088cc, #00d4ff); color: #fff; border-color: #00d4ff;">⚔️ BATTLE ⚔️</button>
                 
-                <div class="auto-spin-toggle" id="autoSpinToggle">
-                    <span class="auto-spin-icon">🔄</span>
-                    <span class="auto-spin-text" id="autoSpinText">Auto Spin OFF</span>
+                <div class="auto-spin-toggle" id="dailyChallengeToggle">
+                    <span class="auto-spin-icon">📅</span>
+                    <span class="auto-spin-text" id="dailyChallengeText">Daily Challenge: 3/day</span>
                 </div>
                 
                 <div class="spin-credits">
-                    <div style="margin-bottom: 8px;">🎯 Total Spins: <span id="totalSpins" style="color: #FFD700; font-weight: 800;">0</span></div>
-                    <div>Spins Left: <span id="spinCredits">3</span>/day | Tickets: <span id="ticketCredits">0</span></div>
+                    <div style="margin-bottom: 8px;">🏆 Battles Won: <span id="battlesWon" style="color: #00d4ff; font-weight: 800;">0</span></div>
+                    <div>Wins: <span id="winsCount">0</span> | Losses: <span id="lossesCount">0</span></div>
                 </div>
                 
-                <div class="prize-display" id="prizeDisplay">🎲 Good luck!</div>
+                <div class="prize-display" id="battleResult">⚔️ Ready to battle!</div>
             </div>
         </div>
 
         <!-- Spin Section -->
         <div id="spin" class="page-section">
-            <div class="spin-section">
-                <div class="spin-title">🎡 Lucky Wheel</div>
-                <div class="spin-subtitle">Navigate to Home to spin!</div>
-                <button class="spin-btn" onclick="handleNav('home')">🏠 Go Home</button>
+            <div class="pvp-section">
+                <div class="pvp-title">⚔️ Battle Log</div>
+                <div class="pvp-subtitle">Recent battles and leaderboard</div>
+                <div style="text-align: left; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 16px; margin: 20px 0;" id="battleLog">
+                    <div style="color: rgba(255,255,255,0.5); font-size: 14px;">No battles yet</div>
+                </div>
             </div>
         </div>
 
@@ -157,8 +158,8 @@
             <span>Home</span>
         </div>
         <div class="nav-item" data-page="spin">
-            <span class="nav-icon">🎰</span>
-            <span>Spin</span>
+            <span class="nav-icon">📊</span>
+            <span>Stats</span>
         </div>
         <div class="nav-item" data-page="refer">
             <span class="nav-icon">👥</span>
@@ -186,168 +187,128 @@
             const fullName = `${user.first_name} ${user.last_name || ''}`.trim();
             document.getElementById('userName').textContent = fullName || 'User';
             document.getElementById('userId').textContent = `ID: ${user.id}`;
-            document.getElementById('userAvatar').textContent = user.first_name?.charAt(0).toUpperCase() || 'U';
+            document.getElementById('playerAvatar').textContent = user.first_name?.charAt(0).toUpperCase() || 'U';
         }
 
-        // Wheel segments - CLEAN (no icons/text on wheel)
-        const wheelSegments = [
-            { color: '#FF3333', text: 'TRY AGAIN' },
-            { color: '#FF6666', text: '0.02 TON' },
-            { color: '#FF9999', text: '0.2 TON' },
-            { color: '#E040FB', text: '0.4 TON' },
-            { color: '#7C4DFF', text: '0.8 TON' },
-            { color: '#536DFE', text: '1 TON' },
-            { color: '#FFD740', text: '50 TON' }
-        ];
-
-        const prizes = {
-            '0.02 TON': { type: 'ton', value: 0.02 },
-            '0.2 TON': { type: 'ton', value: 0.2 },
-            '0.4 TON': { type: 'ton', value: 0.4 },
-            '0.8 TON': { type: 'ton', value: 0.8 },
-            '1 TON': { type: 'ton', value: 1 },
-            '50 TON': { type: 'ton', value: 50 },
-            'TRY AGAIN': { type: 'none', value: 0 }
-        };
-
-        let spinCredits = 3;
-        let ticketCredits = 0;
+        // PVP Game Data
+        const opponentNames = ['Dragon', 'Phoenix', 'Tiger', 'Eagle', 'Wolf', 'Lion', 'Bear', 'Shark'];
+        const opponentEmojis = ['🐉', '🦅', '🐯', '🦅', '🐺', '🦁', '🐻', '🦈'];
+        
         let balance = 0;
-        let isSpinning = false;
-        let currentRotation = 0;
-        let totalSpins = parseInt(localStorage.getItem('tonmands_totalSpins') || '0');
-        let autoSpinEnabled = false;
+        let battlesWon = parseInt(localStorage.getItem('tonmands_battlesWon') || '0');
+        let battlesLost = parseInt(localStorage.getItem('tonmands_battlesLost') || '0');
+        let dailyChallenges = parseInt(localStorage.getItem('tonmands_dailyChallenges') || '0');
+        let isBattling = false;
+        let battleHistory = JSON.parse(localStorage.getItem('tonmands_battleHistory') || '[]');
 
-        // Create wheel - WITH REWARD LABELS
-        function createWheel() {
-            const wheel = document.getElementById('luckyWheel');
-            const segmentAngle = 360 / wheelSegments.length;
-            const halfSegment = segmentAngle / 2;
-            
-            // Center segment 0 (TRY AGAIN) at TOP (12 o'clock)
-            let gradientParts = [];
-            wheelSegments.forEach((segment, index) => {
-                const startAngle = (index * segmentAngle) - halfSegment;
-                const endAngle = ((index + 1) * segmentAngle) - halfSegment;
-                gradientParts.push(`${segment.color} ${startAngle}deg ${endAngle}deg`);
-            });
-            wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
-            
-            // Add reward labels
-            wheelSegments.forEach((segment, index) => {
-                const label = document.createElement('div');
-                label.className = 'wheel-label';
-                const radius = 85; // Distance from center
-                const angle = (index * segmentAngle) - halfSegment;
-                const radians = angle * (Math.PI / 180);
-                const x = Math.cos(radians) * radius;
-                const y = Math.sin(radians) * radius;
-                label.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
-                label.innerHTML = `<span class="wheel-label-text">${segment.text}</span>`;
-                wheel.appendChild(label);
-            });
-            
-            // Initialize wheel rotation (TRY AGAIN at TOP = 0°)
-            currentRotation = 0;
-            wheel.style.transform = 'rotate(0deg)';
-            
-            console.log('✅ Wheel created | Segment 0 (TRY AGAIN) centered at 12 o\'clock');
+        // Generate random opponent
+        function generateOpponent() {
+            const index = Math.floor(Math.random() * opponentNames.length);
+            return {
+                name: opponentNames[index],
+                emoji: opponentEmojis[index],
+                power: Math.floor(Math.random() * 60) + 70 // 70-130
+            };
         }
 
-        // Get result (TRY AGAIN for first 4 spins)
-        function getResult() {
-            if (totalSpins <= 4) {
-                console.log('🔒 Spin #' + totalSpins + ': FORCED TRY AGAIN');
-                return 0;
-            }
-            return Math.random() < 0.001 ? Math.floor(Math.random() * 6) + 1 : 0;
-        }
-
-        // Spin function
-        function spinWheel() {
-            if (isSpinning) return;
-            if (spinCredits <= 0 && ticketCredits <= 0) {
-                alert('No tickets! Visit shop to buy more.');
+        // Battle function
+        function startBattle() {
+            if (isBattling) return;
+            if (dailyChallenges >= 3) {
+                alert('Daily challenge limit reached! Come back tomorrow.');
                 return;
             }
             
-            if (spinCredits > 0) spinCredits--;
-            else ticketCredits--;
-            
-            totalSpins++;
-            localStorage.setItem('tonmands_totalSpins', totalSpins.toString());
-            
-            isSpinning = true;
-            const btn = document.getElementById('spinBtn');
-            const wheel = document.getElementById('luckyWheel');
+            isBattling = true;
+            const btn = document.getElementById('battleBtn');
             btn.disabled = true;
-            btn.textContent = '🔄 SPINNING...';
+            btn.textContent = '⚔️ BATTling...';
             
-            // Add spinning class for transition
-            wheel.classList.add('spinning');
+            // Generate opponent
+            const opponent = generateOpponent();
+            document.getElementById('opponentName').textContent = opponent.name;
+            document.getElementById('opponentAvatar').textContent = opponent.emoji;
+            document.getElementById('opponentPower').textContent = opponent.power;
             
-            const winningIndex = getResult();
-            const segmentAngle = 360 / wheelSegments.length;
-            const extraSpins = 5 * 360;
-            
-            console.log('🎡 SPIN #' + totalSpins + ' | Index: ' + winningIndex + ' (' + wheelSegments[winningIndex].text + ')');
-            
-            // Segment 0 (TRY AGAIN) is CENTERED at 0° (12 o'clock)
-            // Add random offset within segment for natural look (except for rewards)
-            let offset = 0;
-            if (winningIndex === 0) {
-                // TRY AGAIN: Random position within segment (-20° to +20° from center)
-                offset = (Math.random() - 0.5) * 40;
-                console.log('   TRY AGAIN offset: ' + offset.toFixed(2) + '°');
-            }
-            
-            const segmentPosition = (winningIndex * segmentAngle) + offset;
-            const targetRotationMod = (360 - segmentPosition) % 360;
-            
-            let targetRotation = currentRotation + extraSpins;
-            const remainder = targetRotation % 360;
-            let adjustment = targetRotationMod - remainder;
-            if (adjustment < 0) adjustment += 360;
-            
-            targetRotation += adjustment;
-            
-            console.log('   Rotation: ' + targetRotation.toFixed(2) + '° | Final: ' + (targetRotation % 360).toFixed(2) + '°');
-            
-            wheel.style.transform = `rotate(${targetRotation}deg)`;
-            
+            // Simulate battle (1.5 seconds)
             setTimeout(() => {
-                currentRotation = targetRotation;
-                isSpinning = false;
-                btn.disabled = false;
-                btn.textContent = '⭐ SPIN ⭐';
+                const playerPower = Math.floor(Math.random() * 60) + 70; // 70-130
+                document.getElementById('playerPower').textContent = playerPower;
                 
-                // Remove spinning class - no more transition
-                wheel.classList.remove('spinning');
+                const resultDisplay = document.getElementById('battleResult');
+                const won = playerPower > opponent.power;
                 
-                const segment = wheelSegments[winningIndex];
-                const prize = prizes[segment.text];
-                const prizeDisplay = document.getElementById('prizeDisplay');
-                
-                if (prize.type === 'ton') {
-                    balance += prize.value;
-                    prizeDisplay.className = 'prize-display win';
-                    prizeDisplay.textContent = `🎉 WIN: ${prize.value} TON!`;
+                if (won) {
+                    const reward = 0.1; // 0.1 TON reward
+                    balance += reward;
+                    battlesWon++;
+                    dailyChallenges++;
+                    resultDisplay.className = 'prize-display win';
+                    resultDisplay.textContent = `🏆 VICTORY! +${reward} TON`;
                     createConfetti();
                 } else {
-                    prizeDisplay.className = 'prize-display';
-                    prizeDisplay.textContent = '😢 TRY AGAIN!';
+                    battlesLost++;
+                    resultDisplay.className = 'prize-display';
+                    resultDisplay.textContent = '💔 DEFEAT! Try again.';
                 }
                 
-                document.getElementById('totalSpins').textContent = totalSpins;
-                document.getElementById('spinCredits').textContent = spinCredits;
-                document.getElementById('ticketCredits').textContent = ticketCredits;
+                // Save to history
+                battleHistory.unshift({
+                    date: new Date().toISOString(),
+                    opponent: opponent.name,
+                    result: won ? 'win' : 'loss',
+                    reward: won ? 0.1 : 0
+                });
+                if (battleHistory.length > 10) battleHistory.pop();
+                
+                // Update UI
+                localStorage.setItem('tonmands_battlesWon', battlesWon);
+                localStorage.setItem('tonmands_battlesLost', battlesLost);
+                localStorage.setItem('tonmands_dailyChallenges', dailyChallenges);
+                localStorage.setItem('tonmands_battleHistory', JSON.stringify(battleHistory));
+                
+                document.getElementById('battlesWon').textContent = battlesWon;
+                document.getElementById('winsCount').textContent = battlesWon;
+                document.getElementById('lossesCount').textContent = battlesLost;
+                document.getElementById('dailyChallengeText').textContent = `Daily Challenge: ${3 - dailyChallenges}/3 left`;
                 document.getElementById('userBalance').textContent = balance;
                 document.getElementById('walletBalance').textContent = balance;
                 
-                if (autoSpinEnabled && spinCredits > 0) {
-                    setTimeout(spinWheel, 2000);
-                }
-            }, 4000);
+                // Update battle log
+                updateBattleLog();
+                
+                // Reset
+                isBattling = false;
+                btn.disabled = false;
+                btn.textContent = '⚔️ BATTLE ⚔️';
+                
+            }, 1500);
+        }
+
+        // Update battle log display
+        function updateBattleLog() {
+            const logContainer = document.getElementById('battleLog');
+            if (battleHistory.length === 0) {
+                logContainer.innerHTML = '<div style="color: rgba(255,255,255,0.5); font-size: 14px;">No battles yet</div>';
+                return;
+            }
+            
+            let html = '';
+            battleHistory.forEach(battle => {
+                const resultIcon = battle.result === 'win' ? '🏆' : '💔';
+                const resultColor = battle.result === 'win' ? '#00c853' : '#FF5722';
+                html += `<div style="padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #fff; font-weight: 600;">${battle.opponent}</span>
+                        <span style="color: ${resultColor}; font-weight: 700;">${resultIcon}</span>
+                    </div>
+                    <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px;">
+                        ${new Date(battle.date).toLocaleDateString()} ${battle.result === 'win' ? `+${battle.reward} TON` : ''}
+                    </div>
+                </div>`;
+            });
+            
+            logContainer.innerHTML = html;
         }
 
         // Navigation
@@ -364,15 +325,6 @@
             navigator.clipboard.writeText(link).then(() => alert('Link copied!'));
         }
 
-        // Auto spin toggle
-        document.getElementById('autoSpinToggle').addEventListener('click', () => {
-            autoSpinEnabled = !autoSpinEnabled;
-            const text = document.getElementById('autoSpinText');
-            text.textContent = autoSpinEnabled ? 'Auto Spin ON' : 'Auto Spin OFF';
-            document.getElementById('autoSpinToggle').classList.toggle('active');
-            if (autoSpinEnabled) spinWheel();
-        });
-
         // Setup navigation
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', function() {
@@ -380,8 +332,8 @@
             });
         });
 
-        // Spin button
-        document.getElementById('spinBtn').addEventListener('click', spinWheel);
+        // Battle button
+        document.getElementById('battleBtn').addEventListener('click', startBattle);
 
         // Confetti
         function createConfetti() {
@@ -398,9 +350,14 @@
         }
 
         // Initialize
-        createWheel();
-        document.getElementById('totalSpins').textContent = totalSpins;
-        console.log('✅ TON MANDS Ready!');
+        document.getElementById('battlesWon').textContent = battlesWon;
+        document.getElementById('winsCount').textContent = battlesWon;
+        document.getElementById('lossesCount').textContent = battlesLost;
+        document.getElementById('dailyChallengeText').textContent = `Daily Challenge: ${3 - dailyChallenges}/3 left`;
+        document.getElementById('userBalance').textContent = balance;
+        document.getElementById('walletBalance').textContent = balance;
+        updateBattleLog();
+        console.log('✅ TON MANDS PVP Ready!');
     </script>
 </body>
 </html>
