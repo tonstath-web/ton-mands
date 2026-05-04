@@ -1539,9 +1539,6 @@
             // SAVE to localStorage (persist across sessions!)
             localStorage.setItem('tonmands_totalSpins', totalSpins.toString());
             
-            // DEBUG: Log spin count
-            console.log('🎡 SPIN #', totalSpins, '| Eligible rewards:', wheelSegments.filter(seg => totalSpins >= seg.minSpins && seg.text !== 'Try Again').length);
-            
             updateBalanceDisplay();
             isSpinning = true;
             
@@ -1555,20 +1552,30 @@
             winningSegmentIndex = getWeightedResult();
             const winningSegment = wheelSegments[winningSegmentIndex];
             
-            // DEBUG: Log result
             console.log('🎯 Result:', winningSegment.text, '| Index:', winningSegmentIndex);
             
-            // Calculate rotation to land on winning segment
+            // Calculate rotation to land on winning segment at TOP (pointer position)
             const segmentAngle = 360 / wheelSegments.length;
             const minSpins = 5;
-            // Calculate the angle needed to land on the winning segment at the top (pointer)
-            // Pointer is at top (0 degrees), so we need to rotate so the segment ends at 0
+            
+            // Pointer is at TOP (0 degrees / -90 in CSS)
+            // To land segment at top, we need to rotate the wheel so that segment is at -90deg
+            // Segment center angle from start
             const segmentCenterAngle = (winningSegmentIndex * segmentAngle) + (segmentAngle / 2);
-            const targetRotation = (minSpins * 360) + (360 - segmentCenterAngle) + 90; // +90 to adjust for CSS rotation
-            const totalRotation = currentRotation + targetRotation;
+            
+            // Calculate target rotation: 
+            // - We want segmentCenterAngle to end up at -90deg (top)
+            // - So we rotate: -90 - segmentCenterAngle
+            // - Plus minimum spins for animation
+            const extraSpins = (minSpins * 360);
+            const targetPosition = -90 - segmentCenterAngle;
+            
+            // Round to nearest 360 to keep rotation smooth
+            const fullRotations = Math.ceil((currentRotation - targetPosition) / 360) * 360;
+            const totalRotation = fullRotations + extraSpins + targetPosition;
             
             const wheel = document.getElementById('luckyWheel');
-            wheel.style.transform = `rotate(-${totalRotation}deg)`;
+            wheel.style.transform = `rotate(${totalRotation}deg)`;
             
             // Wait for animation to complete
             setTimeout(() => {
