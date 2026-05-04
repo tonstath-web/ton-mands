@@ -333,38 +333,52 @@
         let userIndex = 0;
         let isBattleActive = false;
 
-        // Create battle wheel segments with player profiles
+        // Create battle wheel segments with proportional sizes based on bet amount
         function createBattleWheel() {
             const wheel = document.getElementById('battleWheel');
-            const numSegments = Math.max(players.length, 8);
-            const segmentAngle = 360 / numSegments;
+            const totalBet = players.reduce((sum, p) => sum + p.bet, 0);
             
             wheel.innerHTML = '';
             
-            for (let i = 0; i < numSegments; i++) {
+            let currentAngle = 0;
+            
+            players.forEach((player, index) => {
                 const segment = document.createElement('div');
                 segment.className = 'wheel-segment';
-                const rotation = i * segmentAngle;
-                segment.style.transform = `rotate(${rotation}deg) skewY(-${90 - segmentAngle}deg)`;
                 
-                // Alternating segment colors
-                const colors = ['rgba(0,212,255,0.08)', 'rgba(0,212,255,0.04)'];
-                segment.style.background = colors[i % 2];
-                segment.style.border = `1px solid rgba(0,212,255,0.2)`;
+                // Calculate segment angle based on bet percentage
+                const percentage = (player.bet / totalBet) * 100;
+                const segmentAngle = (percentage / 100) * 360;
                 
-                // Show player info if exists
-                if (i < players.length) {
-                    const player = players[i];
-                    segment.innerHTML = `
-                        <div style="transform: skewY(${90 - segmentAngle}deg) rotate(-${rotation}deg); display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 8px;">
-                            <div style="font-size: 28px; margin-bottom: 4px;">${player.emoji || '👤'}</div>
-                            <div style="font-size: 10px; color: rgba(255,255,255,0.8); font-weight: 600; text-align: center; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${player.name || 'Player'}</div>
-                        </div>
-                    `;
-                }
+                // Position segment
+                const rotation = currentAngle;
+                currentAngle += segmentAngle;
+                
+                // Skew for pie slice shape
+                const skewAngle = 90 - segmentAngle;
+                segment.style.transform = `rotate(${rotation}deg) skewY(-${skewAngle}deg)`;
+                segment.style.transformOrigin = '100% 100%';
+                segment.style.left = '0';
+                segment.style.top = '0';
+                segment.style.width = '50%';
+                segment.style.height = '50%';
+                
+                // Segment colors - gradient based on position
+                const hue = (index * 40) % 360;
+                segment.style.background = `linear-gradient(135deg, hsla(${hue}, 70%, 50%, 0.3), hsla(${hue}, 70%, 40%, 0.2))`;
+                segment.style.border = `1px solid hsla(${hue}, 70%, 60%, 0.5)`;
+                
+                // Show player info
+                segment.innerHTML = `
+                    <div style="transform: skewY(${skewAngle}deg) rotate(-${rotation + segmentAngle/2}deg); display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 8px;">
+                        <div style="font-size: ${Math.min(32, 20 + percentage/5)}px; margin-bottom: 4px;">${player.emoji || '👤'}</div>
+                        <div style="font-size: 11px; color: rgba(255,255,255,0.9); font-weight: 700; text-align: center;">${player.name || 'Player'}</div>
+                        <div style="font-size: 9px; color: rgba(255,255,255,0.6); margin-top: 2px;">${percentage.toFixed(1)}%</div>
+                    </div>
+                `;
                 
                 wheel.appendChild(segment);
-            }
+            });
             
             // Start spinning animation
             wheel.style.animation = 'spin 10s linear infinite';
@@ -489,11 +503,20 @@
             wheel.style.transition = 'none';
             wheel.style.animation = 'none';
             
-            // Calculate spin to land on winner segment
-            const segmentAngle = 360 / players.length;
-            const winnerAngle = winnerIndex * segmentAngle;
+            // Calculate cumulative angles for proportional segments
+            let cumulativeAngle = 0;
+            const playerAngles = players.map(player => {
+                const percentage = (player.bet / currentPool) * 100;
+                const angle = (percentage / 100) * 360;
+                const startAngle = cumulativeAngle;
+                cumulativeAngle += angle;
+                return { startAngle, endAngle: cumulativeAngle, centerAngle: startAngle + angle/2 };
+            });
+            
+            // Land on winner's segment (center of their segment)
+            const winnerCenterAngle = playerAngles[winnerIndex].centerAngle;
             const extraSpins = 5 * 360; // 5 full rotations
-            const targetRotation = extraSpins + (360 - winnerAngle);
+            const targetRotation = extraSpins + (360 - winnerCenterAngle);
             
             // Force reflow
             wheel.offsetHeight;
