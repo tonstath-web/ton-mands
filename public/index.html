@@ -205,11 +205,52 @@
             </div>
         </div>
 
-        <!-- Shop Section -->
+        <!-- Profile Section -->
         <div id="shop" class="page-section">
-            <div class="spin-section">
-                <div class="spin-title">🛒 Shop</div>
-                <div class="spin-subtitle">Coming soon!</div>
+            <div class="pvp-section">
+                <div class="pvp-title">👤 Profile</div>
+                <div class="pvp-subtitle">Your Stats & Info</div>
+                
+                <div style="background: rgba(255,255,255,0.05); border-radius: 20px; padding: 24px; margin: 20px 0;">
+                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #9C27B0, #7B1FA2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 16px; border: 3px solid rgba(255,255,255,0.2);" id="profileAvatar">K</div>
+                    <div style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px;" id="profileName">Kinandra</div>
+                    <div style="font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 20px;" id="profileId">ID: 1750653290</div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div style="background: rgba(156,39,176,0.2); padding: 16px; border-radius: 14px;">
+                            <div style="font-size: 24px; font-weight: 900; color: #9C27B0;" id="profileWins">0</div>
+                            <div style="font-size: 11px; color: rgba(255,255,255,0.5);">🏆 Wins</div>
+                        </div>
+                        <div style="background: rgba(255,87,34,0.2); padding: 16px; border-radius: 14px;">
+                            <div style="font-size: 24px; font-weight: 900; color: #FF5722;" id="profileLosses">0</div>
+                            <div style="font-size: 11px; color: rgba(255,255,255,0.5);">💔 Losses</div>
+                        </div>
+                        <div style="background: rgba(0,212,255,0.2); padding: 16px; border-radius: 14px;">
+                            <div style="font-size: 24px; font-weight: 900; color: #00d4ff;" id="profileEarned">0</div>
+                            <div style="font-size: 11px; color: rgba(255,255,255,0.5);">💰 Earned (TON)</div>
+                        </div>
+                        <div style="background: rgba(255,215,0,0.2); padding: 16px; border-radius: 14px;">
+                            <div style="font-size: 24px; font-weight: 900; color: #FFD700;" id="profileBalance">0</div>
+                            <div style="font-size: 11px; color: rgba(255,255,255,0.5);">💳 Balance</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 16px; margin-top: 16px;">
+                    <div style="font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 12px;">⚡ Battle Stats</div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <span style="color: rgba(255,255,255,0.6); font-size: 13px;">Win Rate</span>
+                        <span style="color: #9C27B0; font-weight: 700;" id="profileWinRate">0%</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <span style="color: rgba(255,255,255,0.6); font-size: 13px;">Total Battles</span>
+                        <span style="color: #fff; font-weight: 700;" id="profileTotalBattles">0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                        <span style="color: rgba(255,255,255,0.6); font-size: 13px;">Avg. Bet</span>
+                        <span style="color: #FFD700; font-weight: 700;" id="profileAvgBet">0.1 TON</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -237,8 +278,8 @@
             <span>Refer</span>
         </div>
         <div class="nav-item" data-page="shop">
-            <span class="nav-icon">🛒</span>
-            <span>Shop</span>
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
         </div>
         <div class="nav-item" data-page="balance">
             <span class="nav-icon">💳</span>
@@ -479,6 +520,27 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(page).classList.add('active');
             document.querySelector(`[data-page="${page}"]`).classList.add('active');
+            
+            // Update profile stats when navigating to profile page
+            if (page === 'shop') {
+                updateProfileStats();
+            }
+        }
+        
+        // Update profile stats
+        function updateProfileStats() {
+            const totalBattles = battlesWon + battlesLost;
+            const winRate = totalBattles > 0 ? ((battlesWon / totalBattles) * 100).toFixed(1) : 0;
+            
+            document.getElementById('profileAvatar').textContent = user?.first_name?.charAt(0).toUpperCase() || 'K';
+            document.getElementById('profileName').textContent = user?.first_name || 'Kinandra';
+            document.getElementById('profileId').textContent = `ID: ${user?.id || '1750653290'}`;
+            document.getElementById('profileWins').textContent = battlesWon;
+            document.getElementById('profileLosses').textContent = battlesLost;
+            document.getElementById('profileEarned').textContent = totalEarned.toFixed(2);
+            document.getElementById('profileBalance').textContent = balance.toFixed(2);
+            document.getElementById('profileWinRate').textContent = `${winRate}%`;
+            document.getElementById('profileTotalBattles').textContent = totalBattles;
         }
 
         // Copy referral
